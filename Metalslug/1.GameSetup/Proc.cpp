@@ -1,5 +1,6 @@
 ﻿#include "Proc.h"
 
+#include "InputMgr.h"
 #include "Loading.h"
 
 #include "ProcField.h"
@@ -7,21 +8,24 @@
 void loadProc()
 {
 	loadProcField();
-	//loadProcPlayer();
+	loadProcPlayer();
 	loadProcBullets();
 }
 void freeProc()
 {
 	freeProcField();
-	//freeProcPlayer();
+	freeProcPlayer();
 	freeProcBullets();
 }
 
 void drawProc(float dt)
 {
 	iPoint off = drawProcField(dt);
-	//drawProcPlayer(dt, off);
+	drawProcPlayer(dt, off);
 	drawProcBullets(dt, off);
+	
+	if(getKeyStat(keyboard_space))
+		addBullet(NULL,2,0);
 	setRGBA(1, 1, 1, 1);
 }
 
@@ -61,8 +65,31 @@ iPoint drawProcField(float dt)
 	bg->paint(dt);
 
 	return off;
+}
 
-	addBullet(NULL, 0, 0);
+///////////////////////////////////////////////////
+//Player
+///////////////////////////////////////////////////
+
+void loadProcPlayer()
+{
+	player = new ProcPlayer();
+
+	player->initObj();
+}
+
+void freeProcPlayer()
+{
+	delete player;
+}
+
+void drawProcPlayer(float dt, iPoint off)
+{
+	if (player->isActive)
+	{
+		player->updateObj(dt);
+		player->drawObj(dt, off);
+	}
 }
 
 
@@ -109,20 +136,27 @@ void drawProcBullets(float dt, iPoint off)
 	{
 		ProcBullets* b = bullets[i];
 		b->updateObj(dt);
-		b->drawObj(dt, b->p);
+		b->drawObj(dt, off);
 	}
 }
 
 void addBullet(ProcObject* parent, int idx, int dir)
 {
-#if 0
+#if 1
 	for (int i = 0; i < bulletMax; i++)
 	{
+		printf("bulletNum[%d]\n", bulletNum);
 		ProcBullets* b = _bullets[idx][i];
 		if (b->isActive == false)
 		{
 			b->isActive = true;
-			int d[4] = { 0, 180, 90, 270 };
+			b->p = iPointMake(300, 300);
+			bullets[bulletNum] = b;
+			bulletNum++;
+			return;
+
+		}
+#if 0
 #if 0
 			b->p = parent->p + iPointRotate(parent->firePoint, iPointZero, 360 - d[dir]);
 #else
@@ -141,10 +175,9 @@ void addBullet(ProcObject* parent, int idx, int dir)
 #endif
 			b->parent = parent;
 			b->v = iPointRotate(iPointMake(1, 0), iPointZero, 360 - d[dir]);
-			bullets[bulletNum] = b;
-			bulletNum++;
-			return;
+
 		}
+#endif
 	}
 #endif
 }

@@ -66,24 +66,6 @@
     <ClInclude Include="0.Manager\GameMgr.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="1. GameSetup\Loading.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="1. GameSetup\Map.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="1. GameSetup\Menu.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="1. GameSetup\Proc.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="1. GameSetup\ProcField.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="1. GameSetup\ProcObject.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="std\iPopup.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -91,9 +73,6 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="std\iStrTex.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="1. GameSetup\ProcBullets.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="0.Manager\ImgMgr.h">
@@ -118,6 +97,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="1.GameSetup\ProcObject.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="1.GameSetup\ProcPlayer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -167,22 +149,7 @@
     <ClCompile Include="0.Manager\GameMgr.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="1. GameSetup\Loading.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="glew.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="1. GameSetup\Map.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="1. GameSetup\Menu.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="1. GameSetup\ProcField.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="1. GameSetup\ProcObject.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="std\iPopup.cpp">
@@ -192,12 +159,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="std\iStrTex.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="1. GameSetup\ProcBullets.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="1. GameSetup\Proc.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="0.Manager\ImgMgr.cpp">
@@ -222,6 +183,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="1.GameSetup\ProcObject.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="1.GameSetup\ProcPlayer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

@@ -35,8 +35,8 @@
 	va_end(args);											\
 }
 
-#define DEV_WIDTH 1280
-#define DEV_HEIGHT 720
+#define DEV_WIDTH 800
+#define DEV_HEIGHT 600
 extern iSize devSize;
 extern iRect viewport;
 

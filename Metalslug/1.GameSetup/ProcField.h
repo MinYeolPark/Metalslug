@@ -40,7 +40,7 @@ struct Bg
 };
 #define cuts_Stage1 8
 #define layers_Stage1 3
-#define tex_rate 4		//1.82
+#define tex_rate 2		//1.82
 
 extern Bg* bg;
 extern BgData bd_stage1[];

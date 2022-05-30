@@ -33,7 +33,6 @@ iImage** createImgChar(ImageInfo* imageInfo, void* c)
 iImage** createImgCharReverse(ImageInfo* imageInfo, void* c)
 {
 	int n = imageInfo->num * 2;
-
 	iImage** imgEnemy = new iImage * [n];
 	for (int i = 0; i < n; i++)
 	{
@@ -50,19 +49,22 @@ iImage** createImgCharReverse(ImageInfo* imageInfo, void* c)
 			for (int k = 0; k < ii->num; k++)
 			{
 				Texture* tex = createImage(iColor4fMake(255, 0, 0, 255),
-					ii->path, 1 + k);
+					ii->path, k);
 				img->addObject(tex);
 				freeImage(tex);
 			}
 			img->scale = ii->s;
 			img->position = ii->p;
 
+			img->_aniDt = ii->aniDt;
 			if (ii->repeatNum)
 				img->_repeatNum = ii->repeatNum;
 
-			img->_aniDt = ii->aniDt;
 			img->anc = TOP | LEFT;
-			img->startAnimation(ii->cbAni, c);
+			if (ii->cbAni)
+				img->startAnimation(ii->cbAni, c);
+			else
+				img->startAnimation();
 
 		}
 		imgEnemy[i] = img;
@@ -70,34 +72,29 @@ iImage** createImgCharReverse(ImageInfo* imageInfo, void* c)
 	return imgEnemy;
 }
 
+
 iImage** createImgBullets(ImageInfo* imageInfo, void* c)
 {
-	iImage** _img;
+	iImage** _imgs = new iImage * [BulletIndexMax];
+	memset(_imgs, 0x00, sizeof(iImage*) * BulletIndexMax);
 	for (int i = 0; i < BulletIndexMax; i++)
 	{
 		ImageInfo* ii = &imageInfo[i];
-		_img = new iImage * [imageInfo->num];
-		for (int j = 0; j < imageInfo->num; j++)
+		iImage* img = new iImage();
+		for (int j = 0; j < ii->num; j++)
 		{
-			iImage* img = new iImage();
-			for (int k = 0; k < ii->num; k++)
-			{
-				Texture* tex = createImage(iColor4fMake(255,255,255,255),
-					ii->path, j);
-				img->addObject(tex);
-				freeImage(tex);
-			}
-			img->scale = ii->s;
-			img->position = ii->p;
-
-			if (ii->repeatNum)
-				img->_repeatNum = ii->repeatNum;
-
-			img->_aniDt = ii->aniDt;
-			img->anc = TOP | LEFT;
-			img->startAnimation(ii->cbAni, c);
-			_img[i] = img;
+			Texture* tex = createImage(ii->colorKey, ii->path, j);
+			img->addObject(tex);
+			freeImage(tex);
 		}
+		img->scale = ii->s;
+		img->position = ii->p;
+		img->_aniDt = ii->aniDt;
+		img->anc = TOP | LEFT;
+		img->startAnimation(ii->cbAni, (ProcBullets*)c);
+		if (ii->repeatNum)
+			img->_repeatNum = ii->repeatNum;
+		_imgs[i]=img;
 	}
-	return _img;
+	return _imgs;
 }

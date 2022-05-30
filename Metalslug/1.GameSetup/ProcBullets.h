@@ -7,6 +7,7 @@ enum BulletIndex
 	HandGun = 0,
 	HeavyMachinegun,
 
+	MoskMissile,
 	BulletIndexMax,
 };
 
@@ -15,7 +16,6 @@ typedef void(*BulletPattern)(ProcBullets* b, float dt);
 class ProcBullets: public ProcObject
 {
 public:
-	ProcBullets();
 	ProcBullets(int idx);
 	virtual ~ProcBullets();
 
@@ -35,7 +35,7 @@ public:
 public:
 	virtual void initObj();
 	virtual void updateObj(float dt);
-	virtual void drawObj(float dt, iPoint p);
+	virtual void drawObj(float dt, iPoint off);
 	virtual void freeObj();
 
 	//Components

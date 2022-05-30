@@ -1,24 +1,11 @@
 #include "ProcBullets.h"
 
+#include "iStd.h"
+
 #include "ImgMgr.h"
-#include "Proc.h"
-#include "ProcField.h"
 
 static iImage** _imgBullets = NULL;
-ImageInfo imageInfo[];
-ProcBullets::ProcBullets() : ProcObject()
-{
-	imgs = NULL;
-	imgCurr = NULL;
-	parent = NULL;
-	bulletIdx = 0;
-	iPoint v = iPointZero;
-	dmg = 0.;
-
-	if (_imgBullets == NULL)
-		_imgBullets = createImgChar(imageInfo, this);
-}
-
+ImageInfo bulletImageInfo[];
 ProcBullets::ProcBullets(int idx) : ProcObject(idx)
 {
 	imgs = NULL;
@@ -30,10 +17,10 @@ ProcBullets::ProcBullets(int idx) : ProcObject(idx)
 	pattern = NULL;
 	speed = 100.;
 	dmg = 100.;	
-	printf("proc bullets!");
 
 	if (_imgBullets == NULL)
-		_imgBullets = createImgBullets(imageInfo, this);
+		_imgBullets = createImgBullets(bulletImageInfo, this);
+
 	imgs = new iImage * [BulletIndexMax];
 	memset(imgs, 0x00, sizeof(iImage*) * BulletIndexMax);
 	for (int i = 0; i < BulletIndexMax; i++)
@@ -43,8 +30,14 @@ ProcBullets::ProcBullets(int idx) : ProcObject(idx)
 ProcBullets::~ProcBullets()
 {
 	for (int i = 0; i < BulletIndexMax; i++)
+	{
+		delete _imgBullets[i];
 		delete imgs[i];
+	}
+	delete _imgBullets;
 	delete imgs;
+
+	_imgBullets = NULL;
 }
 
 void ProcBullets::initObj()
@@ -67,14 +60,15 @@ void ProcBullets::updateObj(float dt)
 	}
 }
 
-void ProcBullets::drawObj(float dt, iPoint p)
+void ProcBullets::drawObj(float dt, iPoint off)
 {
-	imgCurr = imgs[bulletIdx];
-	imgCurr->paint(dt, p + bg->off);
-
+	if (isActive)
+	{
+		imgCurr = imgs[bulletIdx];
+		imgCurr->paint(dt, p + off);
+	}
 #ifdef _DEBUG
-	drawRect(collider().origin.x + bg->off.x, collider().origin.y + bg->off.y,
-		collider().size.width, collider().size.height);
+
 #endif // _DEBUG
 
 	p += v * speed * dt;
@@ -85,21 +79,35 @@ void ProcBullets::freeObj()
 {
 }
 
-ImageInfo imageInfo[] =
+ImageInfo bulletImageInfo[PlayerBehaveMax] =
 {
 	{
-		"assets/Bullets/HandGun.png",
+		"assets/Bullets/HandGun_%02d.png",
 		1,
-		2.0f, {0,0},
+		2.0f, {-12 / 2, -8 / 2},
 		0.18f,
+		1,
+		iColor4fMake(255.,255.,255.,255),
+		NULL,
 	},
 	{
-		"assets/Bullets/HeavyMachineGun.png",
-		2,
-		2.0f, {-30 / 2,-5},
+		"assets/Bullets/HeavyMachineGun_%02d.png",
+		1,
+		2.0f, {-30 / 2,-5/2},
 		0.18f,
+		1,
+		iColor4fMake(255.,255.,255.,255),
+		NULL,
 	},
-
+	{
+		"assets/Bullets/MidBoss_Fire_%02d.png",
+		29,
+		2.0f, {-50 / 2,-26 / 2},
+		0.1f,
+		0,
+		iColor4fMake(255.,255.,255.,255),
+		NULL,
+	},
 };
 
 

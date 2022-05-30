@@ -129,12 +129,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="0.Manager\InputMgr.h" />
-    <ClInclude Include="1. GameSetup\Map.h" />
-    <ClInclude Include="1. GameSetup\Menu.h" />
-    <ClInclude Include="1. GameSetup\Proc.h" />
-    <ClInclude Include="1. GameSetup\ProcBullets.h" />
-    <ClInclude Include="1. GameSetup\ProcField.h" />
-    <ClInclude Include="1. GameSetup\ProcObject.h" />
     <ClInclude Include="1.GameSetup\Loading.h" />
     <ClInclude Include="1.GameSetup\Map.h" />
     <ClInclude Include="1.GameSetup\Menu.h" />
@@ -142,9 +136,9 @@
     <ClInclude Include="1.GameSetup\ProcBullets.h" />
     <ClInclude Include="1.GameSetup\ProcField.h" />
     <ClInclude Include="1.GameSetup\ProcObject.h" />
+    <ClInclude Include="1.GameSetup\ProcPlayer.h" />
     <ClInclude Include="App.h" />
     <ClInclude Include="0.Manager\GameMgr.h" />
-    <ClInclude Include="1. GameSetup\Loading.h" />
     <ClInclude Include="0.Manager\ImgMgr.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="std\iArray.h" />
@@ -166,12 +160,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="0.Manager\InputMgr.cpp" />
-    <ClCompile Include="1. GameSetup\Map.cpp" />
-    <ClCompile Include="1. GameSetup\Menu.cpp" />
-    <ClCompile Include="1. GameSetup\Proc.cpp" />
-    <ClCompile Include="1. GameSetup\ProcBullets.cpp" />
-    <ClCompile Include="1. GameSetup\ProcField.cpp" />
-    <ClCompile Include="1. GameSetup\ProcObject.cpp" />
     <ClCompile Include="1.GameSetup\Loading.cpp" />
     <ClCompile Include="1.GameSetup\Map.cpp" />
     <ClCompile Include="1.GameSetup\Menu.cpp" />
@@ -179,10 +167,10 @@
     <ClCompile Include="1.GameSetup\ProcBullets.cpp" />
     <ClCompile Include="1.GameSetup\ProcField.cpp" />
     <ClCompile Include="1.GameSetup\ProcObject.cpp" />
+    <ClCompile Include="1.GameSetup\ProcPlayer.cpp" />
     <ClCompile Include="App.cpp" />
     <ClCompile Include="0.Manager\GameMgr.cpp" />
     <ClCompile Include="glew.c" />
-    <ClCompile Include="1. GameSetup\Loading.cpp" />
     <ClCompile Include="0.Manager\ImgMgr.cpp" />
     <ClCompile Include="std\iArray.cpp" />
     <ClCompile Include="std\iColor.cpp" />

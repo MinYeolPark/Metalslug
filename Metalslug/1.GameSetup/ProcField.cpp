@@ -90,7 +90,7 @@ void Bg::paint(float dt)
 			while (p.x < -tex->width * bl->scale)
 				p.x += tex->width * bl->scale;
 					
-			drawImage(tex, p.x + tex->width * bl->scale * j , p.y, bl->scale, bl->scale, TOP | LEFT,
+			drawImage(tex, p.x + tex->width * tex_rate * j , p.y, tex_rate, tex_rate, TOP | LEFT,
 				0, 0, tex->width, tex->height, 2, 0);
 		}
 	}
@@ -163,41 +163,49 @@ BgData bgData_Stage1[] = {
 		"assets/BG/BG_00.png",
 		{{0,400}, {340,360}, {480, 400}, {662 * 1,420}},
 		4,
+		2.f,
 	},
 	{
 		"assets/BG/BG_01.png",
 		{{662 * 1,420}, {860, 390}, {980, 420}, {662 * 2,420}},
-		4,		
+		4,
+		2.f,
 	},
 	{
 		"assets/BG/BG_02.png",
 		{{662 * 2,420}, {1500,420}, {1700, 400}, {662 * 3,420}},
 		4,
+		2.f,
 	},
 	{
 		"assets/BG/BG_03.png",
 		{{662 * 3,420}, {2000,420}, {2500, 420}, {662 * 4,420}},
 		4,
+		2.f,
 	},
 	{
 		"assets/BG/BG_04.png",
 		{{662 * 4,420}, {2800,420}, {3100, 420}, {662 * 5,420}},
 		4,
+		2.f,
 	},
 	{
 		"assets/BG/BG_05.png",
 		{{662 * 5, 420}, {3500,420}, {3700, 420}, {662 * 6,420}},
 		4,
+		2.f,
 	},
 	{
 		"assets/BG/BG_06.png",
 		{{662 * 6,420}, {4200,420}, {4500, 420}, {662 * 7,420}},
 		4,
+		2.f,
 	},
 	{
 		"assets/BG/BG_07.png",
 		{{662 * 7,420}, {5000,420}, {5200, 420}, {662 * 8,420}},
 		4,
+		2.f,
 	}
 };
 BgLayer bgLayer_Stage1[] =
