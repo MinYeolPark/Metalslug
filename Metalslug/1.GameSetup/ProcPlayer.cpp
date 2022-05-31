@@ -39,8 +39,8 @@ ProcPlayer::ProcPlayer()
 
 	topState = IdleR;
 	botState = IdleR;
-	topImgs = createImgCharReverse(topImageInfo, this);
-	botImgs = createImgCharReverse(botImageInfo, this);
+	topImgs = createImgPlayer(topImageInfo, this);
+	botImgs = createImgPlayer(botImageInfo, this);
 }
 
 ProcPlayer::~ProcPlayer()
@@ -67,6 +67,10 @@ void ProcPlayer::updateObj(float dt)
 	else if (getKeyStat(keyboard_down))
 		v.y = 1;
 
+	if (getKeyStat(keyboard_z))
+		jump();
+	if (getKeyStat(keyboard_x))
+		fire();
 	if (v != iPointZero)
 	{
 		v /= iPointLength(v);
@@ -89,6 +93,24 @@ void ProcPlayer::updateObj(float dt)
 }
 void ProcPlayer::fixedUpdate(float dt)
 {
+#if 1
+	//Camera Move
+	float x = p.x + bg->off.x;
+	if (x < devSize.width / 3)
+	{
+		bg->move(iPointMake(devSize.width / 3 - x, 0));
+	}
+	else if (x > devSize.width * 2 / 3)
+	{
+		bg->move(iPointMake(devSize.width * 2 / 3 - x, 0));
+	}
+#endif	
+#if 1
+	//Camera fix
+	//if (x > bg->eventTrigger.x)
+		//printf("event triggered");
+
+#endif
 	int maxY = *(bg->maxY + (int)p.x);
 
 	if (p.y > maxY)		//on air
@@ -127,11 +149,11 @@ void ProcPlayer::drawObj(float dt, iPoint off)
 
 	if (isActive)
 	{
-		topImgCurr = topImgs[topState];
 		botImgCurr = botImgs[botState];
-		
-		topImgCurr->paint(dt, p + off);
+		topImgCurr = topImgs[topState];
+
 		botImgCurr->paint(dt, p + off);	
+		topImgCurr->paint(dt, p + off);
 	}
 	{
 		#ifdef _DEBUG
@@ -162,37 +184,51 @@ void ProcPlayer::setState(PlayerBehave pb, iPoint v)
 	botState = pb;
 }
 
+void ProcPlayer::jump()
+{
+	if (jumpCombo == 1)
+		return;
+
+	up -= jumpPow;
+	jumpCombo++;
+}
+
+void ProcPlayer::fire()
+{
+
+}
+
 
 ImageInfo botImageInfo[] =
 {
 	{
 		"assets/Player/Bot_Idle_%02d.png",
-		1, 2.0f, { -20 / 2, -24 },
-		0.18f,
+		1, 2.0f, { -20 / 2, 0 },
+		0.1f,
 		0,
 		iColor4fMake(255,255,255,255),
 		NULL,
 	},
 	{
 		"assets/Player/Bot_Walk_%02d.png",
-		1, 2.0f, { -22 / 2, -26 },
-		0.18f,
+		12, 2.0f, { -22 / 2, 0 },
+		0.1f,
 		0,
 		iColor4fMake(255,255,255,255),
 		NULL,
 	},
 	{
 		"assets/Player/Bot_Jump_%02d.png",
-		1, 2.0f, { -22 / 2, -30 },
-		0.18f,
+		6, 2.0f, { -22 / 2, 0 },
+		0.1f,
 		0,
 		iColor4fMake(255,255,255,255),
 		NULL,
 	},
 	{
 		"assets/Player/Bot_RunJump_%02d.png",
-		1, 2.0f, { -22 / 2, -30 },
-		0.18f,
+		6, 2.0f, { -22 / 2, 0 },
+		0.1f,
 		0,
 		iColor4fMake(255,255,255,255),
 		NULL,
@@ -202,32 +238,40 @@ ImageInfo topImageInfo[] =
 {
 	{
 		"assets/Player/Top_Idle_%02d.png",
-		4, 2.0f, { -32 / 2, -28 },
-		0.18f,
+		4, 2.0f, { -26 / 2, 10 },		
+		0.1f,
 		0,
 		iColor4fMake(255,255,255,255),
 		NULL,
 	},
 	{
 		"assets/Player/Top_Walk_%02d.png",
-		12, 2.0f, { -32 / 2, -28 },
-		0.18f,
+		12, 2.0f, { -26 / 2, 10 },
+		0.1f,
 		0,
 		iColor4fMake(255,255,255,255),
 		NULL,
 	},
 	{
 		"assets/Player/Top_Jump_%02d.png",
-		6, 2.0f, { -29 / 2, -26 },
-		0.18f,
+		6, 2.0f, {  -26 / 2, 8 },
+		0.1f,
 		0,
 		iColor4fMake(255,255,255,255),
 		NULL,
 	},
 	{
 		"assets/Player/Top_RunJump_%02d.png",
-		6, 2.0f, { -33 / 2, -33 },
-		0.18f,
+		6, 2.0f, { -26 / 2, 8 },
+		0.1f,
+		0,
+		iColor4fMake(255,255,255,255),
+		NULL,
+	},
+	{
+		"assets/Player/Top_Fire_%02d.png",
+		10, 2.0f, { -26 / 2, 8 },
+		0.1f,
 		0,
 		iColor4fMake(255,255,255,255),
 		NULL,

@@ -17,6 +17,6 @@ struct ImageInfo
 };
 
 iImage** createImgChar(ImageInfo* imageInfo, void* c);
-iImage** createImgCharReverse(ImageInfo* imageInfo, void* c);
+iImage** createImgPlayer(ImageInfo* imageInfo, void* c);
 
 iImage** createImgBullets(ImageInfo* imageInfo, void* c);

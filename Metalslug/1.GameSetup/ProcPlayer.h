@@ -5,8 +5,8 @@
 #define pBOT 0
 #define pTOP 1
 #define WHOLE 2
-#define jumpPow			12
-#define jumpDecrease	30
+#define jumpPow			8
+#define jumpDecrease	20
 enum CharacterIndex;
 enum PlayerBehave;
 class ProcPlayer :
@@ -44,7 +44,9 @@ public:
 public:
 	void setState(PlayerBehave pb, iPoint v);
 
-
+public:
+	void jump();
+	void fire();
 public:
 	virtual void initObj() override;
 	virtual void updateObj(float dt) override;
@@ -86,26 +88,27 @@ enum PlayerBehave
 	//===========================================
 	//Top
 	//===========================================
-	LookUpR = 100,
-	LookUpL,
-
 	FireR,
 	FireL,
 
-	//===========================================
-	//Whole
-	//===========================================
-	CrouchR = 200,
-	CrouchL,
+	//LookUpR = 100,
+	//LookUpL,
 
-	CrouchMoveLeft,
-	CrouchMoveRight,
 
-	BrakeR,
-	BrakeL,
+	////===========================================
+	////Whole
+	////===========================================
+	//CrouchR = 200,
+	//CrouchL,
 
-	DeadR,
-	DeadL,
+	//CrouchMoveLeft,
+	//CrouchMoveRight,
+
+	//BrakeR,
+	//BrakeL,
+
+	//DeadR,
+	//DeadL,
 
 	PlayerBehaveMax,
 };

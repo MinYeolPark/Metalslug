@@ -30,16 +30,15 @@ iImage** createImgChar(ImageInfo* imageInfo, void* c)
 	return _img;
 }
 
-iImage** createImgCharReverse(ImageInfo* imageInfo, void* c)
+iImage** createImgPlayer(ImageInfo* imageInfo, void* c)
 {
-	int n = imageInfo->num * 2;
-	iImage** imgEnemy = new iImage * [n];
-	for (int i = 0; i < n; i++)
+	iImage** _imgPlayer = new iImage * [PlayerBehaveMax];
+	for (int i = 0; i < PlayerBehaveMax; i++)
 	{
 		iImage* img;
 		if (i % 2 == 1)
 		{
-			img = imgEnemy[i - 1]->clone();
+			img = _imgPlayer[i - 1]->clone();
 			img->reverse = REVERSE_WIDTH;
 		}
 		else
@@ -67,9 +66,9 @@ iImage** createImgCharReverse(ImageInfo* imageInfo, void* c)
 				img->startAnimation();
 
 		}
-		imgEnemy[i] = img;
+		_imgPlayer[i] = img;
 	}
-	return imgEnemy;
+	return _imgPlayer;
 }
 
 
