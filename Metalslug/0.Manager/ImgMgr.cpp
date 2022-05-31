@@ -10,7 +10,7 @@ iImage** createImgChar(ImageInfo* imageInfo, void* c)
 		ImageInfo* ii = &imageInfo[i];
 		for (int j = 0; j < ii->num; j++)
 		{
-			Texture* tex = createImage(iColor4fMake(255, 0, 0, 255),
+			Texture* tex = createImage(iColor4bMake(255, 0, 0, 255),
 				ii->path, j);
 			img->addObject(tex);
 			freeImage(tex);
@@ -33,6 +33,7 @@ iImage** createImgChar(ImageInfo* imageInfo, void* c)
 iImage** createImgPlayer(ImageInfo* imageInfo, void* c)
 {
 	iImage** _imgPlayer = new iImage * [PlayerBehaveMax];
+	memset(_imgPlayer, 0x00, sizeof(iImage * [PlayerBehaveMax]));
 	for (int i = 0; i < PlayerBehaveMax; i++)
 	{
 		iImage* img;
@@ -47,7 +48,7 @@ iImage** createImgPlayer(ImageInfo* imageInfo, void* c)
 			ImageInfo* ii = &imageInfo[i / 2];		//left, right
 			for (int k = 0; k < ii->num; k++)
 			{
-				Texture* tex = createImage(iColor4fMake(255, 0, 0, 255),
+				Texture* tex = createImage(iColor4bMake(255, 0, 0, 255),
 					ii->path, k);
 				img->addObject(tex);
 				freeImage(tex);

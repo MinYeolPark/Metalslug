@@ -35,8 +35,9 @@
 	va_end(args);											\
 }
 
-#define DEV_WIDTH 800
-#define DEV_HEIGHT 600
+//640 : 480 = x : 264
+#define DEV_WIDTH 352
+#define DEV_HEIGHT 264
 extern iSize devSize;
 extern iRect viewport;
 
@@ -78,8 +79,9 @@ void drawImage(Texture* tex, float x, float y, float ratX, float ratY, int anc =
 void drawImage(Texture* tex, float x, float y, float ratX, float ratY, int anc,// dst
 	int ix, int iy, int iw, int ih,// src
 	int xyz, int degree, int reverse = REVERSE_NONE);
-Texture* createImageWithRGBA(int width, int height, uint8* rgba, iColor4f* colorKey = NULL);
-Texture* createImage(iColor4f colorKey, const char* szFormat, ...);
+Texture* createImageWithRGBA(int width, int height, uint8* rgba, iColor4b* colorKey = NULL);
+Texture* createImage(const char* szFormat, ...);
+Texture* createImage(iColor4b colorKey, const char* szFormat, ...);
 Texture** createImageDivide(int numX, int numY, const char* szFormat, ...);
 
 void setStringName(const char* stringName);

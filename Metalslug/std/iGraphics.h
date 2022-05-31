@@ -23,6 +23,7 @@ public:
 	void clean();
 	void clear(iColor4f c);
 	Texture* getTexture();
+	Texture* getTexture(iColor4b colorKey);
 
 	static void initGraphics(Gdiplus::Graphics* g);
 	

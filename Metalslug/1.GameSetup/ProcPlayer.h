@@ -42,11 +42,11 @@ public:
 	int bombs;
 	int score;
 public:
-	void setState(PlayerBehave pb, iPoint v);
-
+	void setTopState(PlayerBehave pb, iPoint v);
+	void setBotState(PlayerBehave pb, iPoint v);
 public:
 	void jump();
-	void fire();
+	void fire(iPoint v);
 public:
 	virtual void initObj() override;
 	virtual void updateObj(float dt) override;
@@ -56,8 +56,13 @@ public:
 
 public:
 	//virtual iRect collider();
+
+public:
+	static void cbAniFire(void* parm);
+
 };
 
+extern ProcPlayer* player;
 enum CharacterIndex
 {
 	PIO = 0,
@@ -94,7 +99,6 @@ enum PlayerBehave
 	//LookUpR = 100,
 	//LookUpL,
 
-
 	////===========================================
 	////Whole
 	////===========================================
@@ -112,3 +116,49 @@ enum PlayerBehave
 
 	PlayerBehaveMax,
 };
+
+enum RecordKind
+{
+	RecordStep = 0,
+
+
+
+};
+
+#define recordMax 1000
+#define recordDt 1.0f
+extern Texture** texRecord;
+
+struct Record
+{
+	RecordKind index;
+	iPoint position;
+	float remindDt;
+
+	void set(RecordKind index, iPoint p)
+	{
+		this->index = index;
+		position = p;
+		remindDt = recordDt;
+	}
+
+	bool paint(float dt, iPoint off)
+	{
+		remindDt -= dt;
+		if (remindDt < 0.0f)
+			return true;
+
+		float a = 1.0f - remindDt / recordDt;
+		setRGBA(1, 1, 1, a);
+
+		iPoint p = position + off;
+		drawImage(texRecord[index], p.x, p.y, VCENTER | HCENTER);
+
+		return false;
+	}
+};
+
+void loadRecord();
+void freeRecord();
+void drawRecord(float dt, iPoint off);
+void addRecord(RecordKind index, iPoint p);

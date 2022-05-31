@@ -129,6 +129,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="0.Manager\InputMgr.h" />
+    <ClInclude Include="0.Manager\UIMgr.h" />
     <ClInclude Include="1.GameSetup\Loading.h" />
     <ClInclude Include="1.GameSetup\Map.h" />
     <ClInclude Include="1.GameSetup\Menu.h" />
@@ -141,6 +142,7 @@
     <ClInclude Include="0.Manager\GameMgr.h" />
     <ClInclude Include="0.Manager\ImgMgr.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="StatusUI.h" />
     <ClInclude Include="std\iArray.h" />
     <ClInclude Include="std\iColor.h" />
     <ClInclude Include="std\iCommon.h" />
@@ -160,6 +162,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="0.Manager\InputMgr.cpp" />
+    <ClCompile Include="0.Manager\UIMgr.cpp" />
     <ClCompile Include="1.GameSetup\Loading.cpp" />
     <ClCompile Include="1.GameSetup\Map.cpp" />
     <ClCompile Include="1.GameSetup\Menu.cpp" />
@@ -172,6 +175,7 @@
     <ClCompile Include="0.Manager\GameMgr.cpp" />
     <ClCompile Include="glew.c" />
     <ClCompile Include="0.Manager\ImgMgr.cpp" />
+    <ClCompile Include="2.UI\StatusUI.cpp" />
     <ClCompile Include="std\iArray.cpp" />
     <ClCompile Include="std\iColor.cpp" />
     <ClCompile Include="std\iGraphics.cpp" />

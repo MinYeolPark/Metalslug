@@ -2,20 +2,20 @@
 
 #include "iStd.h"
 
-struct BgLayer
-{
-	const char* rscName;
-	float scale;	
-	iPoint offSet;
-	float rate;
-};
-
 struct BgData
 {
 	const char* rscName;
 	iPoint p[20];
 	int pCount;
 	float scale;
+};
+
+struct BgLayer
+{
+	const char* rscName;
+	float scale;	
+	iPoint offSet;
+	float rate;
 };
 
 struct Bg
@@ -40,7 +40,7 @@ struct Bg
 };
 #define cuts_Stage1 8
 #define layers_Stage1 3
-#define tex_rate 2		//1.82
 
+extern BgData bgData_Stage1[cuts_Stage1];
+extern BgLayer bgLayer_Stage1[layers_Stage1];
 extern Bg* bg;
-extern BgData bd_stage1[];

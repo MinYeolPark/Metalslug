@@ -1,21 +1,32 @@
 ﻿#include "Proc.h"
 
+#include "GameMgr.h"
 #include "InputMgr.h"
+#include "UIMgr.h"
+
+/// UI Mgr로 이동
+#include "StatusUI.h"
+///
 #include "Loading.h"
 
 #include "ProcField.h"
 #include "ProcBullets.h"
+
 void loadProc()
 {
 	loadProcField();
 	loadProcPlayer();
 	loadProcBullets();
+
+	loadUI();
 }
 void freeProc()
 {
 	freeProcField();
 	freeProcPlayer();
 	freeProcBullets();
+
+	freeUI();
 }
 
 void drawProc(float dt)
@@ -24,6 +35,7 @@ void drawProc(float dt)
 	drawProcPlayer(dt, off);
 	drawProcBullets(dt, off);
 	
+	drawUI(dt, off);
 	if(getKeyStat(keyboard_space))
 		addBullet(NULL,2,0);
 	setRGBA(1, 1, 1, 1);
@@ -150,7 +162,7 @@ void addBullet(ProcObject* parent, int idx, int dir)
 		if (b->isActive == false)
 		{
 			b->isActive = true;
-			b->p = iPointMake(300, 300);
+			b->p = iPointMake(100, 100);
 			bullets[bulletNum] = b;
 			bulletNum++;
 			return;
@@ -182,3 +194,87 @@ void addBullet(ProcObject* parent, int idx, int dir)
 #endif
 }
 
+///////////////////////////////////////////////////
+//UI
+///////////////////////////////////////////////////
+iStrTex* stPlaytime;
+igImage** igNumber;
+Texture* methodStPlaytime(const char* str);
+
+void loadUI()
+{
+	status = new StatusUI();
+
+	iGraphics* g = new iGraphics();
+	stPlaytime = new iStrTex(methodStPlaytime);
+	igNumber = new igImage * [10];
+	for (int i = 0; i < 10; i++)
+		igNumber[i] = g->createIgImage(	"Resources/NumFont/NumFont_%02d.png", i);
+
+	delete g;
+}
+void freeUI()
+{
+#if 1
+	delete status;
+#endif
+	delete stPlaytime;
+	iGraphics* g = new iGraphics();
+	for (int i = 0; i < 10; i++)
+		g->freeIgImage(igNumber[i]);
+	delete igNumber;
+	delete g;
+}
+void drawUI(float dt, iPoint off)
+{
+	status->paint(dt);
+
+	playtime += dt;
+	stPlaytime->setString("%.0f", playtime);
+	Texture* t = stPlaytime->tex;
+	drawImage(t, devSize.width / 2, 16, 2, 2, TOP | HCENTER, 0, 0, t->width, t->height, 2, 0);
+}
+void addUI(iPoint p, int num)
+{
+
+}
+Texture* methodStPlaytime(const char* str)
+{
+	iGraphics* g = new iGraphics();
+	iSize size = iSizeMake(devSize.width / 2, 32);
+	g->init(size);
+
+	//setRGBA(1, 1, 1, 0.3f);
+	//g->fillRect(0, 0, size.width, size.height);
+	//setRGBA(1, 1, 1, 1);
+#if 0
+	setStringName("궁서체");
+	setStringSize(30);
+	setStringRGBA(1, 1, 1, 1);
+	setStringBorder(2);
+	setStringBorderRGBA(0, 0, 0, 1);
+	g->drawString(size.width / 2, size.height / 2, VCENTER | HCENTER, "%ss", str);
+#else
+	int i, j = strlen(str);
+	iPoint p = iPointZero;
+#if 1// hcenter
+	int w = 0;
+	for (int i = 0; i < j; i++)
+	{
+		igImage* ig = igNumber[str[i] - '0'];
+		w += ig->GetWidth() + 1;
+	}
+	p.x -= w / 2;
+#endif
+	for (int i = 0; i < j; i++)
+	{
+		igImage* ig = igNumber[str[i] - '0'];
+		g->drawIgImage(ig, p.x, p.y, TOP | LEFT);
+		p.x += ig->GetWidth() + 1;
+	}
+#endif
+	Texture* tex = g->getTexture(iColor4bMake(163, 73, 164, 255));
+	delete g;
+
+	return tex;
+}

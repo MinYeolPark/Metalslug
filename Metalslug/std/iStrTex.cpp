@@ -81,3 +81,12 @@ void iStrTex::drawString(float x, float y, int anc, const char* szFormat, ...)
 	setString(szText);
 	drawImage(tex, x, y, anc);
 }
+
+void iStrTex::drawString(float x, float y, float sx, float sy, int anc, const char* szFormat, ...)
+{
+	char szText[512];
+	va_start_end(szFormat, szText);
+
+	setString(szText);
+	drawImage(tex, x, y, sx, sy, anc);
+}

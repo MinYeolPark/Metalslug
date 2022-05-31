@@ -7,23 +7,6 @@
 #include "ProcPlayer.h"
 #include "ProcBullets.h"
 
-#if 0
-struct ImageInfo
-{
-	PlayerIndex idx;
-	const char* path;
-	int spriteType;
-	int num;
-	float s;
-	iPoint p;
-
-	float aniDt;
-	int repeatNum;
-	cbAnimation cbAni;
-	PlayerBehave pb0, pb1;
-};
-#endif
-
 ///////////////////////////////////////////////////
 //Proc
 ///////////////////////////////////////////////////
@@ -57,6 +40,14 @@ void addBullet(ProcObject* parent, int idx, int dir);
 void loadProcBullets();
 void freeProcBullets();
 void drawProcBullets(float dt, iPoint off);
+
+///////////////////////////////////////////////////
+//UI
+///////////////////////////////////////////////////
+void loadUI();
+void freeUI();
+void drawUI(float dt, iPoint off);
+void addUI(iPoint p, int num);
 
 ///////////////////////////////////////////////////
 //Eneimies

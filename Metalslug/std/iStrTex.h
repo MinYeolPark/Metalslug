@@ -16,7 +16,7 @@ public:
 
 	void setString(const char* szFormat, ...);
 	void drawString(float x, float y, int anc, const char* szFormat, ...);
-
+	void drawString(float x, float y, float sx, float sy, int anc, const char* szFormat, ...);
 public:
 	char* str;
 	int strLength;

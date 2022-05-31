@@ -75,6 +75,17 @@ Texture* iGraphics::getTexture()
 	return tex;
 }
 
+Texture* iGraphics::getTexture(iColor4b colorKey)
+{
+	uint32 width, height;
+	uint8* rgba = bmp2rgba(bmp, width, height);
+
+	Texture* tex = createImageWithRGBA(width, height, rgba, &colorKey);
+	delete rgba;
+
+	return tex;
+}
+
 void iGraphics::initGraphics(Graphics* g)
 {
 	g->SetPageUnit(UnitPixel);

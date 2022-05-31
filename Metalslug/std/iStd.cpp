@@ -439,19 +439,22 @@ void drawImage(Texture* tex, float x, float y, float ratX, float ratY, int anc,/
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-Texture* createImageWithRGBA(int width, int height, uint8* rgba, iColor4f* colorKey)
+Texture* createImageWithRGBA(int width, int height, uint8* rgba, iColor4b* colorKey)
 {
 	int potWidth = nextPOT(width);
 	int potHeight = nextPOT(height);
 
-	int i, num = potWidth * potHeight;
-	for (i = 0; i < num; i++)
+	if (colorKey != NULL)
 	{
-		uint8* c = &rgba[4 * i];
-		if (c[0] == colorKey->r &&
-			c[1] == colorKey->g &&
-			c[2] == colorKey->b)
-			c[3] = 0;
+		int i, num = potWidth * potHeight;
+		for (i = 0; i < num; i++)
+		{
+			uint8* c = &rgba[4 * i];
+			if (c[0] == colorKey->r &&
+				c[1] == colorKey->g &&
+				c[2] == colorKey->b)
+				c[3] = 0;
+		}
 	}
 	uint32 texID = 0;
 	glGenTextures(1, &texID);
@@ -488,7 +491,21 @@ uint8* createImageData(uint32& width, uint32& height, const char* szFormat)
 	return rgba;
 }
 
-Texture* createImage(iColor4f colorKey, const char* szFormat, ...)
+Texture* createImage(const char* szFormat, ...)
+{
+	char szText[256];
+	va_start_end(szFormat, szText);
+
+	uint32 width, height;
+	uint8* rgba = createImageData(width, height, szText);
+
+	Texture* tex = createImageWithRGBA(width, height, rgba, NULL);
+	delete rgba;
+
+	return tex;
+}
+
+Texture* createImage(iColor4b colorKey, const char* szFormat, ...)
 {
 	char szText[256];
 	va_start_end(szFormat, szText);

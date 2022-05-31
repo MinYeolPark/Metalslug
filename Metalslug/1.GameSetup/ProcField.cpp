@@ -1,10 +1,26 @@
 ﻿#include "ProcField.h"
 
-Bg* bg;
-BgData bgData_Stage1[];
-BgLayer bgLayer_Stage1[];
 Bg::Bg()
 {
+	static bool changeData = true;
+	if (changeData)
+	{
+		changeData = false;
+		// 800 x 600
+		// 470 x 264 (0.5875 x 0.44)
+		int i, j, num = sizeof(bgData_Stage1) / sizeof(BgData);
+		for (i = 0; i < num; i++)
+		{
+			BgData* bd = &bgData_Stage1[i];
+			for (j = 0; j < bd->pCount; j++)
+			{
+				iPoint* p = &bd->p[j];
+				p->x *= 0.5875;
+				p->y *= 0.55f;
+			}
+		}
+	}
+
 	/////////////////////////////////////////////////
 	//Main Layer
 	/////////////////////////////////////////////////
@@ -16,12 +32,12 @@ Bg::Bg()
 	for (i = 0; i < cuts_Stage1; i++)
 	{
 		bd = &bgData_Stage1[i];
-		Texture* t = createImage(iColor4fMake(248, 0, 248, 255),
-			bd->rscName, i);
-		maxW += t->width * tex_rate;
+		Texture* t = createImage(iColor4bMake(248, 0, 248, 255),
+			bd->rscName);
+		maxW += t->width;// * 2
 		texs[i] = t;		
 	}
-	offMin = iPointMake(devSize.width - maxW * tex_rate, 0);
+	offMin = iPointMake(devSize.width - maxW, 0);
 	off =
 	offMax = iPointZero;
 
@@ -52,8 +68,9 @@ Bg::Bg()
 	for (int i = 0; i < layers_Stage1; i++)
 	{
 		bl = &bgLayer_Stage1[i];
-		Texture* t = createImage(iColor4fMake(248, 0, 248, 255),
-			bl->rscName, i);
+		Texture* t = createImage(iColor4bMake(248, 0, 248, 255),
+			bl->rscName);
+
 		bgTexs[i] = t;
 	}
 	off = iPointZero;
@@ -81,16 +98,15 @@ void Bg::paint(float dt)
 	{
 		tex = bgTexs[i];
 		bl = &bgLayer_Stage1[i];
-		for (int j = 0; j < 3; j++)
+
+		p.x = bl->offSet.x + bg->off.x * bl->rate;
+		p.y = bl->offSet.y;
+		while (p.x < -tex->width * bl->scale)
+			p.x += tex->width * bl->scale;
+
+		for (int j = 0; j < 2; j++)
 		{
-
-			p.x = bl->offSet.x * bl->rate;
-			p.y = bl->offSet.y; 
-
-			while (p.x < -tex->width * bl->scale)
-				p.x += tex->width * bl->scale;
-					
-			drawImage(tex, p.x + tex->width * tex_rate * j , p.y, tex_rate, tex_rate, TOP | LEFT,
+			drawImage(tex, p.x + tex->width * j * bl->scale, p.y, bl->scale, bl->scale, TOP | LEFT,
 				0, 0, tex->width, tex->height, 2, 0);
 		}
 	}
@@ -100,9 +116,7 @@ void Bg::paint(float dt)
 	{
 		tex = texs[i];
 		p = off;
-		drawImage(tex, p.x + tex->width * tex_rate * i, p.y - 200,
-			tex_rate, tex_rate, TOP | LEFT,
-			0, 0, tex->width, tex->height, 2, 0);
+		drawImage(tex, p.x + tex->width * i, p.y);
 	}
 #endif
 
@@ -158,74 +172,75 @@ iPoint Bg::move(iPoint mp)
 }
 
 
-BgData bgData_Stage1[] = {
+BgData bgData_Stage1[cuts_Stage1] = {
 	{
 		"assets/BG/BG_00.png",
-		{{0,400}, {340,360}, {480, 400}, {662 * 1,420}},
+		{{0,400}, {170, 360}, {240, 400}, {331 * 1, 400}},
 		4,
-		2.f,
+		1.f,
 	},
 	{
 		"assets/BG/BG_01.png",
-		{{662 * 1,420}, {860, 390}, {980, 420}, {662 * 2,420}},
+		{{331 * 1 , 400}, {331 * 1.3, 390}, { 331 * 1.6, 420}, {331 * 2, 420}},
 		4,
-		2.f,
+		1.f,
 	},
 	{
 		"assets/BG/BG_02.png",
-		{{662 * 2,420}, {1500,420}, {1700, 400}, {662 * 3,420}},
+		{{331 * 2 , 400}, {331 * 2.3, 390}, { 331 * 2.6, 420}, {331 * 3, 420}},
 		4,
-		2.f,
+		1.f,
 	},
 	{
 		"assets/BG/BG_03.png",
-		{{662 * 3,420}, {2000,420}, {2500, 420}, {662 * 4,420}},
-		4,
+		{{331 * 3 , 400}, {331 * 3.3, 390}, { 331 * 3.6, 420}, {331 * 4, 420}},
 		2.f,
 	},
 	{
 		"assets/BG/BG_04.png",
-		{{662 * 4,420}, {2800,420}, {3100, 420}, {662 * 5,420}},
+		{{331 * 4 , 400}, {331 * 4.3, 390}, { 331 * 4.6, 420}, {331 * 5, 420}},
 		4,
-		2.f,
+		1.f,
 	},
 	{
 		"assets/BG/BG_05.png",
-		{{662 * 5, 420}, {3500,420}, {3700, 420}, {662 * 6,420}},
+		{{662 * 5, 420}, {3500,420}, {3700, 420}, {331 * 6,420}},
 		4,
-		2.f,
+		1.f,
 	},
 	{
 		"assets/BG/BG_06.png",
-		{{662 * 6,420}, {4200,420}, {4500, 420}, {662 * 7,420}},
+		{{662 * 6,420}, {4200,420}, {4500, 420}, {331 * 7,420}},
 		4,
-		2.f,
+		1.f,
 	},
 	{
 		"assets/BG/BG_07.png",
-		{{662 * 7,420}, {5000,420}, {5200, 420}, {662 * 8,420}},
+		{{662 * 7,420}, {5000,420}, {5200, 420}, {331 * 8,420}},
 		4,
-		2.f,
+		1.f,
 	}
 };
-BgLayer bgLayer_Stage1[] =
+BgLayer bgLayer_Stage1[layers_Stage1] =
 {
 	{
 		"assets/BG/BG_30.png",
-		4.f,
+		1.25f,
 		{0,0},
 		0.2f,
 	},
 	{
 		"assets/BG/BG_31.png",
-		4.f,
-		{0,180},
+		1.f,
+		{0,105},
 		0.5f,
 	},
 	{
 		"assets/BG/BG_32.png",
-		4.f,
-		{0, 150},
+		1.f,
+		{0,95},
 		0.8f,
 	},
 };
+
+Bg* bg;
