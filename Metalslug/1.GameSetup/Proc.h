@@ -3,9 +3,13 @@
 #include "iStd.h"
 
 #include "ImgMgr.h"
+
+#include "EnemyMgr.h"
+
 #include "ProcField.h"
 #include "ProcPlayer.h"
 #include "ProcBullets.h"
+#include "ProcEnemy.h"
 
 ///////////////////////////////////////////////////
 //Proc
@@ -49,10 +53,3 @@ void freeUI();
 void drawUI(float dt, iPoint off);
 void addUI(iPoint p, int num);
 
-///////////////////////////////////////////////////
-//Eneimies
-///////////////////////////////////////////////////
-void loadProcEnemy();
-void freeProcEnemy();
-void drawProcEnemy(float dt, iPoint off);
-void addProcEnemy(int idx, iPoint p);

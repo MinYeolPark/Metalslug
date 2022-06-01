@@ -204,6 +204,7 @@ void ProcPlayer::drawObj(float dt, iPoint off)
 		if(botState<FireR)
 			botImgCurr->paint(dt, p + off);	
 		topImgCurr->paint(dt, p + off);
+		printf("[%f, %f]\n", p.x+ off.x, p.y+off.y);
 	}
 	{
 #ifdef _DEBUG
@@ -251,6 +252,11 @@ void ProcPlayer::jump()
 void ProcPlayer::fire(iPoint v)
 {	
 	setTopState((PlayerBehave)(FireR + topState % 2), v);
+}
+
+iRect ProcPlayer::collider()
+{
+	return iRectMake(p.x - 20 + bg->off.x, p.y - 70 + bg->off.y, 40, 70);
 }
 
 void ProcPlayer::cbAniFire(void* parm)

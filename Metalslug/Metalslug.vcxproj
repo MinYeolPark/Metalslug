@@ -76,7 +76,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_USE_MATH_DEFINES;_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_WINDOWS;GDIPVER=0x0110;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\workspace\Metalslug\Metalslug\std;C:\workspace\Metalslug\Metalslug;C:\workspace\Metalslug\Metalslug\0.Manager;C:\workspace\Metalslug\Metalslug\1.GameSetup;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\workspace\Metalslug\Metalslug\std;C:\workspace\Metalslug\Metalslug;C:\workspace\Metalslug\Metalslug\0.Manager;C:\workspace\Metalslug\Metalslug\1.GameSetup;C:\workspace\Metalslug\Metalslug\2.UI;C:\workspace\Metalslug\Metalslug\3.Enemies;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -135,12 +135,16 @@
     <ClInclude Include="1.GameSetup\Menu.h" />
     <ClInclude Include="1.GameSetup\Proc.h" />
     <ClInclude Include="1.GameSetup\ProcBullets.h" />
+    <ClInclude Include="1.GameSetup\ProcEnemy.h" />
     <ClInclude Include="1.GameSetup\ProcField.h" />
     <ClInclude Include="1.GameSetup\ProcObject.h" />
     <ClInclude Include="1.GameSetup\ProcPlayer.h" />
+    <ClInclude Include="3.Enemies\ArabMelee.h" />
+    <ClInclude Include="3.Enemies\MoskTower.h" />
     <ClInclude Include="App.h" />
     <ClInclude Include="0.Manager\GameMgr.h" />
     <ClInclude Include="0.Manager\ImgMgr.h" />
+    <ClInclude Include="EnemyMgr.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="StatusUI.h" />
     <ClInclude Include="std\iArray.h" />
@@ -168,11 +172,15 @@
     <ClCompile Include="1.GameSetup\Menu.cpp" />
     <ClCompile Include="1.GameSetup\Proc.cpp" />
     <ClCompile Include="1.GameSetup\ProcBullets.cpp" />
+    <ClCompile Include="1.GameSetup\ProcEnemy.cpp" />
     <ClCompile Include="1.GameSetup\ProcField.cpp" />
     <ClCompile Include="1.GameSetup\ProcObject.cpp" />
     <ClCompile Include="1.GameSetup\ProcPlayer.cpp" />
+    <ClCompile Include="3.Enemies\ArabMelee.cpp" />
+    <ClCompile Include="3.Enemies\MoskTower.cpp" />
     <ClCompile Include="App.cpp" />
     <ClCompile Include="0.Manager\GameMgr.cpp" />
+    <ClCompile Include="EnemyMgr.cpp" />
     <ClCompile Include="glew.c" />
     <ClCompile Include="0.Manager\ImgMgr.cpp" />
     <ClCompile Include="2.UI\StatusUI.cpp" />

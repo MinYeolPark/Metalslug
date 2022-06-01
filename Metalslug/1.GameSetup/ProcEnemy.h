@@ -1,29 +1,5 @@
 #pragma once
 #include "ProcObject.h"
-#include "ProcPlayer.h"
-
-enum EnemyBehave
-{
-	eIdleL = 0,
-	eIdleR,
-
-	eMoveL,
-	eMoveR,
-
-	eDeadL,
-	eDeadR,
-
-	eShuffleL,
-	eShuffleR,
-
-	ePreAttackL,
-	ePreAttackR,
-
-	eAttackL,
-	eAttackR,
-
-	EnemyBehaveMax,
-};
 
 enum class EnemyIndex
 {
@@ -36,25 +12,27 @@ enum class EnemyIndex
 	EnemyIndexMax,
 };
 
-class ProcEnemy :
-	public ProcObject
+class ProcEnemy
 {
 public:
 	ProcEnemy(int idx);
 	virtual ~ProcEnemy();
 
 public:
+	iPoint p;
+	iSize s;
+
+	bool isActive;
+
 	EnemyIndex idx;
-	int hp;
-	int dmg;
 
 	float up;
 	float down;
 	bool fall;
 
-	EnemyBehave state;
-
 	//stats
+	int hp;
+	int dmg;
 	float sight;
 	float attkRange;
 	float attkRate, _attkRate;
@@ -62,26 +40,17 @@ public:
 	iPoint tp;
 
 public:
-	virtual void initObj();
-	virtual void updateObj(float dt);
-	virtual void fixedUpdate(float dt);
-	virtual void renderObj(float dt, iPoint off);
-	virtual void releaseObj();
+	virtual void initObj() = 0;
+	virtual void updateObj(float dt) = 0;
+	virtual void fixedUpdate(float dt) = 0;
+	virtual void drawObj(float dt, iPoint off) = 0;
+	virtual void freeObj() = 0;
 
 	//ai
 public:
-	EnemyBehave getState() { return state; }
-	void setState(EnemyBehave eb);
 	void updateAi(ProcEnemy* e, float dt);
-
-	bool canAttack() { return (attkRate > _attkRate); }
 
 	static void methodDead(void* parm);
 	static void methodAttack(void* parm);
-
-	//Components
-public:
-	virtual iRect collider();
-	virtual iRect attkCollider();
 };
 

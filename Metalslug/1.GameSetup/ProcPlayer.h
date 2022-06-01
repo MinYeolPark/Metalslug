@@ -55,7 +55,8 @@ public:
 	virtual void freeObj() override;
 
 public:
-	//virtual iRect collider();
+public:
+	iRect collider();
 
 public:
 	static void cbAniFire(void* parm);

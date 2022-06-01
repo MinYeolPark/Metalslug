@@ -17,6 +17,7 @@ void loadProc()
 	loadProcField();
 	loadProcPlayer();
 	loadProcBullets();
+	loadProcEnemy();
 
 	loadUI();
 }
@@ -25,6 +26,7 @@ void freeProc()
 	freeProcField();
 	freeProcPlayer();
 	freeProcBullets();
+	freeProcEnemy();
 
 	freeUI();
 }
@@ -34,10 +36,9 @@ void drawProc(float dt)
 	iPoint off = drawProcField(dt);
 	drawProcPlayer(dt, off);
 	drawProcBullets(dt, off);
-	
+	drawProcEnemy(dt, off);
 	drawUI(dt, off);
-	if(getKeyStat(keyboard_space))
-		addBullet(NULL,2,0);
+
 	setRGBA(1, 1, 1, 1);
 }
 

@@ -98,3 +98,49 @@ iImage** createImgBullets(ImageInfo* imageInfo, void* c)
 	}
 	return _imgs;
 }
+
+iImage** createImgEnemy(ImageInfo* imageInfo, void* c)
+{
+	return nullptr;
+}
+
+iImage** createImgEnemyReverse(ImageInfo* imageInfo, int size, void* c)
+{
+	iImage** _imgEnemy = new iImage * [size];
+	//memset(_imgEnemy, 0x00, sizeof(iImage * [PlayerBehaveMax]));
+	for (int i = 0; i < size; i++)
+	{
+		iImage* img;
+		if (i % 2 == 1)
+		{
+			img = _imgEnemy[i - 1]->clone();
+			img->reverse = REVERSE_WIDTH;
+		}
+		else
+		{
+			img = new iImage();
+			ImageInfo* ii = &imageInfo[i / 2];		//left, right
+			for (int k = 0; k < ii->num; k++)
+			{
+				Texture* tex = createImage(imageInfo->colorKey, ii->path, k);
+				img->addObject(tex);
+				freeImage(tex);
+			}
+			img->scale = ii->s;
+			img->position = ii->p;
+
+			img->_aniDt = ii->aniDt;
+			if (ii->repeatNum)
+				img->_repeatNum = ii->repeatNum;
+
+			img->anc = TOP | LEFT;
+			if (ii->cbAni)
+				img->startAnimation(ii->cbAni, c);
+			else
+				img->startAnimation();
+
+		}
+		_imgEnemy[i] = img;
+	}
+	return _imgEnemy;
+}
