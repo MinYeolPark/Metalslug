@@ -48,8 +48,7 @@ iImage** createImgPlayer(ImageInfo* imageInfo, void* c)
 			ImageInfo* ii = &imageInfo[i / 2];		//left, right
 			for (int k = 0; k < ii->num; k++)
 			{
-				Texture* tex = createImage(iColor4bMake(255, 0, 0, 255),
-					ii->path, k);
+				Texture* tex = createImage(ii->colorKey, ii->path, k);
 				img->addObject(tex);
 				freeImage(tex);
 			}
@@ -143,4 +142,14 @@ iImage** createImgEnemyReverse(ImageInfo* imageInfo, int size, void* c)
 		_imgEnemy[i] = img;
 	}
 	return _imgEnemy;
+}
+
+iImage** createImgSingleBehave(ImageInfo* imageInfo, void* c)
+{
+	return nullptr;
+}
+
+iImage** createImgSingleEach(ImageInfo* imageInfo, void* c)
+{
+	return nullptr;
 }

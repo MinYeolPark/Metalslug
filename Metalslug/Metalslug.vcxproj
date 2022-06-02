@@ -145,6 +145,7 @@
     <ClInclude Include="0.Manager\GameMgr.h" />
     <ClInclude Include="0.Manager\ImgMgr.h" />
     <ClInclude Include="EnemyMgr.h" />
+    <ClInclude Include="Item.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="StatusUI.h" />
     <ClInclude Include="std\iArray.h" />
@@ -184,6 +185,7 @@
     <ClCompile Include="glew.c" />
     <ClCompile Include="0.Manager\ImgMgr.cpp" />
     <ClCompile Include="2.UI\StatusUI.cpp" />
+    <ClCompile Include="Item.cpp" />
     <ClCompile Include="std\iArray.cpp" />
     <ClCompile Include="std\iColor.cpp" />
     <ClCompile Include="std\iGraphics.cpp" />

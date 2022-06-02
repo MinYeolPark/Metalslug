@@ -4,8 +4,8 @@
 
 enum BulletIndex
 {
-	HandGun = 0,
-	HeavyMachinegun,
+	BulletHandGun = 0,
+	BulletHeavyMachinegun,
 
 	MoskMissile,
 	BulletIndexMax,
@@ -26,6 +26,7 @@ public:
 	ProcObject* parent;
 	int bulletIdx;
 
+	int dir;
 	iPoint v;
 
 	float speed;

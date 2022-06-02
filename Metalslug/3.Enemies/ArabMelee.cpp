@@ -89,7 +89,22 @@ void ArabMelee::updateObj(float dt)
 	{
 		if (tp != iPointZero)
 		{
+#if 1
 			if (movePoint(p, p, tp, speed * dt))
+#else
+			iPoint p0 = p;
+			float moveDistance = speed * dt;
+			bool arrive = movePoint(p, p, tp, moveDistance);
+			iPoint p1 = p;
+			p1.y = *(bg->maxY + (int)p.x);
+
+			iPoint v = p1 - p0;
+			if (v != iPointZero)
+				v /= iPointLength(v);
+			p = p0 + v * moveDistance;
+
+			if (arrive)
+#endif
 			{
 				float dp = 0xffffff;
 				if (containPoint(p, player->collider()))
@@ -104,6 +119,8 @@ void ArabMelee::updateObj(float dt)
 		}
 	}
 #endif
+	p.y = *(bg->maxY + (int)p.x);
+	return;
 	fixedUpdate(dt);
 }
 

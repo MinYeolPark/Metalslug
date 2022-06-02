@@ -45,11 +45,4 @@ void loadProcBullets();
 void freeProcBullets();
 void drawProcBullets(float dt, iPoint off);
 
-///////////////////////////////////////////////////
-//UI
-///////////////////////////////////////////////////
-void loadUI();
-void freeUI();
-void drawUI(float dt, iPoint off);
-void addUI(iPoint p, int num);
 

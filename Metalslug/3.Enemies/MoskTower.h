@@ -9,7 +9,6 @@ enum MidBossBehave
 };
 
 class MoskTower
-	:public ProcObject
 {
 public:
 	MoskTower();
@@ -52,8 +51,8 @@ public:
 	void initObj();
 	void updateObj(float dt);
 	void fixedUpdate(float dt) ;	
-	void renderObj(float dt, iPoint off);
-	void releaseObj() ;
+	void drawObj(float dt, iPoint off);
+	void freeeObj() ;
 
 	//Behave
 public:

@@ -7,6 +7,56 @@
 #define WHOLE 2
 #define jumpPow			8
 #define jumpDecrease	20
+
+
+struct Gun
+{	
+	enum GunIndex
+	{
+		Handgun = 0,
+		HeavyMachinegun,
+	};
+	struct GunInfo
+	{
+		GunIndex gunIndex;
+		int dmg;
+		int speed;
+		int remain;
+		float rate, _rate;
+	};
+	GunInfo gi[2] =
+	{
+		{GunIndex::Handgun, 100, 100, 0},
+		{GunIndex::HeavyMachinegun, 100, 150, 200},
+	};
+	Gun()
+	{
+		this->gunIndex = (gi + 0)->gunIndex;
+		this->dmg = (gi + Handgun)->dmg;
+		this->speed = (gi + Handgun)->speed;
+		this->remain = (gi + Handgun)->remain;
+		this->rate = (gi + Handgun)->rate;
+	};
+	~Gun()
+	{
+
+	};
+	GunInfo* curGunInfo;
+	GunIndex gunIndex;
+	int dmg;
+	int speed;
+	int remain;
+	float rate, _rate;
+
+	void changeGun(int idx)
+	{
+		this->gunIndex = (curGunInfo + idx)->gunIndex;
+		this->dmg = (curGunInfo + idx)->dmg;
+		this->speed = (curGunInfo + idx)->speed;
+		this->remain = (curGunInfo + idx)->remain;
+		this->rate = (curGunInfo + idx)->rate;
+	}
+};
 enum CharacterIndex;
 enum PlayerBehave;
 class ProcPlayer :
@@ -22,16 +72,14 @@ public:
 	iImage** botImgs;
 	iImage* botImgCurr;
 		
-	int curGun;
+	Gun* curGun;
 	iPoint firePoint;
-	int fireDir;
 
 	float up;
 	float down;
 	bool fall;	
 
 	int jumpCombo;
-	float fireRate, _fireRate;	
 
 	PlayerBehave topState;
 	PlayerBehave botState;
@@ -97,8 +145,14 @@ enum PlayerBehave
 	FireR,
 	FireL,
 
-	//LookUpR = 100,
-	//LookUpL,
+	CrouchR,
+	CrouchL,
+
+	AimUpR,
+	AimUpL,
+
+	AimDownR,
+	AimDownL,
 
 	////===========================================
 	////Whole
@@ -117,6 +171,8 @@ enum PlayerBehave
 
 	PlayerBehaveMax,
 };
+
+
 
 enum RecordKind
 {
@@ -163,3 +219,10 @@ void loadRecord();
 void freeRecord();
 void drawRecord(float dt, iPoint off);
 void addRecord(RecordKind index, iPoint p);
+
+extern float fireDegree;
+
+void loadFB();
+void freeFB();
+void drawFB(float dt, iPoint off);
+void addFB(int index, iPoint p, float degree);

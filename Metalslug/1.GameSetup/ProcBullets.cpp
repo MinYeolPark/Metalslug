@@ -49,8 +49,7 @@ void ProcBullets::updateObj(float dt)
 {
 	for (int i = 0; i < bulletNum; i++)
 	{
-		ProcBullets* b = bullets[i];
-		b->pattern;
+		ProcBullets* b = bullets[i];	
 		if (b->isActive == false)
 		{
 			bulletNum--;
@@ -58,7 +57,28 @@ void ProcBullets::updateObj(float dt)
 			i--;
 		}
 	}
+	//Pattern Update
+#if 0
+#if 0
+	b->p = parent->p + iPointRotate(parent->firePoint, iPointZero, 360 - d[dir]);
+#else
+	int d[4] = { 0, 180, 90, 360 };
+	if (parent->layer == ObjLayer::Player)
+	{
+		ProcPlayer* own = (ProcPlayer*)parent;
+		float y = own->firePoint.y;
+		own->firePoint.y = 0;
+		iPoint mp = iPointRotate(own->firePoint, iPointZero, 360 - d[dir]);
+		mp.y += y;
+		own->firePoint.y = y;
+		p = parent->p + mp;
+	}
+	v = iPointRotate(iPointMake(1, 0), iPointZero, 360 - d[dir]);
+#endif
+#endif
 }
+
+
 
 void ProcBullets::drawObj(float dt, iPoint off)
 {

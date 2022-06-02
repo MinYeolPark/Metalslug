@@ -11,18 +11,28 @@ public:
 	iPoint p;
 	float delta;
 
-	Texture* statsFrame[3];
-	Texture* gaugeFrame[4];
+	igImage** igNumber;
 
 	igImage** alphabet;
 	igImage** number;
 	igImage** numberGold;
+
+	iStrTex* stPlaytime;
 
 	iStrTex* stScore;
 	iStrTex* stAmmo;
 	iStrTex* stBomb;
 	iStrTex* stLife;
 
+	Texture* statsFrame[3];
+	Texture* gaugeFrame[4];
+
+public:
 	bool paint(float dt);	
+
+public:
+
 };
 extern StatusUI* status;
+
+Texture* methodStPlaytime(const char* str);

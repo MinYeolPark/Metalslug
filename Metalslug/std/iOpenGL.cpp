@@ -1,7 +1,7 @@
 #include "iOpenGL.h"
 
 #include "iStd.h"
-
+#include "InputMgr.h"
 #include "App.h"
 static HDC hDC;
 HGLRC hRC;
@@ -230,7 +230,7 @@ void drawOpenGL(float dt, MethodDraw m)
     fbo->bind();
     fbo->clear(0, 0, 0, 0);
     m(dt);// drawGame
-
+    updateKeyboard();
     fbo->unbind();
 
     setGlBlendFunc(iBlendFuncPremultipliedAlpha);

@@ -4,108 +4,8 @@
 #include "EnemyMgr.h"
 
 #include "ProcBullets.h"
-static ImageInfo imageInfo[] =
-{
-	{
-		"Resources/Character/Enemies/MidBoss/MidBoss_Base.png",
-		1, 2.f, { -370/2, -117},
-		0.1f,
-		0,
-		NULL,
-	},
-	{
-		"Resources/Character/Enemies/MidBoss/MidBoss_Base_Destroyed.png",
-		1, 2.f, { -369 / 2, -119},
-		0.1f,
-		0,
-		NULL,
-	},
-	{
-		"Resources/Character/Enemies/MidBoss/MidBoss_Add.png",
-		1, 2.f, { -38 / 2, -55},
-		0.1f,
-		0,
-		NULL,
-	},
-	{
-		"Resources/Character/Enemies/MidBoss/MidBoss_Add_Destroyed_%02d.png",
-		14, 2.f, { -151 / 2, -132},
-		0.1f,
-		0,
-		MoskTower::cbAniAddOut,
-	},
-	{
-		"Resources/Character/Enemies/MidBoss/MidBoss_Door_%02d.png",
-		16, 2.f, { -90 / 2, -57},
-		0.08f,
-		1,
-		NULL,
-	},
-	{
-		"Resources/Character/Enemies/MidBoss/MidBoss_Fire_%02d.png",
-		30, 2.f, { -50 / 2, -26},
-		0.08f,
-		1,
-		NULL,
-	},
-	{
-		"Resources/Character/Enemies/MidBoss/MidBoss_Trail_%02d.png",
-		32, 2.f, { -62 / 2, -45},
-		0.08f,
-		1,
-		NULL,
-	},	
-	{
-		"Resources/Character/Enemies/MidBoss/MidBoss_Curtain_%02d.png",
-		6, 2.f, { -48 / 2, -54},
-		0.18f,
-		0,
-		NULL,
-	},
-	{
-		"Resources/Character/Enemies/MidBoss/MidBoss_Curtain_Open_%02d.png",
-		13, 2.f, { -64 / 2, -59},
-		0.05f,
-		1,
-		NULL,
-	},
-	{
-		"Resources/Character/Enemies/MidBoss/MidBoss_Soldier_%02d.png",
-		8, 2.f, { -34 / 2, -41},
-		0.08f,
-		1,
-		NULL,
-	},
-	{
-		"Resources/Character/Enemies/MidBoss/MidBoss_Soldier_Dead_%02d.png",
-		7, 2.f, { -43 / 2, -44},
-		0.1f,
-		1,
-		NULL,
-	},
-	{
-		"Resources/Character/Enemies/MidBoss/MidBoss_%d.png",
-		1, 2.f, { -86/2, -136},
-		0.1f,
-		0,
-		NULL,
-	},
-	{
-		"Resources/Character/Enemies/MidBoss/MidBoss_Destroyed_%d.png",
-		1, 2.f, { -94 / 2, -102},
-		0.08f,
-		1,
-		NULL,
-	},
-	{
-		"Resources/Character/Enemies/MidBoss/MidBoss_Missiles_%02d.png",
-		3, 2.f, { -94 / 2, -102},
-		0.05f,
-		1,
-		NULL,
-	},
-};
 
+ImageInfo imageInfo[];
 MoskTower::MoskTower()
 {
 	state = mtIdle;
@@ -117,7 +17,6 @@ MoskTower::MoskTower()
 		{p.x + 140 * imageInfo[11].s, p.y - 80 * imageInfo[11].s} };
 	memcpy(towerP, tp, sizeof(iPoint) * 3);
 	memset(doorOpen, 0x00, sizeof(bool));
-	
 	
 	_rate = 2.f;
 	for (int i = 0; i < 3; i++)
@@ -141,7 +40,7 @@ MoskTower::~MoskTower()
 void MoskTower::initObj()
 {	
 	Texture* tex;
-	EnemyImageInfo* ii;	
+	ImageInfo* ii;	
 	iImage** _imgBase = new iImage * [MidBossBehaveMax];
 	for (int i = 0; i < MidBossBehaveMax; i++)
 	{
@@ -165,8 +64,8 @@ void MoskTower::initObj()
 		iImage* _img = new iImage();
 		ii = &imageInfo[i + 2];
 		for (int j = 0; j < ii->num; j++)
-		{
-			tex = createImage(iColor4fMake(255,0,0,255), ii->path, j + 1);
+		{			
+			tex = createImage(iColor4bMake(255,0,0,255), ii->path, j);
 			_img->addObject(tex);
 			freeImage(tex);
 		}
@@ -181,7 +80,7 @@ void MoskTower::initObj()
 	ii = &imageInfo[4];
 	for (int i = 0; i < ii->num; i++)
 	{
-		tex = createImage(iColor4fMake(63, 72, 204, 255), ii->path, i + 1);
+		tex = createImage(iColor4bMake(63, 72, 204, 255), ii->path, i + 1);
 		_imgDoor->addObject(tex);
 		freeImage(tex);
 
@@ -200,7 +99,7 @@ void MoskTower::initObj()
 	ii = &imageInfo[5];
 	for (int i = 0; i < ii->num; i++)
 	{
-		tex = createImage(iColor4fMake(255, 0, 0, 255), ii->path, i);
+		tex = createImage(iColor4bMake(255, 0, 0, 255), ii->path, i);
 		_imgMis->addObject(tex);
 		freeImage(tex);
 
@@ -217,7 +116,7 @@ void MoskTower::initObj()
 	ii = &imageInfo[6];
 	for (int i = 0; i < ii->num; i++)
 	{
-		tex = createImage(iColor4fMake(63, 72, 204, 255), ii->path, i);
+		tex = createImage(iColor4bMake(63, 72, 204, 255), ii->path, i);
 		_imgTrail->addObject(tex);
 		freeImage(tex);
 
@@ -237,7 +136,7 @@ void MoskTower::initObj()
 		iImage* img = new iImage();
 		for (int j = 0; j < ii->num; j++)
 		{			
-			tex = createImage(iColor4fMake(32,8,0,255),ii->path, j + 1);
+			tex = createImage(iColor4bMake(32,8,0,255),ii->path, j + 1);
 			img->addObject(tex);
 			freeImage(tex);
 
@@ -265,7 +164,7 @@ void MoskTower::initObj()
 		iImage* img = new iImage();
 		for (int j = 0; j < ii->num; j++)
 		{
-			tex = createImage(iColor4fMake(255,0,0,255), ii->path, j + 1);
+			tex = createImage(iColor4bMake(255,0,0,255), ii->path, j + 1);
 			img->addObject(tex);
 			freeImage(tex);
 		}
@@ -479,7 +378,7 @@ void MoskTower::dead()
 			imgDoor[i][j].position.y += 300;
 	}	
 }
-void MoskTower::renderObj(float dt, iPoint off)
+void MoskTower::drawObj(float dt, iPoint off)
 {
 	if (isActive)
 	{
@@ -503,12 +402,9 @@ void MoskTower::renderObj(float dt, iPoint off)
 				pos = iPointMake(p.x + 230, p.y - 10);
 			imgAdd[state]->paint(dt, off + pos);
 		}
-
-		if (getKeyStat(keyboard_space))
-			dead();
 	}
 
-#ifdef DEBUG
+#ifdef _DEBUG
 	setRGBA(1, 0, 1, 1);
 	drawDot(p + off);
 	setRGBA(1, 1, 1, 1);
@@ -516,7 +412,7 @@ void MoskTower::renderObj(float dt, iPoint off)
 
 }
 
-void MoskTower::releaseObj()
+void MoskTower::freeeObj()
 {
 }
 
@@ -552,3 +448,105 @@ void MoskTower::cbAniAddOut(void* parm)
 	}
 	mt->isActive = false;
 }
+
+ImageInfo imageInfo[] =
+{
+	{
+		"Resources/Character/Enemies/MidBoss/MidBoss_Base.png",
+		1, 2.f, { -370 / 2, -117},
+		0.1f,
+		0,
+		NULL,
+	},
+	{
+		"Resources/Character/Enemies/MidBoss/MidBoss_Base_Destroyed.png",
+		1, 2.f, { -369 / 2, -119},
+		0.1f,
+		0,
+		NULL,
+	},
+	{
+		"Resources/Character/Enemies/MidBoss/MidBoss_Add.png",
+		1, 2.f, { -38 / 2, -55},
+		0.1f,
+		0,
+		NULL,
+	},
+	{
+		"Resources/Character/Enemies/MidBoss/MidBoss_Add_Destroyed_%02d.png",
+		14, 2.f, { -151 / 2, -132},
+		0.1f,
+		0,
+		NULL,
+	},
+	{
+		"Resources/Character/Enemies/MidBoss/MidBoss_Door_%02d.png",
+		16, 2.f, { -90 / 2, -57},
+		0.08f,
+		1,
+		NULL,
+	},
+	{
+		"Resources/Character/Enemies/MidBoss/MidBoss_Fire_%02d.png",
+		30, 2.f, { -50 / 2, -26},
+		0.08f,
+		1,
+		NULL,
+	},
+	{
+		"Resources/Character/Enemies/MidBoss/MidBoss_Trail_%02d.png",
+		32, 2.f, { -62 / 2, -45},
+		0.08f,
+		1,
+		NULL,
+	},
+	{
+		"Resources/Character/Enemies/MidBoss/MidBoss_Curtain_%02d.png",
+		6, 2.f, { -48 / 2, -54},
+		0.18f,
+		0,
+		NULL,
+	},
+	{
+		"Resources/Character/Enemies/MidBoss/MidBoss_Curtain_Open_%02d.png",
+		13, 2.f, { -64 / 2, -59},
+		0.05f,
+		1,
+		NULL,
+	},
+	{
+		"Resources/Character/Enemies/MidBoss/MidBoss_Soldier_%02d.png",
+		8, 2.f, { -34 / 2, -41},
+		0.08f,
+		1,
+		NULL,
+	},
+	{
+		"Resources/Character/Enemies/MidBoss/MidBoss_Soldier_Dead_%02d.png",
+		7, 2.f, { -43 / 2, -44},
+		0.1f,
+		1,
+		NULL,
+	},
+	{
+		"Resources/Character/Enemies/MidBoss/MidBoss_%d.png",
+		1, 2.f, { -86 / 2, -136},
+		0.1f,
+		0,
+		NULL,
+	},
+	{
+		"Resources/Character/Enemies/MidBoss/MidBoss_Destroyed_%d.png",
+		1, 2.f, { -94 / 2, -102},
+		0.08f,
+		1,
+		NULL,
+	},
+	{
+		"Resources/Character/Enemies/MidBoss/MidBoss_Missiles_%02d.png",
+		3, 2.f, { -94 / 2, -102},
+		0.05f,
+		1,
+		NULL,
+	},
+};

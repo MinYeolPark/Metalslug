@@ -23,3 +23,6 @@ iImage** createImgBullets(ImageInfo* imageInfo, void* c);
 
 iImage** createImgEnemy(ImageInfo* imageInfo, void* c);
 iImage** createImgEnemyReverse(ImageInfo* imageInfo, int size, void* c);
+
+iImage** createImgSingleBehave(ImageInfo* imageInfo, void* c);
+iImage** createImgSingleEach(ImageInfo* imageInfo, void* c);
