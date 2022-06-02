@@ -42,57 +42,63 @@ ProcBullets::~ProcBullets()
 
 void ProcBullets::initObj()
 {
+	isActive = true;
 
+}
+
+void ProcBullets::initObj(ProcObject* parent, int idx, iPoint p, float degree)
+{
+	isActive = true;
+	this->parent = parent;
+	this->bulletIdx = idx;
+	this->p = p;
+	this->degree = degree;
+	v = iPointRotate(iPointMake(1, 0), iPointZero, degree) * 300;
 }
 
 void ProcBullets::updateObj(float dt)
 {
-	for (int i = 0; i < bulletNum; i++)
+	isActive = containPoint(p, iRectMake(-20, -20, devSize.width + 40, devSize.height + 40));
+
+	if (parent->layer == Player)
 	{
-		ProcBullets* b = bullets[i];	
-		if (b->isActive == false)
+		ProcEnemy* eNear = NULL;
+		float dNear = 0xffffff;
+		for (int j = 0; j < enemyCount; j++)
 		{
-			bulletNum--;
-			bullets[i] = bullets[bulletNum];
-			i--;
+			ProcEnemy* e = enemies[j];
+			if (containPoint(p, e->collider()))
+			{
+				float d = iPointLength(p - e->p);
+				if (dNear > d)
+				{
+					dNear = d;
+					eNear = e;
+				}
+			}
+		}
+
+		if (eNear)
+		{
+			isActive = false;
+			eNear->hp -= dmg;
+			if (eNear->hp <= 0)
+				eNear->state = ((EnemyBehave)(DeadEnemyL + eNear->state % 2));
+			//ÆÄÆ¼Å¬
 		}
 	}
-	//Pattern Update
-#if 0
-#if 0
-	b->p = parent->p + iPointRotate(parent->firePoint, iPointZero, 360 - d[dir]);
-#else
-	int d[4] = { 0, 180, 90, 360 };
-	if (parent->layer == ObjLayer::Player)
-	{
-		ProcPlayer* own = (ProcPlayer*)parent;
-		float y = own->firePoint.y;
-		own->firePoint.y = 0;
-		iPoint mp = iPointRotate(own->firePoint, iPointZero, 360 - d[dir]);
-		mp.y += y;
-		own->firePoint.y = y;
-		p = parent->p + mp;
-	}
-	v = iPointRotate(iPointMake(1, 0), iPointZero, 360 - d[dir]);
-#endif
-#endif
 }
 
-
-
-void ProcBullets::drawObj(float dt, iPoint off)
+bool ProcBullets::drawObj(float dt, iPoint off)
 {
-	if (isActive)
-	{
-		imgCurr = imgs[bulletIdx];
-		imgCurr->paint(dt, p + off);
-	}
-#ifdef _DEBUG
-
-#endif // _DEBUG
-
-	p += v * speed * dt;
 	setRGBA(1, 1, 1, 1);
+	imgCurr = imgs[bulletIdx];
+	imgCurr->paint(dt, p + off);
+
+	p += v * dt;
+
+	setRGBA(1, 1, 1, 1);
+	return !isActive;
 }
 
 void ProcBullets::freeObj()

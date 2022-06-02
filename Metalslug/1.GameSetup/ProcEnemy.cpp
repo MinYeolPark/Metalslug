@@ -26,14 +26,23 @@ ProcEnemy::~ProcEnemy()
 {
 }
 
+iRect ProcEnemy::collider()
+{
+	return iRect(p.x - 30, p.y- 30, 100, 100);
+}
+
 void ProcEnemy::updateAi(ProcEnemy* e, float dt)
 {
 }
 
 void ProcEnemy::methodDead(void* parm)
 {
+	ProcEnemy* e = (ProcEnemy*)parm;
+
+	e->isActive = false;
 }
 
 void ProcEnemy::methodAttack(void* parm)
 {
+
 }

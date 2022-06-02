@@ -40,7 +40,7 @@ void drawProcPlayer(float dt, iPoint off);
 extern int bulletNum;
 extern ProcBullets** bullets;
 #define bulletMax 50
-void addBullet(ProcObject* parent, int idx, int dir);
+void addBullet(ProcObject* parent, int idx, float degree);
 void loadProcBullets();
 void freeProcBullets();
 void drawProcBullets(float dt, iPoint off);

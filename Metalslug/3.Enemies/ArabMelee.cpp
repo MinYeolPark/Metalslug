@@ -25,20 +25,20 @@ ArabMelee::ArabMelee(int idx) : ProcEnemy(idx)
 	imgs = NULL;
 	imgCurr = NULL;
 	
-	state = MeleeBehave::IdleL;
+	state = EnemyBehave::IdleEnemyL;
 
 	if( imgEnemy==NULL )
-		imgEnemy = createImgEnemyReverse(imgMeleeInfo, MeleeBehaveMax, this);
+		imgEnemy = createImgEnemyReverse(imgMeleeInfo, EnemyBehaveMax, this);
 
-	imgs = new iImage * [MeleeBehaveMax];
-	memset(imgs, 0x00, sizeof(iImage*) * MeleeBehaveMax);
-	for (int i = 0; i < MeleeBehaveMax; i++)
+	imgs = new iImage * [EnemyBehaveMax];
+	memset(imgs, 0x00, sizeof(iImage*) * EnemyBehaveMax);
+	for (int i = 0; i < EnemyBehaveMax; i++)
 		imgs[i] = imgEnemy[i]->clone();
 }
 
 ArabMelee::~ArabMelee()
 {
-	for (int i = 0; i < MeleeBehaveMax; i++)
+	for (int i = 0; i < EnemyBehaveMax; i++)
 	{
 		//ImageInfo* ii = &imgMeleeInfo[i];
 		//for (int j = 0; j < ii->num; j++)
@@ -62,6 +62,12 @@ void ArabMelee::initObj()
 
 void ArabMelee::updateObj(float dt)
 {
+	//Checking Dead
+	if (state == DeadEnemyL || state == DeadEnemyR)
+	{
+		state = (EnemyBehave)(DeadEnemyL + state % 2);
+		return;
+	}
 	float len = iPointLength(player->p - p);
 	if (len < sight)
 		tp = player->p;
@@ -73,14 +79,14 @@ void ArabMelee::updateObj(float dt)
 
 		if (v.x > 0)
 		{
-			state = WalkR;
+			state = WalkEnemyR;
 		}
 		else if (v.x < 0)
 		{
-			state = WalkL;
+			state = WalkEnemyL;
 		}
 		else
-			state = (MeleeBehave)(IdleL + state % 2);
+			state = (EnemyBehave)(IdleEnemyL + state % 2);
 	}	
 #endif
 
@@ -196,7 +202,7 @@ ImageInfo imgMeleeInfo[] =
 		0.1f,
 		1,
 		{255, 0, 0, 255},
-		NULL,
+		ProcEnemy::methodDead,
 	},
 	{
 		"assets/ArabMelee/ArabMelee_Shuffle_%02d.png",

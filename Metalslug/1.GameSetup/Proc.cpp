@@ -146,11 +146,16 @@ void drawProcBullets(float dt, iPoint off)
 	{
 		ProcBullets* b = bullets[i];
 		b->updateObj(dt);
-		b->drawObj(dt, off);
+		if (b->drawObj(dt, off))
+		{
+			bulletNum--;
+			bullets[i] = bullets[bulletNum];
+			i--;
+		}
 	}
 }
 
-void addBullet(ProcObject* parent, int idx, int dir)
+void addBullet(ProcObject* parent, int idx, float degree)
 {
 	for (int i = 0; i < bulletMax; i++)
 	{
@@ -158,12 +163,8 @@ void addBullet(ProcObject* parent, int idx, int dir)
 		ProcBullets* b = _bullets[idx][i];
 		if (b->isActive == false)
 		{
-			b->isActive = true;
-			b->initObj();
+			b->initObj(parent, idx, parent->p, degree);
 
-			b->parent = parent;	
-			b->bulletIdx = idx;
-			b->dir = dir;
 			bullets[bulletNum] = b;
 			bulletNum++;
 			return;

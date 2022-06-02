@@ -99,14 +99,16 @@ void ProcPlayer::updateObj(float dt)
 			}
 		}
 	}
+#if 0
 	else
 	{
 		setTopState((PlayerBehave)(IdleR + topState % 2), v);
 		setBotState((PlayerBehave)(IdleR + botState % 2), v);
 	}
-	if (getKeyStat(keyboard_z))
+#endif
+	if (getKeyDown(keyboard_z))
 		jump();
-	if (getKeyStat(keyboard_x))
+	if (getKeyDown(keyboard_x))
 		fire(v);
 	
 	//p += v *= moveSpeed * dt;;
@@ -175,7 +177,7 @@ void ProcPlayer::fixedUpdate(float dt)
 
 	ProcObject::fixedUpdate(dt);
 }
-void ProcPlayer::drawObj(float dt, iPoint off)
+bool ProcPlayer::drawObj(float dt, iPoint off)
 {
 	setRGBA(1, 1, 1, 1);
 
@@ -200,7 +202,7 @@ void ProcPlayer::drawObj(float dt, iPoint off)
 	//addRecord(RecordStep, p);
 	//drawRecord(dt, off);
 	setRGBA(1, 1, 1, 1);
-
+#if 0
 	if (getKeyDown(keyboard_space))
 		addFB(0, p, fireDegree);
 	else if (getKeyStat(keyboard_up))
@@ -219,6 +221,8 @@ void ProcPlayer::drawObj(float dt, iPoint off)
 		}
 	}
 	drawFB(dt, off);
+#endif
+	return isActive;
 }
 
 void ProcPlayer::freeObj()
@@ -253,8 +257,7 @@ void ProcPlayer::jump()
 void ProcPlayer::fire(iPoint v)
 {	
 	setTopState((PlayerBehave)(FireR + topState % 2), v);
-
-	addBullet(this, curGun->gunIndex, iPointLength(v));
+	addBullet(this, curGun->gunIndex, fireDegree);
 }
 
 iRect ProcPlayer::collider()

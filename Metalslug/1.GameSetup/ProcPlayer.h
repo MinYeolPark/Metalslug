@@ -5,8 +5,8 @@
 #define pBOT 0
 #define pTOP 1
 #define WHOLE 2
-#define jumpPow			8
-#define jumpDecrease	20
+#define jumpPow			4
+#define jumpDecrease	10
 
 
 struct Gun
@@ -99,7 +99,7 @@ public:
 	virtual void initObj() override;
 	virtual void updateObj(float dt) override;
 	virtual void fixedUpdate(float dt) override;
-	virtual void drawObj(float dt, iPoint off) override;
+	virtual bool drawObj(float dt, iPoint off) override;
 	virtual void freeObj() override;
 
 public:

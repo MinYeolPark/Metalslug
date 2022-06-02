@@ -3,17 +3,7 @@
 
 class ArabMelee :
     public ProcEnemy
-{
-	enum MeleeBehave
-	{
-		IdleL,
-		IdleR,
-
-		WalkL,
-		WalkR,
-
-		MeleeBehaveMax,
-	};
+{	
 public:
 	ArabMelee(int idx);
 	~ArabMelee();
@@ -23,7 +13,6 @@ public:
 	iImage* imgCurr;
 
 	EnemyIndex idx;
-	MeleeBehave state;
 
 public:
 	float speed;

@@ -12,6 +12,19 @@ enum class EnemyIndex
 	EnemyIndexMax,
 };
 
+enum EnemyBehave
+{
+	IdleEnemyL,
+	IdleEnemyR,
+
+	WalkEnemyL,
+	WalkEnemyR,
+
+	DeadEnemyL,
+	DeadEnemyR,
+	EnemyBehaveMax,
+};
+
 class ProcEnemy
 {
 public:
@@ -25,7 +38,7 @@ public:
 	bool isActive;
 
 	EnemyIndex idx;
-
+	EnemyBehave state;
 	float up;
 	float down;
 	bool fall;
@@ -45,7 +58,8 @@ public:
 	virtual void fixedUpdate(float dt) = 0;
 	virtual void drawObj(float dt, iPoint off) = 0;
 	virtual void freeObj() = 0;
-
+public:
+	iRect collider();
 	//ai
 public:
 	void updateAi(ProcEnemy* e, float dt);

@@ -26,7 +26,7 @@ public:
 	ProcObject* parent;
 	int bulletIdx;
 
-	int dir;
+	float degree;
 	iPoint v;
 
 	float speed;
@@ -35,8 +35,9 @@ public:
 	BulletPattern pattern;
 public:
 	virtual void initObj();
+	virtual void initObj(ProcObject* parent, int idx, iPoint p, float degree);
 	virtual void updateObj(float dt);
-	virtual void drawObj(float dt, iPoint off);
+	virtual bool drawObj(float dt, iPoint off);
 	virtual void freeObj();
 
 	//Components
