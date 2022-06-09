@@ -11,7 +11,8 @@ void addProcEffect(int index, iPoint p);
 
 enum EffectIndex
 {
-	EffectHit,
+	EffectHand,
+	EffectHeavy,
 	EffectExplosion,
 
 	EffectIndexMax,

@@ -26,7 +26,7 @@ public:
 	Texture* getTexture(iColor4b colorKey);
 
 	static void initGraphics(Gdiplus::Graphics* g);
-	
+
 	void setClip(int x, int y, int w, int h);
 
 	void drawLine(iPoint sp, iPoint ep);

@@ -14,17 +14,14 @@ Mosque::Mosque()
 {	
 	memset(imgBase, 0x00, sizeof(imgBase));
 	memset(imgDoor, 0x00, sizeof(imgDoor));
+
 	memset(imgLTower, 0x00, sizeof(imgLTower));
 	memset(imgMTower, 0x00, sizeof(imgMTower));
 	memset(imgRTower, 0x00, sizeof(imgRTower));
-	for (int i = 0; i < 3; i++)
-	{
-		memset(imgShutter, 0x00, sizeof(imgShutter[i]));
-		memset(imgCurtain[i], 0x00, sizeof(imgCurtain[i]));
-		memset(imgSoldier[i], 0x00, sizeof(imgSoldier[i]));
-	}
 
-	p = iPointMake(230,200);
+	memset(imgShutter, 0x00, sizeof(iImage*) * 6);
+	memset(imgCurtain, 0x00, sizeof(iImage*) * 6);
+	memset(imgSoldier, 0x00, sizeof(iImage*) * 6);
 
 	memset(doorP, 0x00, sizeof(doorP));
 	memset(shutterP, 0x00, sizeof(shutterP));
@@ -39,6 +36,8 @@ Mosque::Mosque()
 	{
 		towerState[i] = MosqueIdle;
 	}
+
+	p = iPointMake(230,200);
 	s = iSizeZero;
 
 	isActive = false;

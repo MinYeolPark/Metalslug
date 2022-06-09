@@ -37,7 +37,6 @@ public:
 	MosqueAddBehave curtainState[3];
 	MosqueAddBehave soldierState[3];
 
-	iPoint p;
 	iPoint doorP[2];
 	iPoint towerP[3];
 	iPoint shutterP[3];
@@ -45,6 +44,7 @@ public:
 	iPoint curtainP[3];
 	iPoint soldierP[3];
 
+	iPoint p;
 	iSize s;
 
 	bool isActive;

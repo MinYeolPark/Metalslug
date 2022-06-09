@@ -263,3 +263,39 @@ bool movePoint(iPoint& p, iPoint sp, iPoint ep, float speedDt)
 
 	return p == ep;
 }
+
+static float r = 0;
+bool movePoint(iPoint& p, iPoint sp, iPoint ep, float speedDt, float maxH)
+{
+	iPoint v = (ep - sp);
+	v /= iPointLength(v);
+
+	v *= speedDt;
+
+	if (p.x < ep.x)
+	{
+		p.x += v.x;
+		if (p.x > ep.x)
+			p.x = ep.x;
+	}
+	else if (p.x > ep.x)
+	{
+		p.x += v.x;
+		if (p.x < ep.x)
+			p.x = ep.x;
+	}
+
+	if (p.y < ep.y)
+	{
+		p.y += v.y;
+		if (p.y > ep.y)
+			p.y = ep.y;
+	}
+	else if (p.y > ep.y)
+	{
+		p.y += v.y;
+		if (p.y < ep.y)
+			p.y = ep.y;
+	}
+	return p == ep;
+}

@@ -69,13 +69,7 @@ void iImage::paint(float dt, iPoint p)
 	setRGBA(r, g, b, a * alpha);
 
 	tex = (Texture*)imgs->objectAtIndex(frame);
-	//drawImage(tex, position + p, TOP | LEFT);
-#if 0
-	p += position;
 
-	p.x += (1.0f - scale) / 2 * tex->width;
-	p.y += (1.0f - scale) / 2 * tex->height;
-#else
 	float& x = p.x;
 	float& y = p.y;
 	float dx = tex->width;
@@ -103,12 +97,61 @@ void iImage::paint(float dt, iPoint p)
 	else
 		y += position.y * scale;
 	anc = TOP | LEFT;
-#endif
 
 	drawImage(tex, p.x, p.y, scale, scale, anc,
 		0, 0, tex->width, tex->height,
 		2, degree, reverse);
 	setRGBA(r, g, b, a);
+}
+
+void iImage::paint(float dt, iPoint p, iImageType type)
+{
+	if (type == iImageTypePop)
+	{
+		if (animation)
+		{
+			aniDt += dt;
+			if (aniDt >= _aniDt)
+			{
+				aniDt -= _aniDt;
+
+				frame++;
+				if (frame > imgs->count - 1)
+				{
+					if (_repeatNum == 0)
+						frame = 0;
+					else// if (_repeatNum)
+					{
+						printf("repeatNum = %d\n", repeatNum);
+						repeatNum++;
+						if (repeatNum < _repeatNum)
+							frame = 0;
+						else
+						{
+							frame = imgs->count - 1;// frame--;
+							animation = false;
+							if (method)
+								method(parm);
+						}
+					}
+				}
+			}
+		}
+
+		float r, g, b, a;
+		getRGBA(r, g, b, a);
+		setRGBA(r, g, b, a * alpha);
+
+		tex = (Texture*)imgs->objectAtIndex(frame);
+		p += position;
+
+		p.x += (1.0f - scale) / 2 * tex->width;
+		p.y += (1.0f - scale) / 2 * tex->height;
+		drawImage(tex, p.x, p.y, scale, scale, anc,
+			0, 0, tex->width, tex->height,
+			2, degree, reverse);
+		setRGBA(r, g, b, a);
+	}
 }
 
 void iImage::addObject(Texture* tex)

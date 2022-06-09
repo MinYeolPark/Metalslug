@@ -167,6 +167,16 @@ ImageInfo imgEffectInfo[] =
 		0.06f,
 		1,
 		{255, 0, 255, 255},
+		TOP | LEFT,
+		ProcEffect::cbAniEffect,
+	},
+	{
+		"assets/Effect/Effect_%02d.png",
+		10, 1.0f, { -16 / 2, 0},
+		0.06f,
+		1,
+		{255, 0, 255, 255},
+		TOP | LEFT,
 		ProcEffect::cbAniEffect,
 	},
 	{
@@ -175,6 +185,7 @@ ImageInfo imgEffectInfo[] =
 		0.08f,
 		1,
 		{255, 0, 0, 255},
+		TOP | LEFT,
 		ProcEffect::cbAniEffect,
 	},
 };

@@ -5,6 +5,11 @@
 #include "iPoint.h"
 #include "iRect.h"
 
+enum iImageType
+{
+	iImageTypeDefault,
+	iImageTypePop,
+};
 typedef void (*cbAnimation)(void* parm);
 
 class iImage
@@ -16,13 +21,14 @@ public:
 	static void cb(void* data);
 
 	void paint(float dt, iPoint p);
+	void paint(float dt, iPoint p, iImageType type);
 	void addObject(Texture* tex);
 
-	void startAnimation(cbAnimation m=NULL, void* parm=NULL);
+	void startAnimation(cbAnimation m = NULL, void* parm = NULL);
 	void stopAnimation();
 
-	iRect rect(iPoint p=iPointZero, iSize s=iSizeZero);
-	iPoint center(iPoint p=iPointZero);
+	iRect rect(iPoint p = iPointZero, iSize s = iSizeZero);
+	iPoint center(iPoint p = iPointZero);
 	iImage* clone();
 
 public:

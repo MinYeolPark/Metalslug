@@ -55,10 +55,10 @@ void iGraphics::clear(iColor4f c)
 {
 	if (g == NULL)
 		return;
-	g->Clear(Color(	c.a * 0xff,
-					c.r * 0xff,
-					c.g * 0xff,
-					c.b * 0xff));
+	g->Clear(Color(c.a * 0xff,
+		c.r * 0xff,
+		c.g * 0xff,
+		c.b * 0xff));
 }
 
 Texture* iGraphics::getTexture()
@@ -85,7 +85,6 @@ Texture* iGraphics::getTexture(iColor4b colorKey)
 
 	return tex;
 }
-
 void iGraphics::initGraphics(Graphics* g)
 {
 	g->SetPageUnit(UnitPixel);
@@ -113,10 +112,10 @@ void iGraphics::drawLine(float x0, float y0, float x1, float y1)
 {
 	float ca, cr, cg, cb;
 	getRGBA(cr, cg, cb, ca);
-	Pen pen(Color(	ca * 0xFF,
-					cr * 0xFF,
-					cg * 0xFF,
-					cb * 0xFF), getLineWidth());
+	Pen pen(Color(ca * 0xFF,
+		cr * 0xFF,
+		cg * 0xFF,
+		cb * 0xFF), getLineWidth());
 	g->DrawLine(&pen, x0, y0, x1, y1);
 
 }
@@ -140,10 +139,10 @@ void iGraphics::drawRect(float x, float y, float width, float height, float radi
 
 	float ca, cr, cg, cb;
 	getRGBA(cr, cg, cb, ca);
-	Pen pen(Color(	ca * 0xFF,
-					cr * 0xFF,
-					cg * 0xFF,
-					cb * 0xFF), getLineWidth());
+	Pen pen(Color(ca * 0xFF,
+		cr * 0xFF,
+		cg * 0xFF,
+		cb * 0xFF), getLineWidth());
 	g->DrawPath(&pen, &path);
 }
 void iGraphics::fillRect(iRect rt, float radius)
@@ -165,10 +164,10 @@ void iGraphics::fillRect(float x, float y, float width, float height, float radi
 
 	float ca, cr, cg, cb;
 	getRGBA(cr, cg, cb, ca);
-	SolidBrush brush(Color(	ca * 0xFF,
-							cr * 0xFF,
-							cg * 0xFF,
-							cb * 0xFF));
+	SolidBrush brush(Color(ca * 0xFF,
+		cr * 0xFF,
+		cg * 0xFF,
+		cb * 0xFF));
 	g->FillPath(&brush, &path);
 }
 
@@ -232,7 +231,7 @@ igImage** iGraphics::createIgImageDivide(int numX, int numY, const char* szForma
 	uint8* rgba = bmp2rgba(bmp, width, height);//////////////////////////
 	delete bmp;
 
-	igImage** ii = new igImage*[numX * numY];
+	igImage** ii = new igImage * [numX * numY];
 	int w = width / numX;
 	int h = height / numY;
 	for (int j = 0; j < numY; j++)
@@ -418,17 +417,17 @@ void iGraphics::drawString(float x, float y, int anc, const char* szFormat, ...)
 	if (getStringBorder())
 	{
 		getStringBorderRGBA(cr, cg, cb, ca);
-		Pen pen(Color(	ca * 0xFF,
-						cr * 0xFF,
-						cg * 0xFF,
-						cb * 0xFF), getStringBorder());
+		Pen pen(Color(ca * 0xFF,
+			cr * 0xFF,
+			cg * 0xFF,
+			cb * 0xFF), getStringBorder());
 		g->DrawPath(&pen, &path);
 	}
 	getStringRGBA(cr, cg, cb, ca);
-	SolidBrush brush(Color(	ca * 0xFF,
-							cr * 0xFF,
-							cg * 0xFF,
-							cb * 0xFF));
+	SolidBrush brush(Color(ca * 0xFF,
+		cr * 0xFF,
+		cg * 0xFF,
+		cb * 0xFF));
 	g->FillPath(&brush, &path);
 }
 
@@ -523,17 +522,17 @@ void RectOfString::drawString(const char* str)
 	if (getStringBorder())
 	{
 		getStringBorderRGBA(cr, cg, cb, ca);
-		Pen pen(Color(	ca * 0xFF,
-						cr * 0xFF,
-						cg * 0xFF,
-						cb * 0xFF), getStringBorder());
+		Pen pen(Color(ca * 0xFF,
+			cr * 0xFF,
+			cg * 0xFF,
+			cb * 0xFF), getStringBorder());
 		g->DrawPath(&pen, &path);
 	}
 	getStringRGBA(cr, cg, cb, ca);
-	SolidBrush brush(Color(	ca * 0xFF,
-							cr * 0xFF,
-							cg * 0xFF,
-							cb * 0xFF));
+	SolidBrush brush(Color(ca * 0xFF,
+		cr * 0xFF,
+		cg * 0xFF,
+		cb * 0xFF));
 	g->FillPath(&brush, &path);
 }
 

@@ -5,7 +5,7 @@
 void loadMenu();
 void freeMenu();
 void drawMenu(float dt);
-bool keyMenu(iKeyState stat, iPoint p);
+void keyMenu(iKeyState stat, iPoint p);
 
 // -----------------------------------
 // Title Menu Popup

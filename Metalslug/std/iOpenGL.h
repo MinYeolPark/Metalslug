@@ -2,6 +2,7 @@
 
 #include <gl/glew.h>
 #include <gl/GL.h>
+//#define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <gl/wglew.h>
 #pragma comment(lib, "OpenGL32.lib")
@@ -73,7 +74,7 @@ enum TextureWrap {
 enum TextureFilter {
 	LINEAR = 0,	// GL_LINEAR
 	NEAREST,	// GL_NEAREST
-	MIPMAP,
+	MIPMAP = LINEAR
 };
 
 void setTexture(TextureFilter filter, TextureWrap wrap = CLAMP);
@@ -82,3 +83,4 @@ void applyTexture();
 
 void setTexture(uint32 texID, TextureFilter filter, TextureWrap wrap = CLAMP);
 void setTexture(uint32 texID, TextureFilter minFilter, TextureFilter magFilter, TextureWrap wrap = CLAMP);
+

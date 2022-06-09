@@ -35,26 +35,24 @@ void drawMenu(float dt)
 	setRGBA(1, 1, 1, 1);
 }
 
-bool keyMenu(iKeyState stat, iPoint p)
+void keyMenu(iKeyState stat, iPoint p)
 {
-	return false;
+	if (keyTitleMenu(stat, p))
+		return;
 }
 
 
 void createTitleMenu()
 {	
-	setRGBA(1, 1, 1, 1);
 #if 1
 	iPopup* pop = new iPopup();
+
 	iGraphics* g = new iGraphics();
-	iSize size = iSizeMake(devSize.width, devSize.height);	
+	
+	iSize size = iSizeMake(devSize.width/3, devSize.height/3);	
 	g->init(size);
 
-	//setRGBA(0, 0, 0, 0.5f);
-	g->fillRect(0, 0, devSize.width, devSize.height, 3);
-	//g->fillRect(devSize.width / 2, devSize.height / 2,
-	//	devSize.width / 2, devSize.height / 2);
-
+	setRGBA(1, 0, 1, 0.5f);
 	Texture* tex = g->getTexture();
 	iImage* img = new iImage();
 	img->addObject(tex);	
@@ -68,10 +66,10 @@ void createTitleMenu()
 	const char* str[4] =
 	{ "Game Start","Map Tool", "Option","Exit" };
 	setStringName("assets/BMJUA_ttf.ttf");
-	setStringSize(15);
-	setStringBorder(2);
+	setStringSize(10);
+	setStringBorder(0);
 
-	size = iSizeMake(80, 40);
+	size = iSizeMake(80, 15);
 	titleMenuBtn = new iImage * [4];
 	for (int i = 0; i < 4; i++)
 	{
@@ -79,7 +77,6 @@ void createTitleMenu()
 		for (int j = 0; j < 2; j++)
 		{
 			g->init(size);
-
 			if (j == 0)
 			{
 				setRGBA(0.5, 0.5, 0.5, 1);
@@ -90,16 +87,15 @@ void createTitleMenu()
 				setRGBA(1, 1, 0, 1);
 				setStringRGBA(1, 1, 1, 1);
 			}
-			g->fillRect(0, 0, size.width, size.height, 5);
+			g->fillRect(0, 0, size.width, size.height, 1);
 			g->drawString(size.width / 2, size.height / 2, VCENTER | HCENTER, str[i]);
 
 			tex = g->getTexture();
 			img->addObject(tex);
 			freeImage(tex);
 		}
-		//img->position = iPointMake(devSize.width / 2 - size.width / 2,
-		//	(devSize.width + 10) / 2 + 20 * i);
-		img->position = iPointZero;
+		img->position = iPointMake(devSize.width / 2 - size.width / 2,
+			(devSize.width + 10) / 2 + 20 * i);		
 		pop->addObject(img);
 		titleMenuBtn[i] = img;
 	}
@@ -132,15 +128,16 @@ bool keyTitleMenu(iKeyState stat, iPoint p)
 
 	int i, j = -1;
 	switch (stat) {
-
 	case iKeyStateBegan:
 		i = titleMenu->selected;
 		if (i == -1) break;
 	case iKeyStateMoved:
-		for (i = 0; i < 3; i++)
+		printf("mouse move");
+		for (i = 0; i < 4; i++)
 		{
 			if (containPoint(p, titleMenuBtn[i]->rect(titleMenu->closePoint)))
 			{
+				printf("contain\n");
 				j = i;
 				break;
 			}
@@ -159,5 +156,5 @@ bool keyTitleMenu(iKeyState stat, iPoint p)
 }
 void showTitleMenu(bool show)
 {
-	titleMenu->show(true);
+	titleMenu->show(show);
 }

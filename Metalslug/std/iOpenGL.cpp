@@ -1,7 +1,9 @@
 #include "iOpenGL.h"
 
 #include "iStd.h"
+
 #include "InputMgr.h"
+
 #include "App.h"
 static HDC hDC;
 HGLRC hRC;
@@ -111,15 +113,15 @@ void loadOpenGL(void* hdc)
     glBufferData(GL_ARRAY_BUFFER, 4 * sizeof(Vertex), NULL, GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+    matrixProject = new iMatrix;
+    matrixProject->loadIdentity();
+    matrixProject->ortho(0, devSize.width, devSize.height, 0, -1, 1);
+
     glGenBuffers(1, &vbe);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbe);
     uint8 indices[6] = { 0, 1, 2,   1, 2, 3 };
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint8) * 6, indices, GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-    matrixProject = new iMatrix;
-    matrixProject->loadIdentity();
-    matrixProject->ortho(0, devSize.width, devSize.height, 0, -1, 1);
 
     matrixModelview = new iMatrix;
     matrixModelview->loadIdentity();
@@ -226,12 +228,19 @@ void setZoom(iPoint c, float scale, float zoomDt, float delayDt)
 
 void drawOpenGL(float dt, MethodDraw m)
 {
+    //matrixProject->loadIdentity();
+    //matrixProject->ortho(0, devSize.width, devSize.height, 0, -1, 1);
+
     setGlBlendFunc(iBlendFuncAlpha);
     fbo->bind();
     fbo->clear(0, 0, 0, 0);
     m(dt);// drawGame
     updateKeyboard();
+    //drawCursor(dt);
     fbo->unbind();
+
+    //matrixProject->loadIdentity();
+    //matrixProject->ortho(0, viewport.size.width, viewport.size.height, 0, -1, 1);
 
     setGlBlendFunc(iBlendFuncPremultipliedAlpha);
     fbo->clear(0, 0, 0, 0);

@@ -59,7 +59,7 @@ iImage** createImgPlayer(ImageInfo* imageInfo, void* c)
 			if (ii->repeatNum)
 				img->_repeatNum = ii->repeatNum;
 
-			img->anc = TOP | LEFT;
+			img->anc = ii->anc;
 			if (ii->cbAni)
 				img->startAnimation(ii->cbAni, c);
 			else

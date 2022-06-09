@@ -186,39 +186,39 @@ void iPopup::paint(float dt)
 	}
 	else if (style == iPopupStyleRotate)
 	{
-	if (state == iPopupStateOpen)
-	{
-		scaleX = scaleY = aniDt / _aniDt;
-		p = linear(scaleX, openPoint, closePoint);
-		degree = 360 * scaleX;
-		aniDt += dt;
-		if (aniDt > _aniDt)
+		if (state == iPopupStateOpen)
 		{
-			state = iPopupStateProc;
-			if (methodOpen)
-				methodOpen(this);
+			scaleX = scaleY = aniDt / _aniDt;
+			p = linear(scaleX, openPoint, closePoint);
+			degree = 360 * scaleX;
+			aniDt += dt;
+			if (aniDt > _aniDt)
+			{
+				state = iPopupStateProc;
+				if (methodOpen)
+					methodOpen(this);
+			}
 		}
-	}
-	else if (state == iPopupStateProc)
-	{
-		scaleX = scaleY = 1.0f;
-		p = closePoint;
-		degree = 0;
-	}
-	else// if (state == iPopupStateClose)
-	{
-		scaleX = scaleY = 1.0f - aniDt / _aniDt;
-		p = linear(scaleX, openPoint, closePoint);
-		degree = 360 * scaleX;
-		aniDt += dt;
-		if (aniDt > _aniDt)
+		else if (state == iPopupStateProc)
 		{
-			bShow = false;
-			if (methodClose)
-				methodClose(this);
-			return;
+			scaleX = scaleY = 1.0f;
+			p = closePoint;
+			degree = 0;
 		}
-	}
+		else// if (state == iPopupStateClose)
+		{
+			scaleX = scaleY = 1.0f - aniDt / _aniDt;
+			p = linear(scaleX, openPoint, closePoint);
+			degree = 360 * scaleX;
+			aniDt += dt;
+			if (aniDt > _aniDt)
+			{
+				bShow = false;
+				if (methodClose)
+					methodClose(this);
+				return;
+			}
+		}
 	}
 
 	if (methodDrawBefore)
@@ -230,7 +230,7 @@ void iPopup::paint(float dt)
 	for (int i = 0; i < imgs->count; i++)
 	{
 		iImage* img = (iImage*)imgs->objectAtIndex(i);
-		img->paint(dt, iPointZero);
+		img->paint(dt, iPointZero, iImageTypePop);
 	}
 	fbo->unbind();///////////////////////
 

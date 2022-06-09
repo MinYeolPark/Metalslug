@@ -52,3 +52,4 @@ float easeInOut(float r, float s, float e);
 iPoint easeInOut(float r, iPoint s, iPoint e);
 
 bool movePoint(iPoint& p, iPoint sp, iPoint ep, float speedDt);
+bool movePoint(iPoint& p, iPoint sp, iPoint ep, float speedDt, float maxH);

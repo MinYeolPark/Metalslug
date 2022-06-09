@@ -76,12 +76,15 @@ public:
 		
 	Gun* curGun;
 	iPoint firePoint;
+	iPoint targetPoint;
 	iPoint v;
 
 	float up;
 	float down;
 	bool fall;	
 
+	bool isRight;				//check is Right.
+	bool isAttacking;
 	bool isAimup;
 	bool isCrouching;
 	bool isAimDown;
@@ -94,7 +97,9 @@ public:
 	int hp;
 	int life;
 	float moveSpeed;
+	float bombSpeed;
 	float attkRange;
+
 	int bombs;
 	int score;
 public:

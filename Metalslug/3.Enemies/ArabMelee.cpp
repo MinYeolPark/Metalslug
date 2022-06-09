@@ -177,6 +177,7 @@ ImageInfo imgMeleeInfo[] =
 		0.18f,
 		0,			//repeat
 		{255, 0, 0, 255},
+		TOP | LEFT,
 		NULL,
 	},
 	{
@@ -185,6 +186,7 @@ ImageInfo imgMeleeInfo[] =
 		0.1f,
 		0,
 		{255, 0, 0, 255},
+		TOP | LEFT,
 		NULL,
 	},
 	{
@@ -193,6 +195,7 @@ ImageInfo imgMeleeInfo[] =
 		0.1f,
 		1,
 		{255, 0, 0, 255},
+		TOP | LEFT,
 		ProcEnemy::methodDead,
 	},
 	{
@@ -201,6 +204,7 @@ ImageInfo imgMeleeInfo[] =
 		0.1f,
 		0,
 		{255, 0, 0, 255},
+		TOP | LEFT,
 		NULL,
 	},
 	{
@@ -209,6 +213,7 @@ ImageInfo imgMeleeInfo[] =
 		0.18f,
 		0,
 		{255, 0, 0, 255},
+		TOP | LEFT,
 		NULL,
 	},
 	{
@@ -217,6 +222,7 @@ ImageInfo imgMeleeInfo[] =
 		0.1f,
 		1,
 		{255, 0, 0, 255},
+		TOP | LEFT,
 		NULL,
 	},
 };

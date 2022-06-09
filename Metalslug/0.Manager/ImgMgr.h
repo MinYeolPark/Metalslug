@@ -13,6 +13,7 @@ struct ImageInfo
 	float aniDt;
 	int repeatNum;
 	iColor4b colorKey;
+	int anc;
 	cbAnimation cbAni;
 };
 

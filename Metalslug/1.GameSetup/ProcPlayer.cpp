@@ -33,6 +33,7 @@ ProcPlayer::ProcPlayer()
 	down = 0;
 	fall = true;
 
+	isAttacking = false;
 	isAimup = false;
 	isCrouching = false;
 	isAimDown = false;
@@ -40,6 +41,7 @@ ProcPlayer::ProcPlayer()
 	hp = 100;
 	life = 2;
 	moveSpeed = 150.f;
+	bombSpeed = 10.f;
 	attkRange = 40;
 
 	bombs = 20;
@@ -78,6 +80,11 @@ void ProcPlayer::updateObj(float dt)
 		v.y = -1;
 	else if (getKeyStat(keyboard_down))
 		v.y = 1;
+	
+	if (v.x > 0)
+		isRight = true;
+	else
+		isRight = false;
 
 	if (v != iPointZero)
 	{
@@ -88,13 +95,15 @@ void ProcPlayer::updateObj(float dt)
 		{
 			if (v.x > 0)
 			{
-				setTopState(WalkR, v);
 				setBotState(WalkR, v);
+				if (!isAttacking)
+					setTopState(WalkR, v);					
 			}
 			else if (v.x < 0)
 			{
-				setTopState(WalkL, v);
 				setBotState(WalkL, v);
+				if (!isAttacking)
+					setTopState(WalkL, v);					
 			}
 		}
 	}
@@ -105,43 +114,7 @@ void ProcPlayer::updateObj(float dt)
 			//|| topState == RunJumpR || topState == RunJumpL)
 			setTopState((PlayerBehave)(BrakeR + topState % 2), v);
 	}
-#if 0
-		if (!up)
-		{
-			if (v.x > 0)
-			{
-				setTopState(WalkR, v);
-				setBotState(WalkR, v);
-				if (v.y < 0)	//up
-				{
-					setTopState((PlayerBehave)(AimUpR + topState % 2), v);
-				}
-				fireDegree = 0;// interpolate
-				firePoint = iPointMake(p.x + botImgCurr->tex->width / 2,
-					p.y - botImgCurr->tex->height / 2);
-			}
-			else if (v.x < 0)
-			{
-				setTopState(WalkL, v);
-				setBotState(WalkL, v);
-				if (v.y > 0)	//crouch
-				{
-					setTopState((PlayerBehave)(CrouchR + topState % 2), v);
-				}
-				fireDegree = 180;// interpolate
-				firePoint = iPointMake(p.x - botImgCurr->tex->width / 2,
-					p.y - botImgCurr->tex->height / 2);
-			}
-		}
-	}
-#endif
-#if 0
-	else
-	{
-		setTopState((PlayerBehave)(IdleR + topState % 2), v);
-		setBotState((PlayerBehave)(IdleR + botState % 2), v);
-	}
-#endif
+
 	if (getKeyDown(keyboard_up))
 	{
 		if (getKeyDown(keyboard_space))
@@ -369,6 +342,7 @@ void ProcPlayer::aimUp()
 
 void ProcPlayer::fire(iPoint v)
 {	
+	isAttacking = true;
 	ProcEnemy* eNear = NULL;
 	float dNear = 0xffffff;
 	for (int i = 0; i < enemyCount; i++)
@@ -438,6 +412,7 @@ void ProcPlayer::cbAniFire(void* parm)
 	printf("cbAniFire\n");
 
 	ProcPlayer* pp = (ProcPlayer*)parm;	
+	pp->isAttacking = false;
 	pp->setTopState((PlayerBehave)(IdleR + pp->topState % 2), iPointZero);
 }
 
@@ -450,6 +425,7 @@ ImageInfo botImageInfo[] =
 		0.1f,
 		0,
 		{255,0,0,255},
+		TOP | LEFT,
 		NULL,
 	},
 	{
@@ -458,6 +434,7 @@ ImageInfo botImageInfo[] =
 		0.1f,
 		0,
 		{255,0,0,255},
+		TOP | LEFT,
 		NULL,
 	},
 	{
@@ -466,6 +443,7 @@ ImageInfo botImageInfo[] =
 		0.1f,
 		1,
 		{255,0,0,255},
+		TOP | LEFT,
 		NULL,
 	},
 	{
@@ -474,6 +452,7 @@ ImageInfo botImageInfo[] =
 		0.1f,
 		1,
 		{255,0,0,255},
+		TOP | LEFT,
 		NULL,
 	},
 };
@@ -485,6 +464,7 @@ ImageInfo topImageInfo[] =
 		0.1f,
 		0,
 		{255,0,0,255},
+		TOP | LEFT,
 		NULL,
 	},
 	{
@@ -493,6 +473,7 @@ ImageInfo topImageInfo[] =
 		0.1f,
 		0,
 		{255,0,0,255},
+		TOP | LEFT,
 		NULL,
 	},
 	{
@@ -501,6 +482,7 @@ ImageInfo topImageInfo[] =
 		0.1f,
 		1,
 		{255,0,0,255},
+		TOP | LEFT,
 		NULL,
 	},
 	{
@@ -509,6 +491,7 @@ ImageInfo topImageInfo[] =
 		0.1f,
 		0,
 		{255,0,0,255},
+		TOP | LEFT,
 		NULL,
 	},
 	{
@@ -517,6 +500,7 @@ ImageInfo topImageInfo[] =
 		0.06f,
 		1,
 		{255,0,0,255},
+		TOP | LEFT,
 		NULL,
 	},
 	{
@@ -525,6 +509,7 @@ ImageInfo topImageInfo[] =
 		0.06f,
 		1,
 		{255, 0, 0, 255},
+		TOP | LEFT,
 		NULL,
 	},
 	{
@@ -533,6 +518,7 @@ ImageInfo topImageInfo[] =
 		0.06f,
 		1,
 		{255,0,0,255},
+		TOP | LEFT,
 		NULL,
 	},
 	{
@@ -541,6 +527,7 @@ ImageInfo topImageInfo[] =
 		0.06f,
 		1,
 		{255,0,0,255},
+		TOP | LEFT,
 		ProcPlayer::cbAniFire,
 	},
 	{
@@ -549,6 +536,7 @@ ImageInfo topImageInfo[] =
 		0.06f,
 		1,
 		{255,255,255,255},
+		TOP | LEFT,
 		ProcPlayer::cbAniFire,
 	},
 	{
@@ -557,6 +545,7 @@ ImageInfo topImageInfo[] =
 		0.06f,
 		1,
 		{255,0,0,255},
+		TOP | LEFT,
 		ProcPlayer::cbAniFire,
 	},
 	{
@@ -565,6 +554,7 @@ ImageInfo topImageInfo[] =
 		0.06f,
 		1,
 		{255,0,0,255},
+		TOP | LEFT,
 		NULL,
 	},
 	{
@@ -573,6 +563,7 @@ ImageInfo topImageInfo[] =
 		0.12f,
 		1,
 		{255, 255, 255, 255},
+		TOP | LEFT,
 		ProcPlayer::cbAniBrake,
 	},
 };

@@ -65,9 +65,9 @@ void ProcBullets::initObj(ProcPlayer* parent, int idx, iPoint p, float degree)
 
 void ProcBullets::updateObj(float dt)
 {
-	isActive = containPoint(p, iRectMake(player->p.x + bg->off.x - 20, 
-		player->p.y + bg->off.y - 20, devSize.width + 40, devSize.height + 40));
-
+	isActive = containPoint(p,
+		iRectMake(-bg->off.x - 20, -bg->off.y - 20,
+			devSize.width + 40, devSize.height + 40));
 	//Pattern
 	if (this->bulletIdx == BulletIndex::BulletBomb)
 		this->pattern = methodBomb(this, degree, dt);
@@ -144,10 +144,10 @@ iRect ProcBullets::collider()
 BulletPattern ProcBullets::methodDefault(ProcBullets* b, float degree, float dt)
 {
 	b->v = iPointRotate(iPointMake(1, 0), iPointZero, degree) * b->speed;
-	
 	return NULL;
 }
 
+static float r = 0;
 BulletPattern ProcBullets::methodBomb(ProcBullets* b, float degree, float dt)
 {
 
@@ -179,12 +179,51 @@ BulletPattern ProcBullets::methodBomb(ProcBullets* b, float degree, float dt)
 	{
 		elaspe_time += dt;
 	}
-#elif 1
+#elif 0
 	b->v = iPointRotate(iPointMake(1, 0), iPointZero, 45) * b->speed;
+#elif 0	
+	float maxY = *(bg->maxY + (int)b->p.x);
+	player->targetPoint = tp;
+	
+	//if (movePoint(b->p, b->p, player->targetPoint, player->bombSpeed))
+	//	b->isActive = false;
+	iPoint v = (player->targetPoint, b->p);
+	v /= iPointLength(v);
+#elif 1
+	float maxY = *(bg->maxY + (int)b->p.x);
+	iPoint tp = { player->p.x + 150, maxY };
+
+	iPoint sp = player -> p;
+	iPoint ep = tp;
+
+	iPoint v = (ep - sp);
+	v /= iPointLength(v);
+	v *= 3;
+	if (b->p.x < ep.x)
+	{
+		b->p.x += v.x;
+		if (b->p.x > ep.x)
+			b->p.x = ep.x;
+	}
+	else if (b->p.x > ep.x)
+	{
+		b->p.x += v.x;
+		if (b->p.x < ep.x)
+			b->p.x = ep.x;
+	}
+	if (b->p.y < ep.y)
+	{
+		for (int i = 0; i < 180; i ++)
+		{			
+			if (i > 90)
+				b->p.y += _sin(i) * 2;
+			else
+				b->p.y -= _sin(i) * 2;
+		}	
+	}
 #endif
 	return NULL;
 }
-
 BulletPattern ProcBullets::methodMosk(ProcBullets* b, float dt)
 {
 	//b->v = 
@@ -200,6 +239,7 @@ ImageInfo bulletImageInfo[PlayerBehaveMax] =
 		0.18f,
 		1,
 		{255, 255, 255 ,255},
+		TOP|LEFT,
 		NULL,
 	},
 	{
@@ -209,6 +249,7 @@ ImageInfo bulletImageInfo[PlayerBehaveMax] =
 		0.18f,
 		1,
 		{255, 255, 255, 255},
+		TOP | LEFT,
 		NULL,
 	},
 	{
@@ -218,6 +259,7 @@ ImageInfo bulletImageInfo[PlayerBehaveMax] =
 		0.1f,
 		0,
 		{0, 248, 0, 255},
+		TOP | LEFT,
 		NULL,
 	},
 	{
@@ -227,6 +269,7 @@ ImageInfo bulletImageInfo[PlayerBehaveMax] =
 		0.1f,
 		0,
 		{255, 0, 0, 255},
+		TOP | LEFT,
 		NULL,
 	},
 };
