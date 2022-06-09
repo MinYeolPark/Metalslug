@@ -38,7 +38,7 @@ struct Bg
 	int maxW;			//Bg texture 넓이
 	int* maxY;			//Bg texture 높이
 };
-#define cuts_Stage1 8
+#define cuts_Stage1 12
 #define layers_Stage1 3
 
 extern BgData bgData_Stage1[cuts_Stage1];

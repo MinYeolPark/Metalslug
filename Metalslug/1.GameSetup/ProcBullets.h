@@ -1,18 +1,33 @@
 #pragma once
 
-#include "ProcObject.h"
+#include "iStd.h"
 
+#include "ProcObject.h"
+#include "ProcEnemy.h"
+#include "ProcPlayer.h"
+
+class ProcBullets;
+typedef void(*BulletPattern)(ProcBullets* b, float dt);
 enum BulletIndex
 {
 	BulletHandGun = 0,
 	BulletHeavyMachinegun,
+	BulletBomb,
 
-	MoskMissile,
+	BulletMosque,
 	BulletIndexMax,
 };
 
-class ProcBullets;
-typedef void(*BulletPattern)(ProcBullets* b, float dt);
+enum BulletPatterns
+{
+	PatternHandGun,
+	PatternHeavyMachinegun,
+	PatternBomb,
+
+	PatternMosque,
+	PatternIndexMax,
+};
+
 class ProcBullets: public ProcObject
 {
 public:
@@ -36,21 +51,23 @@ public:
 public:
 	virtual void initObj();
 	virtual void initObj(ProcObject* parent, int idx, iPoint p, float degree);
+	virtual void initObj(ProcEnemy* parent, int idx, iPoint p, float degree);
+	virtual void initObj(ProcPlayer* parent, int idx, iPoint p, float degree);
 	virtual void updateObj(float dt);
+	virtual void fixedUpdate(float dt);
 	virtual bool drawObj(float dt, iPoint off);
 	virtual void freeObj();
 
 	//Components
 public:
-	virtual iRect collider()
-	{
-		return iRectMake(p.x, p.y,
-			imgCurr->tex->width, imgCurr->tex->height);
-	}
+	virtual iRect collider();
+
+public:
+	static BulletPattern methodDefault(ProcBullets* b, float degree, float dt);
+	static BulletPattern methodBomb(ProcBullets* b, float degree, float dt);
+	static BulletPattern methodMosk(ProcBullets* b, float dt);
 };
-//Patterns
-BulletPattern methodDefault(ProcBullets* b, float dt);
-BulletPattern methodMosk(ProcBullets* b, float dt);
+
 
 #if 0
 struct Animal

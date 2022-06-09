@@ -12,14 +12,15 @@ ProcBullets::ProcBullets(int idx) : ProcObject(idx)
 	imgCurr = NULL;
 	parent = NULL;
 	bulletIdx = idx;
+
 	iPoint v = iPointZero;
 
 	pattern = NULL;
-	speed = 100.;
+	speed = 300.;
 	dmg = 100.;	
 
 	if (_imgBullets == NULL)
-		_imgBullets = createImgBullets(bulletImageInfo, this);
+		_imgBullets = createImgBullets(bulletImageInfo);
 
 	imgs = new iImage * [BulletIndexMax];
 	memset(imgs, 0x00, sizeof(iImage*) * BulletIndexMax);
@@ -42,24 +43,42 @@ ProcBullets::~ProcBullets()
 
 void ProcBullets::initObj()
 {
-	isActive = true;
 
 }
 
 void ProcBullets::initObj(ProcObject* parent, int idx, iPoint p, float degree)
 {
+}
+
+void ProcBullets::initObj(ProcEnemy* parent, int idx, iPoint p, float degree)
+{
+}
+
+void ProcBullets::initObj(ProcPlayer* parent, int idx, iPoint p, float degree)
+{
 	isActive = true;
 	this->parent = parent;
-	this->bulletIdx = idx;
-	this->p = p;
+	this->bulletIdx = idx;	
+	this->p = parent->firePoint;
 	this->degree = degree;
-	v = iPointRotate(iPointMake(1, 0), iPointZero, degree) * 300;
 }
 
 void ProcBullets::updateObj(float dt)
 {
-	isActive = containPoint(p, iRectMake(-20, -20, devSize.width + 40, devSize.height + 40));
+	isActive = containPoint(p, iRectMake(player->p.x + bg->off.x - 20, 
+		player->p.y + bg->off.y - 20, devSize.width + 40, devSize.height + 40));
 
+	//Pattern
+	if (this->bulletIdx == BulletIndex::BulletBomb)
+		this->pattern = methodBomb(this, degree, dt);
+	else
+		this->pattern = methodDefault(this, degree, dt);
+
+	fixedUpdate(dt);
+}
+
+void ProcBullets::fixedUpdate(float dt)
+{
 	if (parent->layer == Player)
 	{
 		ProcEnemy* eNear = NULL;
@@ -80,29 +99,96 @@ void ProcBullets::updateObj(float dt)
 
 		if (eNear)
 		{
-			isActive = false;
-			eNear->hp -= dmg;
-			if (eNear->hp <= 0)
-				eNear->state = ((EnemyBehave)(DeadEnemyL + eNear->state % 2));
-			//ÆÄÆ¼Å¬
+			if (eNear->getState() != (EnemyBehave)(DeadEnemyL + eNear->state % 2))
+			{
+				isActive = false;
+				eNear->hp -= dmg;				
+				iPoint bp = iPointMake(rand() % 10 + p.x, rand() % 10 + p.y);
+				if (eNear->hp <= 0)
+					eNear->setState((EnemyBehave)(DeadEnemyL + eNear->state % 2));
+
+				//Particles
+				addProcEffect(bulletIdx, bp);		//bulletIndex=effectIndex
+			}
 		}
 	}
 }
 
 bool ProcBullets::drawObj(float dt, iPoint off)
 {
-	setRGBA(1, 1, 1, 1);
-	imgCurr = imgs[bulletIdx];
-	imgCurr->paint(dt, p + off);
-
 	p += v * dt;
 
 	setRGBA(1, 1, 1, 1);
+	imgCurr = imgs[bulletIdx];
+	imgCurr->paint(dt, p + off);	
+
+	setRGBA(1, 1, 1, 1);
+
+#ifdef _DEBUG	
+	drawRect(collider());
+#endif // DEBUG
 	return !isActive;
 }
 
 void ProcBullets::freeObj()
 {
+}
+
+iRect ProcBullets::collider()
+{
+	return iRectMake(p.x + bg->off.x - imgCurr->tex->width / 2,
+		p.y + bg->off.y - imgCurr->tex->height / 2,
+		imgCurr->tex->width, imgCurr->tex->height);
+}
+
+BulletPattern ProcBullets::methodDefault(ProcBullets* b, float degree, float dt)
+{
+	b->v = iPointRotate(iPointMake(1, 0), iPointZero, degree) * b->speed;
+	
+	return NULL;
+}
+
+BulletPattern ProcBullets::methodBomb(ProcBullets* b, float degree, float dt)
+{
+
+#if 0
+	dt = 1.0 / (b->speed * cos(45));
+	b->v.x = b->speed * cos(45);
+	b->v.y = b->speed * sin(45);
+
+	int maxY = (*bg->maxY + int(b->p.x));
+	while (b->p.y < maxY)
+	{
+		b->v.x = b->v.x * dt;
+		b->v.y = (9.81 + b->v.y) * dt;
+		b->p.x += b->v.x * dt;
+		b->p.y += b->v.y * dt;
+	}
+#elif 0
+	b->v = iPointRotate(iPointMake(0, -1), iPointZero, degree) * b->speed;
+#elif 0
+	float td = iPointLength(b->p - iPointMake(player->firePoint.x + 50, player->firePoint.y));
+
+	float vx = sqrt(b->speed) * _cos(45);
+	float vy = sqrt(b->speed) * _sin(45);
+
+	//airborn time
+	float duration = td / vx;
+	float elaspe_time = 0;
+	while (elaspe_time < duration)
+	{
+		elaspe_time += dt;
+	}
+#elif 1
+	b->v = iPointRotate(iPointMake(1, 0), iPointZero, 45) * b->speed;
+#endif
+	return NULL;
+}
+
+BulletPattern ProcBullets::methodMosk(ProcBullets* b, float dt)
+{
+	//b->v = 
+	return NULL;
 }
 
 ImageInfo bulletImageInfo[PlayerBehaveMax] =
@@ -123,6 +209,15 @@ ImageInfo bulletImageInfo[PlayerBehaveMax] =
 		0.18f,
 		1,
 		{255, 255, 255, 255},
+		NULL,
+	},
+	{
+		"assets/Bullets/Bomb_%02d.png",
+		16,
+		.5f, {-20 / 2, 0},
+		0.1f,
+		0,
+		{0, 248, 0, 255},
 		NULL,
 	},
 	{

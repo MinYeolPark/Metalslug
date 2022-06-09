@@ -114,13 +114,19 @@
     <ClInclude Include="3.Enemies\ArabMelee.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyMgr.h">
+    <ClInclude Include="0.Manager\EnemyMgr.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="3.Enemies\MoskTower.h">
+    <ClInclude Include="3.Enemies\Mosque.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Item.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="0.Manager\BulletMgr.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="0.Manager\EffectMgr.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -221,13 +227,19 @@
     <ClCompile Include="3.Enemies\ArabMelee.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyMgr.cpp">
+    <ClCompile Include="0.Manager\EnemyMgr.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="3.Enemies\MoskTower.cpp">
+    <ClCompile Include="3.Enemies\Mosque.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Item.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="0.Manager\BulletMgr.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="0.Manager\EffectMgr.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

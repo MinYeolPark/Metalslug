@@ -7,4 +7,13 @@ void freeMenu();
 void drawMenu(float dt);
 bool keyMenu(iKeyState stat, iPoint p);
 
+// -----------------------------------
+// Title Menu Popup
+// -----------------------------------
+void createTitleMenu();
+void freeTitleMenu();
+void drawTitleMenu(float dt);
+bool keyTitleMenu(iKeyState stat, iPoint p);
+void showTitleMenu(bool show);
+
 

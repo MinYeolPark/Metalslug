@@ -17,7 +17,7 @@ static void _setKeyboard(int& keys, bool down, int key)
 		case 16: keys |= keyboard_shift; break;
 		case 90: keys |= keyboard_z;	break;
 		case 88: keys |= keyboard_x;	break;
-		}
+		}		
 	}
 	else
 	{

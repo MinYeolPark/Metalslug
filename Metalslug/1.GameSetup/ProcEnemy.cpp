@@ -1,5 +1,7 @@
 #include "ProcEnemy.h"
 
+#include "ProcField.h"
+
 ProcEnemy::ProcEnemy(int idx)
 {
 	p = iPointZero;
@@ -28,7 +30,7 @@ ProcEnemy::~ProcEnemy()
 
 iRect ProcEnemy::collider()
 {
-	return iRect(p.x - 30, p.y- 30, 100, 100);
+	return iRectMake(p.x + bg->off.x - 25, p.y + bg->off.y -50, 50, 50);
 }
 
 void ProcEnemy::updateAi(ProcEnemy* e, float dt)

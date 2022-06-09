@@ -5,11 +5,14 @@
 #include "ImgMgr.h"
 
 #include "EnemyMgr.h"
+#include "EffectMgr.h"
 
 #include "ProcField.h"
 #include "ProcPlayer.h"
 #include "ProcBullets.h"
 #include "ProcEnemy.h"
+
+#include "Mosque.h"
 
 ///////////////////////////////////////////////////
 //Proc
@@ -34,15 +37,5 @@ void loadProcPlayer();
 void freeProcPlayer();
 void drawProcPlayer(float dt, iPoint off);
 
-///////////////////////////////////////////////////
-//Bullets
-///////////////////////////////////////////////////
-extern int bulletNum;
-extern ProcBullets** bullets;
-#define bulletMax 50
-void addBullet(ProcObject* parent, int idx, float degree);
-void loadProcBullets();
-void freeProcBullets();
-void drawProcBullets(float dt, iPoint off);
 
 

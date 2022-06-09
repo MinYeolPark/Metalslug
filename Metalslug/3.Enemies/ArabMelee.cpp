@@ -7,7 +7,7 @@ ArabMelee::ArabMelee(int idx) : ProcEnemy(idx)
 {
 	idx = (int)EnemyIndex::ArMelee;
 
-	speed = 100;
+	speed = 80;
 	up = 0.f;
 	down = 0.f;
 	fall = false;
@@ -39,21 +39,8 @@ ArabMelee::ArabMelee(int idx) : ProcEnemy(idx)
 ArabMelee::~ArabMelee()
 {
 	for (int i = 0; i < EnemyBehaveMax; i++)
-	{
-		//ImageInfo* ii = &imgMeleeInfo[i];
-		//for (int j = 0; j < ii->num; j++)
 		delete imgs[i];
-		delete imgEnemy[i];
-	}
 	delete imgs;
-	delete imgEnemy;
-
-	imgEnemy = NULL;
-}
-
-iRect ArabMelee::collider()
-{
-	return iRectMake(p.x - 20 + bg->off.x, p.y - 70 + bg->off.y, 40, 70);
 }
 
 void ArabMelee::initObj()
@@ -172,10 +159,14 @@ void ArabMelee::drawObj(float dt, iPoint off)
 
 void ArabMelee::freeObj()
 {
-	//for (int i = 0; i < 12; i++)
-	//	delete imgEnemy[i];
-	//delete imgEnemy;
-	//imgEnemy = NULL;
+	//#issue한번만 지우기
+	if (imgEnemy != NULL)
+	{
+		for (int i = 0; i < EnemyBehaveMax; i++)
+			delete imgEnemy[i];
+		delete imgEnemy;
+		imgEnemy = NULL;
+	}
 }
 
 ImageInfo imgMeleeInfo[] =

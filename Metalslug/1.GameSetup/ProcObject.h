@@ -31,7 +31,7 @@ public:
 public:
 	virtual void initObj() = 0;
 	virtual void updateObj(float dt) = 0;
-	virtual void fixedUpdate(float dt);
+	virtual void fixedUpdate(float dt) = 0;
 	virtual bool drawObj(float dt, iPoint off) = 0;
 	virtual void freeObj() = 0;
 };

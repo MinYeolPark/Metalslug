@@ -72,7 +72,7 @@ iImage** createImgPlayer(ImageInfo* imageInfo, void* c)
 }
 
 
-iImage** createImgBullets(ImageInfo* imageInfo, void* c)
+iImage** createImgBullets(ImageInfo* imageInfo)
 {
 	iImage** _imgs = new iImage * [BulletIndexMax];
 	memset(_imgs, 0x00, sizeof(iImage*) * BulletIndexMax);
@@ -90,10 +90,35 @@ iImage** createImgBullets(ImageInfo* imageInfo, void* c)
 		img->position = ii->p;
 		img->_aniDt = ii->aniDt;
 		img->anc = TOP | LEFT;
-		img->startAnimation(ii->cbAni, (ProcBullets*)c);
+		img->startAnimation();
 		if (ii->repeatNum)
 			img->_repeatNum = ii->repeatNum;
 		_imgs[i]=img;
+	}
+	return _imgs;
+}
+
+iImage** createImgEffect(ImageInfo* imageInfo, void* c)
+{	
+	iImage** _imgs = new iImage * [EffectIndexMax];
+	memset(_imgs, 0x00, sizeof(iImage*) * EffectIndexMax);
+	for (int i = 0; i < EffectIndexMax; i++)
+	{
+		ImageInfo* ii = &imageInfo[i];
+		iImage* img = new iImage();
+		for (int j = 0; j < ii->num; j++)
+		{
+			Texture* tex = createImage(ii->colorKey, ii->path, j);
+			img->addObject(tex);
+			freeImage(tex);
+		}
+		img->scale = ii->s;
+		img->position = ii->p;
+		img->_aniDt = ii->aniDt;
+		img->anc = TOP | LEFT;		
+		if (ii->repeatNum)
+			img->_repeatNum = ii->repeatNum;
+		_imgs[i] = img;
 	}
 	return _imgs;
 }
@@ -106,7 +131,7 @@ iImage** createImgEnemy(ImageInfo* imageInfo, void* c)
 iImage** createImgEnemyReverse(ImageInfo* imageInfo, int size, void* c)
 {
 	iImage** _imgEnemy = new iImage * [size];
-	//memset(_imgEnemy, 0x00, sizeof(iImage * [PlayerBehaveMax]));
+	memset(_imgEnemy, 0x00, sizeof(iImage*) * size);
 	for (int i = 0; i < size; i++)
 	{
 		iImage* img;
@@ -121,7 +146,7 @@ iImage** createImgEnemyReverse(ImageInfo* imageInfo, int size, void* c)
 			ImageInfo* ii = &imageInfo[i / 2];		//left, right
 			for (int k = 0; k < ii->num; k++)
 			{
-				Texture* tex = createImage(imageInfo->colorKey, ii->path, k);
+				Texture* tex = createImage(ii->colorKey, ii->path, k);
 				img->addObject(tex);
 				freeImage(tex);
 			}
@@ -152,4 +177,30 @@ iImage** createImgSingleBehave(ImageInfo* imageInfo, void* c)
 iImage** createImgSingleEach(ImageInfo* imageInfo, void* c)
 {
 	return nullptr;
+}
+
+iImage** createMosqueBaseImage(ImageInfo* imageInfo, int size, void* c)
+{	
+	iImage** _imgs = new iImage * [size];
+	memset(_imgs, 0x00, sizeof(iImage*) * size);
+	for (int i = 0; i < size; i++)
+	{
+		ImageInfo* ii = &imageInfo[i];
+		iImage* img = new iImage();
+		for (int j = 0; j < ii->num; j++)
+		{
+			Texture* tex = createImage(ii->colorKey, ii->path, j);
+			img->addObject(tex);
+			freeImage(tex);
+		}
+		img->scale = ii->s;
+		img->position = ii->p;
+		img->_aniDt = ii->aniDt;
+		img->anc = TOP | LEFT;
+		img->startAnimation();
+		if (ii->repeatNum)
+			img->_repeatNum = ii->repeatNum;
+		_imgs[i] = img;
+	}
+	return _imgs;
 }

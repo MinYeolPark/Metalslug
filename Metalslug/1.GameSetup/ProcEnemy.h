@@ -1,7 +1,7 @@
 #pragma once
 #include "ProcObject.h"
 
-enum class EnemyIndex
+enum EnemyIndex
 {
 	ArMelee = 0,
 	ArBurserker,
@@ -51,7 +51,6 @@ public:
 	float attkRate, _attkRate;
 	float aiDt, _aiDt;
 	iPoint tp;
-
 public:
 	virtual void initObj() = 0;
 	virtual void updateObj(float dt) = 0;
@@ -60,6 +59,9 @@ public:
 	virtual void freeObj() = 0;
 public:
 	iRect collider();
+	
+	EnemyBehave getState() { return state; }
+	void setState(EnemyBehave newState) { state = newState; }
 	//ai
 public:
 	void updateAi(ProcEnemy* e, float dt);

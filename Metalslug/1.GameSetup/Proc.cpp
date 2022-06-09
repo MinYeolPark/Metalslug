@@ -4,26 +4,31 @@
 #include "InputMgr.h"
 #include "UIMgr.h"
 
+#include "EffectMgr.h"
+#include "BulletMgr.h"
+
 #include "Loading.h"
 
 #include "ProcField.h"
-#include "ProcBullets.h"
+
 
 void loadProc()
 {
 	loadProcField();
-	loadProcPlayer();
-	loadProcBullets();
 	loadProcEnemy();
+	loadProcBullets();
+	loadProcEffect();
+	loadProcPlayer();
 
 	loadUI();
 }
 void freeProc()
 {
 	freeProcField();
-	freeProcPlayer();
-	freeProcBullets();
 	freeProcEnemy();
+	freeProcBullets();
+	freeProcEffect();
+	freeProcPlayer();
 
 	freeUI();
 }
@@ -31,9 +36,10 @@ void freeProc()
 void drawProc(float dt)
 {
 	iPoint off = drawProcField(dt);
-	drawProcPlayer(dt, off);
-	drawProcBullets(dt, off);
 	drawProcEnemy(dt, off);
+	drawProcBullets(dt, off);
+	drawProcEffect(dt, off);
+	drawProcPlayer(dt, off);
 	drawUI(dt, off);
 
 	setRGBA(1, 1, 1, 1);
@@ -103,75 +109,6 @@ void drawProcPlayer(float dt, iPoint off)
 }
 
 
-///////////////////////////////////////////////////
-//Bullets
-///////////////////////////////////////////////////
-
-ProcBullets*** _bullets;
-ProcBullets** bullets;
-int bulletNum;
-static iImage*** _imgProcBullet;
-void loadProcBullets()
-{
-	_imgProcBullet = NULL;
-
-	_bullets = new ProcBullets * *[BulletIndexMax];
-	for (int i = 0; i < BulletIndexMax; i++)
-	{
-		_bullets[i] = new ProcBullets * [bulletMax];
-		for (int j = 0; j < bulletMax; j++)
-			_bullets[i][j] = new ProcBullets(i);
-	}
-	bullets = new ProcBullets * [BulletIndexMax * bulletMax];
-	bulletNum = 0;
-}
-
-void freeProcBullets()
-{
-	for (int i = 0; i < bulletMax; i++)
-	{
-		delete _imgProcBullet[i];
-		delete _bullets[i];
-	}
-	delete _imgProcBullet;
-	delete _bullets;
-
-	delete bullets;
-	_imgProcBullet = NULL;
-}
-
-void drawProcBullets(float dt, iPoint off)
-{
-	for (int i = 0; i < bulletNum; i++)
-	{
-		ProcBullets* b = bullets[i];
-		b->updateObj(dt);
-		if (b->drawObj(dt, off))
-		{
-			bulletNum--;
-			bullets[i] = bullets[bulletNum];
-			i--;
-		}
-	}
-}
-
-void addBullet(ProcObject* parent, int idx, float degree)
-{
-	for (int i = 0; i < bulletMax; i++)
-	{
-		printf("bulletNum[%d]\n", bulletNum);
-		ProcBullets* b = _bullets[idx][i];
-		if (b->isActive == false)
-		{
-			b->initObj(parent, idx, parent->p, degree);
-
-			bullets[bulletNum] = b;
-			bulletNum++;
-			return;
-
-		}
-	}
-}
 
 
 

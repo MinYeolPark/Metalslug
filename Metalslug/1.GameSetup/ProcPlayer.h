@@ -5,8 +5,8 @@
 #define pBOT 0
 #define pTOP 1
 #define WHOLE 2
-#define jumpPow			4
-#define jumpDecrease	10
+#define jumpPow			3
+#define jumpDecrease	7
 
 
 struct Gun
@@ -15,6 +15,7 @@ struct Gun
 	{
 		Handgun = 0,
 		HeavyMachinegun,
+		Bomb,
 	};
 	struct GunInfo
 	{
@@ -24,10 +25,11 @@ struct Gun
 		int remain;
 		float rate, _rate;
 	};
-	GunInfo gi[2] =
+	GunInfo gi[3] =
 	{
 		{GunIndex::Handgun, 100, 100, 0},
 		{GunIndex::HeavyMachinegun, 100, 150, 200},
+		{GunIndex::Bomb, 100, 150, 200},
 	};
 	Gun()
 	{
@@ -74,10 +76,15 @@ public:
 		
 	Gun* curGun;
 	iPoint firePoint;
+	iPoint v;
 
 	float up;
 	float down;
 	bool fall;	
+
+	bool isAimup;
+	bool isCrouching;
+	bool isAimDown;
 
 	int jumpCombo;
 
@@ -87,26 +94,32 @@ public:
 	int hp;
 	int life;
 	float moveSpeed;
+	float attkRange;
 	int bombs;
 	int score;
 public:
 	void setTopState(PlayerBehave pb, iPoint v);
 	void setBotState(PlayerBehave pb, iPoint v);
 public:
-	void jump();
+	void jump(iPoint v);
+	void crouch();
+	void aimUp();
 	void fire(iPoint v);
+	void bomb(iPoint v);
 public:
-	virtual void initObj() override;
-	virtual void updateObj(float dt) override;
-	virtual void fixedUpdate(float dt) override;
-	virtual bool drawObj(float dt, iPoint off) override;
-	virtual void freeObj() override;
+	virtual void initObj() ;
+	virtual void updateObj(float dt);
+	virtual void fixedUpdate(float dt) ;
+	virtual bool drawObj(float dt, iPoint off) ;
+	virtual void freeObj() ;
 
 public:
 public:
 	iRect collider();
 
 public:
+	static void cbAniJump(void* parm);
+	static void cbAniBrake(void* parm);
 	static void cbAniFire(void* parm);
 
 };
@@ -142,17 +155,35 @@ enum PlayerBehave
 	//===========================================
 	//Top
 	//===========================================
+
+	AimtoUpR,
+	AimtoUpL,
+
+	AimtoNormR,
+	AimtoNormL,
+
+	AimDownR,
+	AimDownL,
+
 	FireR,
 	FireL,
+
+	MeleeR,
+	MeleeL,
+
+	BombR,
+	BombL,
+
+	/// 
+	/// Whole
+	/// 
 
 	CrouchR,
 	CrouchL,
 
-	AimUpR,
-	AimUpL,
+	BrakeR,
+	BrakeL,
 
-	AimDownR,
-	AimDownL,
 
 	////===========================================
 	////Whole

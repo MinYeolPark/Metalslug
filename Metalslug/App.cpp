@@ -59,7 +59,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     int wH = wndHeight + win_border_height;         //Monitor 2/3 size + outline pixel value
     int wW = wndHeight * devSize.width / devSize.height + win_border_width;
 
-    MoveWindow(hWnd, (mW - wW) / 2, (mH - wH) / 2, wW, wH, TRUE);
+    MoveWindow(hWnd, (mW - wW) / 2, (mH - wH) / 2, wW, wH, TRUE);    
 
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);

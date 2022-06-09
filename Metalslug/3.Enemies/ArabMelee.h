@@ -12,7 +12,7 @@ public:
 	iImage** imgs;
 	iImage* imgCurr;
 
-	EnemyIndex idx;
+	int idx;
 
 public:
 	float speed;
@@ -20,8 +20,6 @@ public:
 	float down;
 	bool fall;
 
-public:
-	iRect collider();
 public:
 	virtual void initObj();
 	virtual void updateObj(float dt);
