@@ -8,7 +8,6 @@
 #define jumpPow			3
 #define jumpDecrease	7
 
-
 struct Gun
 {	
 	enum GunIndex
@@ -132,12 +131,12 @@ public:
 extern ProcPlayer* player;
 enum CharacterIndex
 {
-	PIO = 0,
+	MARCO = 0,
 	ERI,
-	MARCO,
 	TAMA,
+	PIO,
 
-	PlayerIndexMAX
+	CharacterIndexMax,
 };
 enum PlayerBehave
 {
@@ -182,6 +181,8 @@ enum PlayerBehave
 	/// 
 	/// Whole
 	/// 
+	SpawnR,
+	SpawnL,
 
 	CrouchR,
 	CrouchL,

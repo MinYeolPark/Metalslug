@@ -1,5 +1,30 @@
 #include "ImgMgr.h"
 
+iImage** createImgSelect(Texture* bg)
+{
+	iImage** _img = new iImage * [CharacterIndexMax];
+	for (int i = 0; i < CharacterIndexMax; i++)
+	{
+		iImage* img = new iImage();
+		for (int j = 0; j < 3; j++)
+		{
+			Texture* t = createImage("assets/CharSelect/CharacterSelect_%d%d.png", i, j);
+			img->addObject(t);
+			freeImage(t);
+
+			t->width *= devSize.width / bg->width;
+			t->potWidth *= devSize.width / bg->width;
+			t->height *= devSize.height / bg->height;
+			t->potHeight *= devSize.height / bg->height;
+
+			img->position = iPointMake(10 * viewport.size.height / devSize.height + (img->tex->width * j),
+				devSize.height - 65 * viewport.size.height / devSize.height);
+		}
+		_img[i] = img;
+	}
+	return _img;
+}
+
 iImage** createImgChar(ImageInfo* imageInfo, void* c)
 {
 	iImage** _img = new iImage * [imageInfo->num];
@@ -30,11 +55,11 @@ iImage** createImgChar(ImageInfo* imageInfo, void* c)
 	return _img;
 }
 
-iImage** createImgPlayer(ImageInfo* imageInfo, void* c)
+iImage** createImgPlayer(ImageInfo* imageInfo, int size, void* c)
 {
-	iImage** _imgPlayer = new iImage * [PlayerBehaveMax];
-	memset(_imgPlayer, 0x00, sizeof(iImage * [PlayerBehaveMax]));
-	for (int i = 0; i < PlayerBehaveMax; i++)
+	iImage** _imgPlayer = new iImage * [size];
+	memset(_imgPlayer, 0x00, sizeof(iImage*) * size);
+	for (int i = 0; i < size; i++)
 	{
 		iImage* img;
 		if (i % 2 == 1)

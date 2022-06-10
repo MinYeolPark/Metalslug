@@ -2,15 +2,31 @@
 
 GameState gs;
 
+bool isLoaded = false;
+static float delay, _delay;
 static GameState gsNew;
 static MethodLoading methodFree, methodLoad;
 static float loadingDt = 0.0f;
-
 void setLoading(GameState gs, MethodLoading free, MethodLoading load)
 {
 	if (loadingDt)
 		return;
 
+	_delay = 0.f;
+	delay = 0.f;
+	gsNew = gs;
+	methodFree = free;
+	methodLoad = load;
+	loadingDt = 0.000001f;
+}
+
+void setLoading(GameState gs, float delayTime, MethodLoading free, MethodLoading load)
+{
+	if (loadingDt)
+		return;
+	
+	_delay = delayTime;
+	delay = 0.f;
 	gsNew = gs;
 	methodFree = free;
 	methodLoad = load;
@@ -20,6 +36,11 @@ void setLoading(GameState gs, MethodLoading free, MethodLoading load)
 void drawLoading(float dt)
 {
 	if (loadingDt == 0.0f)
+		return;
+	else
+		delay += dt;
+
+	if (delay < _delay)
 		return;
 
 	float alpha = 1.0f;
@@ -61,7 +82,10 @@ void drawLoading(float dt)
 
 		loadingDt += dt;
 		if (loadingDt > loadingDelta * 2 + 0.7f)
+		{
 			loadingDt = 0.0f;// 완전 밝아짐
+			isLoaded = true;
+		}
 	}
 
 	// alpha 블랙 그림

@@ -246,6 +246,7 @@ void drawOpenGL(float dt, MethodDraw m)
     fbo->clear(0, 0, 0, 0);
     setRGBA(1, 1, 1, 1);
 
+    //setTexture(NEAREST, CLAMP);
     Texture* t = fbo->tex;
     float s = zoom.update(dt);
     if (s == 1.0f)
@@ -259,6 +260,7 @@ void drawOpenGL(float dt, MethodDraw m)
         drawImage(t, p.x, p.y, s, s,
             TOP | LEFT, 0, 0, t->width, t->height, 2, 0, REVERSE_HEIGHT);
     }
+    //setTexture(LINEAR, CLAMP);
 
     SwapBuffers(hDC);
 }

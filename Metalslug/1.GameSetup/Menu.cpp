@@ -1,5 +1,9 @@
 #include "Menu.h"
 
+#include "Loading.h"
+#include "Proc.h"
+#include "Select.h"
+
 #include "iPopup.h"
 
 Texture* titleBg;
@@ -65,11 +69,11 @@ void createTitleMenu()
 	//
 	const char* str[4] =
 	{ "Game Start","Map Tool", "Option","Exit" };
-	setStringName("assets/BMJUA_ttf.ttf");
-	setStringSize(10);
-	setStringBorder(0);
-
-	size = iSizeMake(80, 15);
+	setStringName("assets/BMJUA_ttf.ttf");	
+	setStringSize(20);
+	setStringBorder(2);
+	
+	size = iSizeMake(160, 25);
 	titleMenuBtn = new iImage * [4];
 	for (int i = 0; i < 4; i++)
 	{
@@ -95,7 +99,7 @@ void createTitleMenu()
 			freeImage(tex);
 		}
 		img->position = iPointMake(devSize.width / 2 - size.width / 2,
-			(devSize.width + 10) / 2 + 20 * i);		
+			(devSize.height / 2 + 30 * i));		
 		pop->addObject(img);
 		titleMenuBtn[i] = img;
 	}
@@ -131,24 +135,27 @@ bool keyTitleMenu(iKeyState stat, iPoint p)
 	case iKeyStateBegan:
 		i = titleMenu->selected;
 		if (i == -1) break;
+		if (i == 0)
+		{
+			printf("GameStart\n");
+#if 0
+			setLoading(GameStateProc, freeMenu, loadProc);
+#else
+			setLoading(GameStateSelect, freeMenu, loadSelect);
+#endif
+		}
 	case iKeyStateMoved:
-		printf("mouse move");
 		for (i = 0; i < 4; i++)
 		{
 			if (containPoint(p, titleMenuBtn[i]->rect(titleMenu->closePoint)))
 			{
-				printf("contain\n");
 				j = i;
 				break;
 			}
 		}
 		if (j != titleMenu->selected)
-		{
-			printf("audio play btn\n");
 			titleMenu->selected = j;
-		}
 		break;
-
 	case iKeyStateEnded:
 		break;
 	}

@@ -49,8 +49,8 @@ ProcPlayer::ProcPlayer()
 
 	topState = IdleR;
 	botState = IdleR;
-	topImgs = createImgPlayer(topImageInfo, this);
-	botImgs = createImgPlayer(botImageInfo, this);
+	topImgs = createImgPlayer(topImageInfo, 13 * 2 , this);
+	botImgs = createImgPlayer(botImageInfo, 4 * 2, this);
 
 	loadFB();
 }
@@ -64,7 +64,8 @@ ProcPlayer::~ProcPlayer()
 void ProcPlayer::initObj()
 {
 	this->isActive = true;
-
+	topState = SpawnR;
+	botState = IdleR;
 	this->p = iPointMake(100, 200);
 }
 
@@ -138,7 +139,6 @@ void ProcPlayer::updateObj(float dt)
 	}
 	if (getKeyDown(keyboard_down))
 		crouch();
-
 	if (getKeyDown(keyboard_z))
 		jump(v);
 	if (getKeyDown(keyboard_x))
@@ -214,7 +214,7 @@ bool ProcPlayer::drawObj(float dt, iPoint off)
 	botImgCurr = botImgs[botState];
 	topImgCurr = topImgs[topState];
 
-	if (topState < CrouchR)
+	if (topState < SpawnR)
 		botImgCurr->paint(dt, p + off);
 	topImgCurr->paint(dt, p + off);
 	{
@@ -286,6 +286,10 @@ void ProcPlayer::setTopState(PlayerBehave pb, iPoint v)
 	if (pb == BombR || pb == BombL)
 	{
 		topImgs[pb]->startAnimation(cbAniFire, this);
+	}
+	if (pb == SpawnR || pb == SpawnL)
+	{
+		topImgs[pb]->startAnimation();
 	}
 	if (pb == CrouchR || pb == CrouchL)
 	{
@@ -547,6 +551,15 @@ ImageInfo topImageInfo[] =
 		{255,0,0,255},
 		TOP | LEFT,
 		ProcPlayer::cbAniFire,
+	},
+	{
+		"assets/Player/Spawn_%02d.png",
+		7, 1.0f, { -29 / 2, 0 },
+		0.04f,
+		1,
+		{255,0,0,255},
+		TOP | LEFT,
+		NULL,
 	},
 	{
 		"assets/Player/Crouch_%02d.png",

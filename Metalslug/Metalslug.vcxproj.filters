@@ -81,9 +81,6 @@
     <ClInclude Include="1.GameSetup\Loading.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="1.GameSetup\Map.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="1.GameSetup\Menu.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -127,6 +124,12 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="0.Manager\EffectMgr.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="1.GameSetup\Map.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="1.GameSetup\Select.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -194,9 +197,6 @@
     <ClCompile Include="1.GameSetup\Loading.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="1.GameSetup\Map.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="1.GameSetup\Menu.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -240,6 +240,12 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="0.Manager\EffectMgr.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="1.GameSetup\Map.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="1.GameSetup\Select.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
