@@ -3,6 +3,7 @@
 #include "iStd.h"
 
 #include "ImgMgr.h"
+#include "BulletMgr.h"
 
 static iImage** _imgBullets = NULL;
 ImageInfo bulletImageInfo[];
@@ -13,14 +14,14 @@ ProcBullets::ProcBullets(int idx) : ProcObject(idx)
 	parent = NULL;
 	bulletIdx = idx;
 
-	iPoint v = iPointZero;
+	v = iPointZero;
 
 	pattern = NULL;
-	speed = 300.;
-	dmg = 100.;	
+	speed = 0;
+	dmg = 0;
 
 	if (_imgBullets == NULL)
-		_imgBullets = createImgBullets(bulletImageInfo);
+		_imgBullets = createImgBullets(bulletImageInfo, this);
 
 	imgs = new iImage * [BulletIndexMax];
 	memset(imgs, 0x00, sizeof(iImage*) * BulletIndexMax);
@@ -46,6 +47,25 @@ void ProcBullets::initObj()
 
 }
 
+void ProcBullets::initObj(Mosque* parent, int idx, iPoint p, float degree)
+{
+	this->isActive = true;
+	this->parent = (ProcObject*)parent;
+	this->bulletIdx = idx;
+	this->p = p;
+	this->degree = degree;
+	speed = 50;
+	dmg = 100;
+	if (bulletIdx == BulletMosqueTrace)
+		this->pattern = patMosqueTrace;
+	else
+		this->pattern = patMosque;
+
+	imgs[this->bulletIdx]->startAnimation(cbAniBullet, this);
+}
+
+
+
 void ProcBullets::initObj(ProcObject* parent, int idx, iPoint p, float degree)
 {
 }
@@ -56,29 +76,33 @@ void ProcBullets::initObj(ProcEnemy* parent, int idx, iPoint p, float degree)
 
 void ProcBullets::initObj(ProcPlayer* parent, int idx, iPoint p, float degree)
 {
-	isActive = true;
+	this->isActive = true;
 	this->parent = parent;
 	this->bulletIdx = idx;	
 	this->p = parent->firePoint;
 	this->degree = degree;
+	this->pattern = patDefault;
+	speed = 300;
+	dmg = 100;
+	imgs[this->bulletIdx]->startAnimation();
 }
 
 void ProcBullets::updateObj(float dt)
 {
+#if 1
 	isActive = containPoint(p,
-		iRectMake(-bg->off.x - 20, -bg->off.y - 20,
-			devSize.width + 40, devSize.height + 40));
+	iRectMake(-bg->off.x - 20, -bg->off.y - 20,
+		devSize.width + 40, devSize.height + 40));
+#endif
+	pattern(this, dt);
 	//Pattern
-	if (this->bulletIdx == BulletIndex::BulletBomb)
-		this->pattern = methodBomb(this, degree, dt);
-	else
-		this->pattern = methodDefault(this, degree, dt);
-
 	fixedUpdate(dt);
 }
 
 void ProcBullets::fixedUpdate(float dt)
 {
+	if (!parent)
+		return;
 	if (parent->layer == Player)
 	{
 		ProcEnemy* eNear = NULL;
@@ -115,18 +139,18 @@ void ProcBullets::fixedUpdate(float dt)
 }
 
 bool ProcBullets::drawObj(float dt, iPoint off)
-{
-	p += v * dt;
-
+{	
 	setRGBA(1, 1, 1, 1);
+
 	imgCurr = imgs[bulletIdx];
-	imgCurr->paint(dt, p + off);	
+	imgCurr->paint(dt, p + off);
 
 	setRGBA(1, 1, 1, 1);
 
-#ifdef _DEBUG	
-	drawRect(collider());
+#ifdef _DEBUG		
+	drawDot(p + off);
 #endif // DEBUG
+	
 	return !isActive;
 }
 
@@ -141,14 +165,16 @@ iRect ProcBullets::collider()
 		imgCurr->tex->width, imgCurr->tex->height);
 }
 
-BulletPattern ProcBullets::methodDefault(ProcBullets* b, float degree, float dt)
+void ProcBullets::patDefault(ProcBullets* b, float dt)
 {
-	b->v = iPointRotate(iPointMake(1, 0), iPointZero, degree) * b->speed;
-	return NULL;
+	//degree?
+	b->v = iPointRotate(iPointMake(1, 0), iPointZero, 0);
+
+	b->p += b->v * b->speed * dt;
 }
 
 static float r = 0;
-BulletPattern ProcBullets::methodBomb(ProcBullets* b, float degree, float dt)
+void ProcBullets::patBomb(ProcBullets* b, float dt)
 {
 
 #if 0
@@ -222,15 +248,41 @@ BulletPattern ProcBullets::methodBomb(ProcBullets* b, float degree, float dt)
 		}	
 	}
 #endif
-	return NULL;
 }
-BulletPattern ProcBullets::methodMosk(ProcBullets* b, float dt)
+void ProcBullets::patMosque(ProcBullets* b, float dt)
 {
-	//b->v = 
-	return NULL;
+	
 }
 
-ImageInfo bulletImageInfo[PlayerBehaveMax] =
+void ProcBullets::patMosqueTrace(ProcBullets* b, float dt)
+{
+	iPoint v = player->p - b->p;
+	v /= iPointLength(v);
+	v *= (b->speed * dt);
+	b->v = iPointRotate(v, player->p, 180);	
+	b->p += v;
+	if (player)
+	{
+		if (containPoint(b->p, player->collider()))
+		{
+			b->isActive = false;
+			//player->hp -= b->dmg;
+
+			//dead
+			//addProcEffect(bulletIdx, bp);
+		}	
+	}
+}
+
+void ProcBullets::cbAniBullet(void* parm)
+{
+	ProcBullets* b = (ProcBullets*)parm;
+	b->isActive = false;
+
+	addBullet(b->m, BulletMosqueTrace, b->p);
+}
+
+ImageInfo bulletImageInfo[BulletIndexMax] =
 {
 	{
 		"assets/Bullets/HandGun_%02d.png",
@@ -239,7 +291,6 @@ ImageInfo bulletImageInfo[PlayerBehaveMax] =
 		0.18f,
 		1,
 		{255, 255, 255 ,255},
-		TOP|LEFT,
 		NULL,
 	},
 	{
@@ -249,7 +300,6 @@ ImageInfo bulletImageInfo[PlayerBehaveMax] =
 		0.18f,
 		1,
 		{255, 255, 255, 255},
-		TOP | LEFT,
 		NULL,
 	},
 	{
@@ -259,17 +309,24 @@ ImageInfo bulletImageInfo[PlayerBehaveMax] =
 		0.1f,
 		0,
 		{0, 248, 0, 255},
-		TOP | LEFT,
 		NULL,
 	},
 	{
 		"assets/Bullets/MidBoss_Fire_%02d.png",
 		29,
-		1.0f, {-50 / 2,-26 / 2},
+		1.0f, {-50 / 2,0},
+		0.1f,
+		1,
+		{255, 0, 0, 255},
+		ProcBullets::cbAniBullet,
+	},
+	{
+		"assets/Bullets/MosqueMissile_%02d.png",
+		3,
+		1.0f, {-40 / 2,0},
 		0.1f,
 		0,
 		{255, 0, 0, 255},
-		TOP | LEFT,
 		NULL,
 	},
 };

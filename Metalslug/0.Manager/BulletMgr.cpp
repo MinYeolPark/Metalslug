@@ -40,6 +40,22 @@ void drawProcBullets(float dt, iPoint off)
 	}
 }
 
+void addBullet(Mosque* m, int idx, iPoint p)
+{
+	for (int i = 0; i < bulletMax; i++)
+	{
+		ProcBullets* b = _bullets[idx][i];
+		if (b->isActive == false)
+		{
+			b->initObj(m, idx, p, 0);
+
+			bullets[bulletNum] = b;
+			bulletNum++;
+			return;
+		}
+	}
+}
+
 void addBullet(ProcPlayer* parent, int idx, float degree)
 {
 	for (int i = 0; i < bulletMax; i++)
@@ -52,7 +68,6 @@ void addBullet(ProcPlayer* parent, int idx, float degree)
 			bullets[bulletNum] = b;
 			bulletNum++;
 			return;
-
 		}
 	}
 }

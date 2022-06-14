@@ -8,6 +8,7 @@ struct BgData
 	iPoint p[20];
 	int pCount;
 	float scale;
+	iPoint trigger[3];
 };
 
 struct BgLayer

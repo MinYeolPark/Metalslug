@@ -35,7 +35,7 @@ void loadProcEnemy()
 	addProcEnemy(ArMelee, iPointMake(200, 50));
 
 
-#if 0
+#if 1
 	mosque = new Mosque();
 	mosque->initObj();
 #endif
@@ -55,13 +55,13 @@ void freeProcEnemy()
 	delete _enemies;
 	delete enemies;
 
-#if 0
+#if 1
 	delete mosque;
 #endif
 }
 void drawProcEnemy(float dt, iPoint off)
 {
-#if 0
+#if 1
 	mosque->updateObj(dt);
 	mosque->drawObj(dt, off);
 #endif

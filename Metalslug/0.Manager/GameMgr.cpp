@@ -12,14 +12,14 @@ void loadGame()
 	setTexture(NEAREST, CLAMP);
 
 	playtime = 0.0f;
-#if 0
+#if 1
 	gs = GameState::GameStateProc;
+	loadProc();
 #else
 	gs = GameState::GameStateMenu;
+	loadMenu();
 #endif
 
-	loadMenu();
-	//loadProc();
 }
 
 void freeGame()

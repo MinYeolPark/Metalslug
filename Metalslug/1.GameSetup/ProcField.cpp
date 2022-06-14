@@ -100,9 +100,7 @@ void Bg::paint(float dt)
 	}
 #endif
 
-	//////////////////////////////////////
-	//For Debug
-	//////////////////////////////////////
+#ifdef _DEBUG
 
 	//#issue
 	setLineWidth(2);
@@ -114,7 +112,16 @@ void Bg::paint(float dt)
 			drawLine(bd->p[i].x + bg->off.x, bd->p[i].y + bg->off.y,
 				bd->p[i + 1].x + bg->off.x, bd->p[i + 1].y + bg->off.y);
 		}
+		for (int j = 0; j < 3; j++)
+		{
+			if (bd->trigger[j].x!= 0)
+				fillRect(bd->trigger[j].x, bd->trigger[j].y, 20, 100);
+		}
 	}
+#endif // DEBUG
+
+
+
 
 
 #if 0 //Collider Render for debug
@@ -152,64 +159,13 @@ iPoint Bg::move(iPoint mp)
 	return off - p;
 }
 
-#if 0
-BgData bgData_Stage1[cuts_Stage1] = {
-	{
-		"assets/BG/BG_00.png",
-		{{331 * 0, 200}, {331 * 0.3, 200}, {331 * 0.6, 200}, {331 * 1, 200}},
-		4,
-		1.f,
-	},
-	{
-		"assets/BG/BG_01.png",
-		{{331 * 1, 200}, {331 * 1.3, 200}, {331 * 1.6, 200}, {331 * 2, 200}},
-		4,
-		1.f,
-	},
-	{
-		"assets/BG/BG_02.png",
-		{{331 * 2, 200}, {331 * 2.3, 200}, {331 * 2.6, 200}, {331 * 3, 200}},
-		4,
-		1.f,
-	},
-	{
-		"assets/BG/BG_03.png",
-		{{331 * 3, 200}, {331 * 3.3, 200}, {331 * 3.6, 200}, {331 * 4, 200}},
-		2.f,
-	},
-	{
-		"assets/BG/BG_04.png",
-		{{331 * 4, 200}, {331 * 4.3, 200}, {331 * 4.6, 200}, {331 * 5, 200}},
-		4,
-		1.f,
-	},
-	{
-		"assets/BG/BG_05.png",
-		{{331 * 5, 200}, {331 * 5.3, 200}, {331 * 5.6, 200}, {331 * 6, 200}},
-		4,
-		1.f,
-	},
-	{
-		"assets/BG/BG_06.png",
-		{{331 * 6, 200}, {331 * 6.3, 200}, {331 * 6.6, 200}, {331 * 7, 200}},
-		4,
-		1.f,
-	},
-	{
-		"assets/BG/BG_07.png",
-		{{331 * 7, 200}, {331 * 7.3, 200}, {331 * 7.6, 200}, {331 * 8, 200}},
-		4,
-		1.f,
-	}
-};
-#else
-
 BgData bgData_Stage1[cuts_Stage1] = {
 	{
 		"assets/BG/BG_00.png",
 		{{331 * 0, 200}, {331 * 0.3, 200}, {331 * 0.6, 200}, {331 * 1, 200}},
 		4,
 		1.2f,
+		{{200,100}},
 	},
 	{
 		"assets/BG/BG_01.png",
@@ -278,7 +234,6 @@ BgData bgData_Stage1[cuts_Stage1] = {
 	}
 
 };
-#endif
 BgLayer bgLayer_Stage1[layers_Stage1] =
 {
 	{

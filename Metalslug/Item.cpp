@@ -6,7 +6,7 @@ ImageInfo itemImage[];
 Item* item;
 Item::Item()
 {
-	imgs = createImgBullets(itemImage);	
+	imgs = createImgBullets(itemImage, this);	
 
 	itemIndex = ItemIndex::ItemDefault;
 	p = iPointZero;

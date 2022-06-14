@@ -16,21 +16,6 @@ void loadProcEffect()
 		_effect[i] = new ProcEffect[effectMax];
 	effect = new ProcEffect * [EffectIndexMax * effectMax];
 	effectNum = 0;
-
-#if 0
-	_effect = new ProcEffect * [EffectIndexMax];
-	for (int i = 0; i < EffectIndexMax; i++)
-	{
-		_effect[i] = new ProcEffect[effectMax];
-		for (int j = 0; j < effectMax; j++)
-		{
-			_effect[i][j].index = (EffectIndex)i;			
-			_effect[i][j].imgs = _imgEffect[i]->clone();
-		}
-	}
-	effect = new ProcEffect * [effectMax * EffectIndexMax];		
-	effectNum = 0;
-#endif
 }
 
 void freeProcEffect()
@@ -41,12 +26,6 @@ void freeProcEffect()
 		delete _effect[i];
 		delete effect[i];
 	}
-	delete _effect;
-	delete effect;
-#endif
-#if 0
-	for (int i = 0; i < EffectIndexMax; i++)
-		delete _effect[i];
 	delete _effect;
 	delete effect;
 #endif
@@ -107,7 +86,7 @@ ProcEffect::ProcEffect()
 
 ProcEffect::~ProcEffect()
 {
-#if 0
+#if 1
 	for (int i = 0; i < BulletIndexMax; i++)
 		delete _imgEffect[i];
 	delete _imgEffect;
@@ -152,7 +131,6 @@ void ProcEffect::freeEffect()
 
 void ProcEffect::cbAniEffect(void* parm)
 {
-	printf("cbAniEffect\n");
 	ProcEffect* e = (ProcEffect*)parm;
 	e->isActive = false;	
 }
@@ -167,7 +145,6 @@ ImageInfo imgEffectInfo[] =
 		0.06f,
 		1,
 		{255, 0, 255, 255},
-		TOP | LEFT,
 		ProcEffect::cbAniEffect,
 	},
 	{
@@ -176,7 +153,6 @@ ImageInfo imgEffectInfo[] =
 		0.06f,
 		1,
 		{255, 0, 255, 255},
-		TOP | LEFT,
 		ProcEffect::cbAniEffect,
 	},
 	{
@@ -185,7 +161,14 @@ ImageInfo imgEffectInfo[] =
 		0.08f,
 		1,
 		{255, 0, 0, 255},
-		TOP | LEFT,
+		ProcEffect::cbAniEffect,
+	},
+	{
+		"assets/Effect/MidBoss_Trail_%02d.png",
+		33, 1.0f, { -63 / 2, 0},
+		0.08f,
+		1,
+		{63,72,204,255},
 		ProcEffect::cbAniEffect,
 	},
 };

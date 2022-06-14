@@ -118,6 +118,7 @@ void ProcPlayer::updateObj(float dt)
 
 	if (getKeyDown(keyboard_up))
 	{
+#if 0
 		if (getKeyDown(keyboard_space))
 			addFB(0, p, fireDegree);
 		else if (getKeyStat(keyboard_up))
@@ -135,8 +136,11 @@ void ProcPlayer::updateObj(float dt)
 					fireDegree = 90;
 			}
 		}
-		aimUp();
+#endif
+		aimUp();	
 	}
+	else if (getKeyUp(keyboard_up))
+		setTopState(IdleR, v);
 	if (getKeyDown(keyboard_down))
 		crouch();
 	if (getKeyDown(keyboard_z))
@@ -164,12 +168,6 @@ void ProcPlayer::fixedUpdate(float dt)
 		bg->move(iPointMake(devSize.width * 2 / 3 - x, 0));
 	}
 #endif	
-#if 1
-	//Camera fix
-	//if (x > bg->eventTrigger.x)
-		//printf("event triggered");
-
-#endif
 	int maxY = *(bg->maxY + (int)p.x);
 	if (p.y > maxY)		//on air
 	{
@@ -370,8 +368,8 @@ void ProcPlayer::fire(iPoint v)
 	}
 	else
 	{
-		setTopState((PlayerBehave)(FireR + topState % 2), v);
-		addBullet(this, curGun->gunIndex, fireDegree);
+		setTopState((PlayerBehave)(FireR + topState % 2), v);		
+		addBullet(this, 0, fireDegree);
 	}
 
 	if (v.x > 0)
@@ -429,7 +427,6 @@ ImageInfo botImageInfo[] =
 		0.1f,
 		0,
 		{255,0,0,255},
-		TOP | LEFT,
 		NULL,
 	},
 	{
@@ -438,7 +435,6 @@ ImageInfo botImageInfo[] =
 		0.1f,
 		0,
 		{255,0,0,255},
-		TOP | LEFT,
 		NULL,
 	},
 	{
@@ -447,7 +443,6 @@ ImageInfo botImageInfo[] =
 		0.1f,
 		1,
 		{255,0,0,255},
-		TOP | LEFT,
 		NULL,
 	},
 	{
@@ -456,7 +451,6 @@ ImageInfo botImageInfo[] =
 		0.1f,
 		1,
 		{255,0,0,255},
-		TOP | LEFT,
 		NULL,
 	},
 };
@@ -468,7 +462,6 @@ ImageInfo topImageInfo[] =
 		0.1f,
 		0,
 		{255,0,0,255},
-		TOP | LEFT,
 		NULL,
 	},
 	{
@@ -477,7 +470,6 @@ ImageInfo topImageInfo[] =
 		0.1f,
 		0,
 		{255,0,0,255},
-		TOP | LEFT,
 		NULL,
 	},
 	{
@@ -486,7 +478,6 @@ ImageInfo topImageInfo[] =
 		0.1f,
 		1,
 		{255,0,0,255},
-		TOP | LEFT,
 		NULL,
 	},
 	{
@@ -495,7 +486,6 @@ ImageInfo topImageInfo[] =
 		0.1f,
 		0,
 		{255,0,0,255},
-		TOP | LEFT,
 		NULL,
 	},
 	{
@@ -504,7 +494,6 @@ ImageInfo topImageInfo[] =
 		0.06f,
 		1,
 		{255,0,0,255},
-		TOP | LEFT,
 		NULL,
 	},
 	{
@@ -513,7 +502,6 @@ ImageInfo topImageInfo[] =
 		0.06f,
 		1,
 		{255, 0, 0, 255},
-		TOP | LEFT,
 		NULL,
 	},
 	{
@@ -522,7 +510,6 @@ ImageInfo topImageInfo[] =
 		0.06f,
 		1,
 		{255,0,0,255},
-		TOP | LEFT,
 		NULL,
 	},
 	{
@@ -531,7 +518,6 @@ ImageInfo topImageInfo[] =
 		0.06f,
 		1,
 		{255,0,0,255},
-		TOP | LEFT,
 		ProcPlayer::cbAniFire,
 	},
 	{
@@ -540,7 +526,6 @@ ImageInfo topImageInfo[] =
 		0.06f,
 		1,
 		{255,255,255,255},
-		TOP | LEFT,
 		ProcPlayer::cbAniFire,
 	},
 	{
@@ -549,7 +534,6 @@ ImageInfo topImageInfo[] =
 		0.06f,
 		1,
 		{255,0,0,255},
-		TOP | LEFT,
 		ProcPlayer::cbAniFire,
 	},
 	{
@@ -558,7 +542,6 @@ ImageInfo topImageInfo[] =
 		0.04f,
 		1,
 		{255,0,0,255},
-		TOP | LEFT,
 		NULL,
 	},
 	{
@@ -567,7 +550,6 @@ ImageInfo topImageInfo[] =
 		0.06f,
 		1,
 		{255,0,0,255},
-		TOP | LEFT,
 		NULL,
 	},
 	{
@@ -576,7 +558,6 @@ ImageInfo topImageInfo[] =
 		0.12f,
 		1,
 		{255, 255, 255, 255},
-		TOP | LEFT,
 		ProcPlayer::cbAniBrake,
 	},
 };

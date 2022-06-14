@@ -4,11 +4,8 @@
 
 enum MosqueBaseBehave
 {
-	MosqueIdle,
+	MosqueIdle = 0,
 	MosqueDead,
-};
-enum MosqueAddBehave
-{
 
 	MosqueBehaveMax,
 };
@@ -22,29 +19,33 @@ public:
 	iImage* imgBase[2];
 	iImage* imgDoor[2];	
 	
-	iImage* imgLTower[2];
-	iImage* imgMTower[2];
-	iImage* imgRTower[2];
+	iImage* imgLeftTower[2];
+	iImage* imgMidTower[2];
+	iImage* imgRightTower[2];
+
+	iImage* imgLeftCurtain[2];
+	iImage* imgMidCurtain[2];
+	iImage* imgRightCurtain[2];
 
 	iImage* imgShutter[3][2];
-	iImage* imgCurtain[3][2];
 	iImage* imgSoldier[3][2];	
 
 	MosqueBaseBehave baseState;
 	MosqueBaseBehave doorState;
 	MosqueBaseBehave towerState[3];
-	MosqueAddBehave shutterState[3];
-	MosqueAddBehave curtainState[3];
-	MosqueAddBehave soldierState[3];
+	MosqueBaseBehave shutterState[3];
+	MosqueBaseBehave curtainState[3];
+	MosqueBaseBehave soldierState[3];
 
 	iPoint doorP[2];
 	iPoint towerP[3];
+	iPoint curtainP[3];
 	iPoint shutterP[3];
 	bool isShutterOpen[3];
-	iPoint curtainP[3];
 	iPoint soldierP[3];
 
 	iPoint p;
+	iPoint tp;
 	iSize s;
 
 	bool isActive;
@@ -65,7 +66,7 @@ public:
 	void dead();
 	//Ani callback
 public:
-	static void cbAniDoorOpen(void* parm);
+	static void cbAniShutterOpen(void* parm);
 	static void cbAniCurOpen(void* parm);
 	static void cbAniAddOut(void* parm);
 

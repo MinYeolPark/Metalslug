@@ -101,10 +101,10 @@ void freeProcPlayer()
 
 void drawProcPlayer(float dt, iPoint off)
 {
-	if (player->isActive)
+	player->updateObj(dt);
+	if (player->drawObj(dt, off))
 	{
-		player->updateObj(dt);
-		player->drawObj(dt, off);
+		
 	}
 }
 

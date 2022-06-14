@@ -2,8 +2,9 @@
 
 #include "EnemyMgr.h"
 #include "ImgMgr.h"
+#include "BulletMgr.h"
 
-#include "ProcBullets.h"
+//#include "ProcBullets.h"
 #include "InputMgr.h"
 
 ImageInfo imgMosqueBaseInfo[];
@@ -15,13 +16,23 @@ Mosque::Mosque()
 	memset(imgBase, 0x00, sizeof(imgBase));
 	memset(imgDoor, 0x00, sizeof(imgDoor));
 
-	memset(imgLTower, 0x00, sizeof(imgLTower));
-	memset(imgMTower, 0x00, sizeof(imgMTower));
-	memset(imgRTower, 0x00, sizeof(imgRTower));
+	memset(imgLeftTower, 0x00, sizeof(imgLeftTower));
+	memset(imgMidTower, 0x00, sizeof(imgMidTower));
+	memset(imgRightTower, 0x00, sizeof(imgRightTower));
+
+	memset(imgLeftCurtain, 0x00, sizeof(imgLeftCurtain));
+	memset(imgMidCurtain, 0x00, sizeof(imgMidCurtain));
+	memset(imgRightCurtain, 0x00, sizeof(imgRightCurtain));
 
 	memset(imgShutter, 0x00, sizeof(iImage*) * 6);
-	memset(imgCurtain, 0x00, sizeof(iImage*) * 6);
 	memset(imgSoldier, 0x00, sizeof(iImage*) * 6);
+
+	baseState = MosqueIdle;
+	doorState = MosqueIdle;
+	memset(towerState, 0x00, sizeof(towerState));
+	memset(shutterState, 0x00, sizeof(shutterState));
+	memset(curtainState, 0x00, sizeof(curtainState));
+	memset(soldierState, 0x00, sizeof(soldierState));
 
 	memset(doorP, 0x00, sizeof(doorP));
 	memset(shutterP, 0x00, sizeof(shutterP));
@@ -30,14 +41,8 @@ Mosque::Mosque()
 	memset(soldierP, 0x00, sizeof(soldierP));
 	memset(towerP, 0x00, sizeof(towerP));
 	
-	baseState = MosqueIdle;
-	doorState = MosqueIdle;
-	for (int i = 0; i < 3; i++)
-	{
-		towerState[i] = MosqueIdle;
-	}
-
-	p = iPointMake(230,200);
+	p = iPointZero;
+	tp = { -1,-1 };
 	s = iSizeZero;
 
 	isActive = false;
@@ -47,93 +52,109 @@ Mosque::Mosque()
 	memset(rate, 0x00, sizeof(rate));
 	_rate = 0.f;
 
-	if (imgMosqueBaseInfo == NULL)
-		_imgMosqueBase = createMosqueBaseImage(imgMosqueBaseInfo, 10, this);
-	if (imgMosqueAddInfo == NULL)
-		_imgMosqueAdd = createMosqueBaseImage(imgMosqueAddInfo, 2, this);
+	if (_imgMosqueBase == NULL)
+		_imgMosqueBase = createMosqueBaseImage(imgMosqueBaseInfo, 16, this);
+	if (_imgMosqueAdd == NULL)
+		_imgMosqueAdd = createMosqueBaseImage(imgMosqueAddInfo, 4, this);
 }
 
 Mosque::~Mosque()
 {
 	for (int i = 0; i < MosqueBehaveMax; i++)
+	{
 		delete _imgMosqueBase[i];
+		delete _imgMosqueAdd[i];
+	}
 	delete _imgMosqueBase;
+	delete _imgMosqueAdd;
 
 	_imgMosqueBase = NULL;
+	_imgMosqueAdd = NULL;
 }
 void Mosque::initObj()
 {
+	p = iPointMake(230, 200);
+	
 	doorP[0] = { p.x - 60, p.y - 3 };
 	doorP[1] = { p.x + 110, p.y - 3 };
 
-	towerP[0] = { p.x - 50, p.y - 50 };
+	towerP[0] = { p.x - 60, p.y - 50 };
 	towerP[1] = { p.x + 40, p.y - 50 };
 	towerP[2] = { p.x + 130, p.y - 50 };
-
-	shutterP[0] = towerP[0];
-	shutterP[1] = towerP[1];
-	shutterP[2] = towerP[2];
-
-	for (int i = 0; i < 10; i++)
+#if 1
+	imgBase[MosqueIdle] = _imgMosqueBase[0]->clone();
+	imgBase[MosqueDead] = _imgMosqueBase[1]->clone();
+	imgDoor[MosqueIdle] = _imgMosqueBase[2]->clone();
+	imgDoor[MosqueDead] = _imgMosqueBase[3]->clone();	
+	imgLeftTower[MosqueIdle] = _imgMosqueBase[4]->clone();
+	imgLeftTower[MosqueDead] = _imgMosqueBase[5]->clone();
+	imgMidTower[MosqueIdle] = _imgMosqueBase[6]->clone();
+	imgMidTower[MosqueDead] = _imgMosqueBase[7]->clone();
+	imgRightTower[MosqueIdle] = _imgMosqueBase[8]->clone();
+	imgRightTower[MosqueDead] = _imgMosqueBase[9]->clone();
+	imgLeftCurtain[MosqueIdle] = _imgMosqueBase[10]->clone();
+	imgLeftCurtain[MosqueDead] = _imgMosqueBase[11]->clone();
+	imgMidCurtain[MosqueIdle] = _imgMosqueBase[12]->clone();
+	imgMidCurtain[MosqueDead] = _imgMosqueBase[13]->clone();
+	imgRightCurtain[MosqueIdle] = _imgMosqueBase[14]->clone();
+	imgRightCurtain[MosqueDead] = _imgMosqueBase[15]->clone();
+#endif
+	for (int i = 0; i < 3; i++)
 	{
-		for (int j = 0; j < 2; j++)
-		{
-			imgBase[j] = _imgMosqueBase[j]->clone();
-			imgDoor[j] = _imgMosqueBase[j + 2]->clone();
-			imgLTower[j] = _imgMosqueBase[j + 4]->clone();
-			imgMTower[j] = _imgMosqueBase[j + 6]->clone();
-			imgRTower[j] = _imgMosqueBase[j + 8]->clone();
-		}
-		
+		imgShutter[i][MosqueIdle] = _imgMosqueAdd[0]->clone();
+		imgShutter[i][MosqueDead] = _imgMosqueAdd[1]->clone();		
+		imgSoldier[i][MosqueIdle] = _imgMosqueAdd[2]->clone();
+		imgSoldier[i][MosqueDead] = _imgMosqueAdd[3]->clone();
 	}
 
-	for (int j = 0; j < 3; j++)
-	{
-		imgShutter[j][MosqueIdle] = _imgMosqueAdd[0]->clone();
-		imgShutter[j][MosqueDead] = _imgMosqueAdd[1]->clone();
+	isActive = true;
+	_rate = 5.f;
+	_hp = 1500.f;
+	for (int i = 0; i < 3; i++)
+	{		
+		hp[i] = 100.f;
+		float t = rand() % 100;
+		float r= (t / 100) * _rate;
+		rate[i] = r;
 	}
 };
 
 void Mosque::updateObj(float dt)
-{
-	
-#if 0
-	for (int i = 0; i < 3; i++)
+{	
+	for(int i = 0; i < 3; i++)
 	{
-		setDoorPos(towerP[i]);
+		if (movePoint(towerP[i], towerP[i], iPointMake(towerP[i].x,
+			p.y - 80), 1))
+			shutterState[i] = MosqueDead;
 
-		if (flag)
+		if (isShutterOpen[i])
 		{
-			if (imgDoor[i]->frame==0)
+			rate[i] += dt;
+			if (rate[i] > _rate)
 			{
-				imgCurtain[i][state]->startAnimation(cbAniCurOpen, this);
-				imgDoor[i]->startAnimation(cbAniDoorOpen, this);
+				rate[i] = 0.f;
+				addBullet(this ,BulletMosque, soldierP[i]);
+				addProcEffect(EffectMoskTrail, soldierP[i]);
 			}
 		}
-		rate[i] += dt;
-		if (rate[i] > _rate)
-		{
-			rate[i] -= _rate;			
-			fire(dt);
-		}
 	}
-#endif
-		
-#if 1
-	if (getKeyStat(keyboard_space))
-	{
-		baseState = MosqueDead;
-		doorState = MosqueDead;
-	}
-	else
-	{
-		baseState = MosqueIdle;
-		doorState = MosqueIdle;
-	}
-#endif
+
+
+	fixedUpdate(dt);
 }
 void Mosque::fixedUpdate(float dt)
 {
+	shutterP[0] = { towerP[0].x + 2, towerP[0].y - 70 };
+	shutterP[1] = { towerP[1].x + 2, towerP[1].y - 70 };
+	shutterP[2] = { towerP[2].x + 5, towerP[2].y - 70 };
+
+	curtainP[0] = { shutterP[0].x - 5, shutterP[0].y + 5 };
+	curtainP[1] = { shutterP[1].x - 5, shutterP[1].y + 5 };
+	curtainP[2] = { shutterP[2].x - 5, shutterP[2].y + 5 };
+
+	soldierP[0] = { shutterP[0].x - 5, shutterP[0].y - 5 };
+	soldierP[1] = { shutterP[1].x - 5, shutterP[1].y - 5 };
+	soldierP[2] = { shutterP[2].x - 5, shutterP[2].y - 5 };
 }
 void Mosque::fire(float dt)
 {
@@ -144,30 +165,38 @@ void Mosque::dead()
 }
 bool Mosque::drawObj(float dt, iPoint off)
 {
-	for (int i = 0; i < 2; i++)
-	{
-		imgDoor[doorState]->paint(dt, doorP[i] + off);
-	}
-	
-	imgLTower[towerState[0]]->paint(dt, towerP[0] + off);
-	imgMTower[towerState[1]]->paint(dt, towerP[1] + off);
-	imgRTower[towerState[2]]->paint(dt, towerP[2] + off);
-	
+	imgLeftTower[towerState[0]]->paint(dt, towerP[0] + off);
+	imgMidTower[towerState[1]]->paint(dt, towerP[1] + off);
+	imgRightTower[towerState[2]]->paint(dt, towerP[2] + off);
+
+	imgBase[MosqueIdle]->paint(dt, p + off);
+
+	for (int i = 0; i < 3; i++)
+		imgSoldier[i][soldierState[i]]->paint(dt, soldierP[i] + off);
+
+	imgLeftCurtain[curtainState[0]]->paint(dt, curtainP[0] + off);
+	imgMidCurtain[curtainState[1]]->paint(dt, curtainP[1] + off);
+	imgRightCurtain[curtainState[2]]->paint(dt, curtainP[2] + off);
 	for (int j = 0; j < 3; j++)
+	{
 		imgShutter[j][shutterState[j]]->paint(dt, shutterP[j] + off);
-	imgBase[baseState]->paint(dt, p + off);
-
-
-
-
+	}
 
 	#ifdef _DEBUG
 		setRGBA(1, 0, 1, 1);
-		drawRect(off.x + p.x - imgBase[baseState]->tex->width / 2,
-			off.y + p.y - imgBase[baseState]->tex->height,
-			imgBase[baseState]->tex->width,
-			imgBase[baseState]->tex->height);
-		drawDot(p + off);
+		drawRect(off.x + p.x - imgBase[0]->tex->width / 2,
+			off.y + p.y - imgBase[0]->tex->height,
+			imgBase[0]->tex->width,
+			imgBase[0]->tex->height);
+
+		for (int i = 0; i < 3; i++)
+		{
+			drawRect(
+				shutterP[i].x + off.x - imgShutter[i][soldierState[i]]->tex->width/2,
+				shutterP[i].y + off.y - imgShutter[i][soldierState[i]]->tex->height,
+				imgShutter[i][shutterState[i]]->tex->width,
+				imgShutter[i][shutterState[i]]->tex->height);
+		};
 		setRGBA(1, 1, 1, 1);
 	#endif // DEBUG
 	return !isActive;
@@ -178,9 +207,15 @@ void Mosque::freeeObj()
 }
 
 
-void Mosque::cbAniDoorOpen(void* parm)
+void Mosque::cbAniShutterOpen(void* parm)
 {
 	printf("cbAni Door Open\n");
+	Mosque* m = (Mosque*)parm;
+	for (int i = 0; i < 3; i++)
+	{
+		m->curtainState[i] = MosqueDead;
+		m->isShutterOpen[i] = true;
+	}
 }
 
 void Mosque::cbAniCurOpen(void* parm)
@@ -196,7 +231,7 @@ void Mosque::cbAniAddOut(void* parm)
 	{
 		
 	}
-	mt->isActive = false;
+	mt->isActive = false;	
 }
 
 ImageInfo imgMosqueBaseInfo[] =
@@ -235,7 +270,7 @@ ImageInfo imgMosqueBaseInfo[] =
 	},
 	{
 		"assets/Mosque/Mosque_00.png",
-		1, 1.f, { -86 / 2, 0},
+		3, 1.f, { -86 / 2, 0},
 		0.18f,
 		0,
 		{255,0,0,255},
@@ -243,15 +278,15 @@ ImageInfo imgMosqueBaseInfo[] =
 	},
 	{
 		"assets/Mosque/Mosque_Dead_00.png",
-		1, 1.f, { -86 / 2, 0},
+		3, 1.f, { -86 / 2, 0},
 		0.18f,
 		0,
 		{255,0,0,255},
 		NULL,
 	},
-		{
+	{
 		"assets/Mosque/Mosque_01.png",
-		1, 1.f, { -86 / 2, 0},
+		3, 1.f, { -86 / 2, 0},
 		0.18f,
 		0,
 		{255,0,0,255},
@@ -259,15 +294,15 @@ ImageInfo imgMosqueBaseInfo[] =
 	},
 	{
 		"assets/Mosque/Mosque_Dead_01.png",
-		1, 1.f, { -86 / 2, 0},
+		3, 1.f, { -86 / 2, 0},
 		0.18f,
 		0,
 		{255,0,0,255},
 		NULL,
 	},
-		{
+	{
 		"assets/Mosque/Mosque_02.png",
-		1, 1.f, { -86 / 2, 0},
+		3, 1.f, { -86 / 2, 0},
 		0.18f,
 		0,
 		{255,0,0,255},
@@ -275,10 +310,58 @@ ImageInfo imgMosqueBaseInfo[] =
 	},
 	{
 		"assets/Mosque/Mosque_Dead_02.png",
-		1, 1.f, { -86 / 2, 0},
+		3, 1.f, { -86 / 2, 0},
 		0.18f,
 		0,
 		{255,0,0,255},
+		NULL,
+	},
+	{
+		"assets/Mosque/MosqueLeftCurtain_%02d.png",
+		5, 1.f, { -48 / 2, 0},
+		0.18f,
+		0,
+		{32,8,0,255},
+		NULL,
+	},
+	{
+		"assets/Mosque/MosqueLeftCurtain_Open_%02d.png",
+		13, 1.f, { -64 / 2, 0},
+		0.06f,
+		1,
+		{32,8,0,255},
+		NULL,
+	},
+	{
+		"assets/Mosque/MosqueMidCurtain_%02d.png",
+		6, 1.f, { -48 / 2, 0},
+		0.18f,
+		0,
+		{32,8,0,255},
+		NULL,
+	},
+	{
+		"assets/Mosque/MosqueMidCurtain_Open_%02d.png",
+		13, 1.f, { -64 / 2, 0},
+		0.06f,
+		1,
+		{32,8,0,255},
+		NULL,
+	},
+	{
+		"assets/Mosque/MosqueRightCurtain_%02d.png",
+		6, 1.f, { -48 / 2, 0},
+		0.18f,
+		0,
+		{32,8,0,255},
+		NULL,
+		},
+	{
+		"assets/Mosque/MosqueRightCurtain_Open_%02d.png",
+		13, 1.f, { -64 / 2, 0},
+		0.06f,
+		1,
+		{32,8,0,255},
 		NULL,
 	},
 };
@@ -297,8 +380,24 @@ ImageInfo imgMosqueAddInfo[] =
 		"assets/Mosque/MosqueDoor_%02d.png",
 		16, 1.f, { -97 / 2, 0},
 		0.1f,
-		0,
+		1,
 		{63,72,204,255},
+		Mosque::cbAniShutterOpen,
+	},
+	{
+		"assets/Mosque/Mosque_Soldier_%02d.png",
+		8, 1.f, { -34 / 2, 0},
+		0.1f,
+		1,
+		{255,0,0,255},
+		NULL,
+	},
+	{
+		"assets/Mosque/Mosque_Soldier_Dead_%02d.png",
+		7, 1.f, { -43 / 2, 0},
+		0.1f,
+		1,
+		{255,0,0,255},
 		NULL,
 	},
 };

@@ -117,7 +117,7 @@ float iPointLength(iPoint p)
 {
 	return sqrtf(p.x * p.x + p.y * p.y);
 }
-
+ 
 iPoint iPointRotate(iPoint p, iPoint t, float degree)
 {
 	while (degree < 0) degree += 360;

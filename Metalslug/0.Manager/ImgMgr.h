@@ -13,7 +13,6 @@ struct ImageInfo
 	float aniDt;
 	int repeatNum;
 	iColor4b colorKey;
-	int anc;
 	cbAnimation cbAni;
 };
 
@@ -22,7 +21,7 @@ iImage** createImgSelect(Texture* bg);
 iImage** createImgChar(ImageInfo* imageInfo, void* c);
 iImage** createImgPlayer(ImageInfo* imageInfo, int size, void* c);
 
-iImage** createImgBullets(ImageInfo* imageInfo);
+iImage** createImgBullets(ImageInfo* imageInfo, void* b);
 iImage** createImgEffect(ImageInfo* imageInfo, void* c);
 
 iImage** createImgEnemy(ImageInfo* imageInfo, void* c);

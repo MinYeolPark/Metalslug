@@ -15,6 +15,8 @@ enum EffectIndex
 	EffectHeavy,
 	EffectExplosion,
 
+	EffectMoskTrail,
+
 	EffectIndexMax,
 };
 

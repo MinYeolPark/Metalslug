@@ -2,6 +2,7 @@
 
 #include "iStd.h"
 
+#include "Mosque.h"
 #include "ProcObject.h"
 #include "ProcEnemy.h"
 #include "ProcPlayer.h"
@@ -15,19 +16,11 @@ enum BulletIndex
 	BulletBomb,
 
 	BulletMosque,
+	BulletMosqueTrace,
 	BulletIndexMax,
 };
 
-enum BulletPatterns
-{
-	PatternHandGun,
-	PatternHeavyMachinegun,
-	PatternBomb,
-
-	PatternMosque,
-	PatternIndexMax,
-};
-
+typedef void (*BulletPattern)(ProcBullets* b, float dt);
 class ProcBullets: public ProcObject
 {
 public:
@@ -39,6 +32,7 @@ public:
 	iImage* imgCurr;
 
 	ProcObject* parent;
+	Mosque* m;
 	int bulletIdx;
 
 	float degree;
@@ -50,6 +44,7 @@ public:
 	BulletPattern pattern;
 public:
 	virtual void initObj();
+	virtual void initObj(Mosque* parent, int idx, iPoint p, float degree);
 	virtual void initObj(ProcObject* parent, int idx, iPoint p, float degree);
 	virtual void initObj(ProcEnemy* parent, int idx, iPoint p, float degree);
 	virtual void initObj(ProcPlayer* parent, int idx, iPoint p, float degree);
@@ -63,9 +58,13 @@ public:
 	virtual iRect collider();
 
 public:
-	static BulletPattern methodDefault(ProcBullets* b, float degree, float dt);
-	static BulletPattern methodBomb(ProcBullets* b, float degree, float dt);
-	static BulletPattern methodMosk(ProcBullets* b, float dt);
+	static void patDefault(ProcBullets* b, float dt);
+	static void patBomb(ProcBullets* b, float dt);
+
+	static void patMosque(ProcBullets* b, float dt);
+	static void patMosqueTrace(ProcBullets* b, float dt);
+public:
+	static void cbAniBullet(void* parm);
 };
 
 

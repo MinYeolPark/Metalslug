@@ -17,19 +17,18 @@ void loadSelect()
 {
 	selectBg = createImage("assets/CharSelect/CharacterSelectBg.png");
 		
-	imgSelectBtn = createImgSelect(selectBg);
-	return;
+	imgSelectBtn = new iImage * [CharacterIndexMax];
 #if 1
 	imgSelectPosBtn = new iImage * [CharacterIndexMax];
 	imgShutter = new iImage();
 	for (int j = 0; j < CharacterIndexMax; j++)
 	{
-		iImage* img = new iImage();
-		iImage* img2 = new iImage();
+		iImage* _imgSelectBtn = new iImage();
+		iImage* _imgSelectPos = new iImage();
 		for (int i = 0; i < 3; i++)
 		{
 			Texture* t = createImage("assets/CharSelect/CharacterSelect_%d%d.png", i, j);
-			img->addObject(t);
+			_imgSelectBtn->addObject(t);
 			freeImage(t);
 
 			t->width *= devSize.width / selectBg->width;
@@ -38,26 +37,27 @@ void loadSelect()
 			t->potHeight *= devSize.height / selectBg->height;
 
 			t=createImage("assets/CharSelect/P1_%02d.png", j);
-			img2->addObject(t);
+			_imgSelectPos->addObject(t);
 			freeImage(t);
 
 			t->width *= devSize.width / selectBg->width;
 			t->potWidth *= devSize.width / selectBg->width;
 			t->height *= devSize.height / selectBg->height;
 			t->potHeight *= devSize.height / selectBg->height;
-		}		
-		img->position = iPointMake( 10 * viewport.size.height / devSize.height + (img->tex->width * j)
-			, devSize.height - 65 * viewport.size.height /devSize.height);
+		}
+		_imgSelectBtn->position = iPointMake(15 + (_imgSelectBtn->tex->width + 8) * j, 80);
+
 		iPoint p[4] = {
-			{img->position.x + img->tex->width / 2, img->position.y - 18},
-			{img->position.x + img->tex->width / 2 - 6, img->position.y - 18},
-			{img->position.x + img->tex->width / 2 + 6, img->position.y - 18},
-			{img->position.x + img->tex->width / 2, img->position.y - 18}
+			{_imgSelectBtn->position.x + _imgSelectBtn->tex->width / 2 + 3, _imgSelectBtn->position.y - 14},
+			{_imgSelectBtn->position.x + _imgSelectBtn->tex->width / 2 - 6 , _imgSelectBtn->position.y - 14},
+			{_imgSelectBtn->position.x + _imgSelectBtn->tex->width / 2 + 3, _imgSelectBtn->position.y - 14},
+			{_imgSelectBtn->position.x + _imgSelectBtn->tex->width / 2 - 8, _imgSelectBtn->position.y - 14}
 		};
-		img2->position = p[j];
-		img2->anc = HCENTER | VCENTER;
-		imgSelectBtn[j] = img;
-		imgSelectPosBtn[j] = img2;
+		_imgSelectPos->position = p[j];
+		_imgSelectPos->anc = VCENTER | HCENTER;
+
+		imgSelectBtn[j] = _imgSelectBtn;
+		imgSelectPosBtn[j] = _imgSelectPos;
 	}
 	iImage* img = new iImage();
 	Texture* t = createImage("assets/CharSelect/Shutter.png");
@@ -117,8 +117,7 @@ void drawSelect(float dt)
 			imgSelectBtn[i]->frame = (i == selectedBtn);			
 		imgSelectBtn[i]->paint(dt, iPointZero, iImageTypePop);
 	}
-	return;
-#if 0
+#if 1
 	iPoint p[4];
 	for (int i = 0; i < CharacterIndexMax; i++)
 	{

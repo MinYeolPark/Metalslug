@@ -17,8 +17,7 @@ iImage** createImgSelect(Texture* bg)
 			t->height *= devSize.height / bg->height;
 			t->potHeight *= devSize.height / bg->height;
 
-			img->position = iPointMake(10 * viewport.size.height / devSize.height + (img->tex->width * j),
-				devSize.height - 65 * viewport.size.height / devSize.height);
+			img->position = iPointMake(30 * i + img->tex->width, 75);
 		}
 		_img[i] = img;
 	}
@@ -83,8 +82,6 @@ iImage** createImgPlayer(ImageInfo* imageInfo, int size, void* c)
 			img->_aniDt = ii->aniDt;
 			if (ii->repeatNum)
 				img->_repeatNum = ii->repeatNum;
-
-			img->anc = ii->anc;
 			if (ii->cbAni)
 				img->startAnimation(ii->cbAni, c);
 			else
@@ -97,8 +94,9 @@ iImage** createImgPlayer(ImageInfo* imageInfo, int size, void* c)
 }
 
 
-iImage** createImgBullets(ImageInfo* imageInfo)
+iImage** createImgBullets(ImageInfo* imageInfo, void* b)
 {
+	ProcBullets* bul = (ProcBullets*)b;
 	iImage** _imgs = new iImage * [BulletIndexMax];
 	memset(_imgs, 0x00, sizeof(iImage*) * BulletIndexMax);
 	for (int i = 0; i < BulletIndexMax; i++)
@@ -115,7 +113,6 @@ iImage** createImgBullets(ImageInfo* imageInfo)
 		img->position = ii->p;
 		img->_aniDt = ii->aniDt;
 		img->anc = TOP | LEFT;
-		img->startAnimation();
 		if (ii->repeatNum)
 			img->_repeatNum = ii->repeatNum;
 		_imgs[i]=img;
@@ -222,7 +219,7 @@ iImage** createMosqueBaseImage(ImageInfo* imageInfo, int size, void* c)
 		img->position = ii->p;
 		img->_aniDt = ii->aniDt;
 		img->anc = TOP | LEFT;
-		img->startAnimation();
+		img->startAnimation(ii->cbAni, c);
 		if (ii->repeatNum)
 			img->_repeatNum = ii->repeatNum;
 		_imgs[i] = img;
