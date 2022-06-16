@@ -148,8 +148,10 @@
     <ClInclude Include="0.Manager\EnemyMgr.h" />
     <ClInclude Include="0.Manager\EffectMgr.h" />
     <ClInclude Include="Item.h" />
+    <ClInclude Include="3.Enemies\Kessie.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="1.GameSetup\Select.h" />
+    <ClInclude Include="Sorting.h" />
     <ClInclude Include="StatusUI.h" />
     <ClInclude Include="std\iArray.h" />
     <ClInclude Include="std\iColor.h" />
@@ -192,6 +194,8 @@
     <ClCompile Include="2.UI\StatusUI.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="1.GameSetup\Select.cpp" />
+    <ClCompile Include="3.Enemies\Kessie.cpp" />
+    <ClCompile Include="Sorting.cpp" />
     <ClCompile Include="std\iArray.cpp" />
     <ClCompile Include="std\iColor.cpp" />
     <ClCompile Include="std\iGraphics.cpp" />

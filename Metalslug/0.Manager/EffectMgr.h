@@ -8,6 +8,7 @@ void loadProcEffect();
 void freeProcEffect();
 void drawProcEffect(float dt, iPoint off);
 void addProcEffect(int index, iPoint p);
+void addProcEffect(int index, iPoint p, float spawnDt);
 
 enum EffectIndex
 {
@@ -16,7 +17,8 @@ enum EffectIndex
 	EffectExplosion,
 
 	EffectMoskTrail,
-
+	EffectKessieBlast,
+	EffectKessieBlastRage,
 	EffectIndexMax,
 };
 
@@ -34,8 +36,10 @@ struct ProcEffect
 	EffectIndex index;
 	bool isActive;
 	float delta, _delta;
+	float spawnDt, _spawnDt;
 
 	void initEffect(int idx, iPoint p);
+	void initEffect(int idx, iPoint p, float spawnDt);
 	void updateEffect(float dt);
 	bool drawEffect(float dt, iPoint off);
 	void freeEffect();

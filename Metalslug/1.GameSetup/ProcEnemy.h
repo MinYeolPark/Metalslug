@@ -6,9 +6,9 @@ enum EnemyIndex
 	ArMelee = 0,
 	ArBurserker,
 
-	Masknell,
-	MTower,
-	Kessie,
+	IdxMasknell,
+	IdxMosque,
+	IdxKessie,
 	EnemyIndexMax,
 };
 

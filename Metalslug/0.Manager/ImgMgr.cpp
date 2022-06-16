@@ -201,7 +201,7 @@ iImage** createImgSingleEach(ImageInfo* imageInfo, void* c)
 	return nullptr;
 }
 
-iImage** createMosqueBaseImage(ImageInfo* imageInfo, int size, void* c)
+iImage** createSingleImage(ImageInfo* imageInfo, int size, void* c)
 {	
 	iImage** _imgs = new iImage * [size];
 	memset(_imgs, 0x00, sizeof(iImage*) * size);

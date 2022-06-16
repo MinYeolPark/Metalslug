@@ -63,6 +63,21 @@ void addProcEffect(int index, iPoint p)
 #endif
 }
 
+void addProcEffect(int index, iPoint p, float spawnDt)
+{
+	for (int i = 0; i < effectMax; i++)
+	{
+		ProcEffect* e = &_effect[index][i];
+		if (e->isActive == false)
+		{
+			e->initEffect(index, p , spawnDt);
+			effect[effectNum] = e;
+			effectNum++;
+			return;
+		}
+	}
+}
+
 ProcEffect::ProcEffect()
 {
 	imgs = NULL;
@@ -73,6 +88,8 @@ ProcEffect::ProcEffect()
 	isActive = false;
 	delta = 0.f;
 	_delta = 0.f;
+	spawnDt = 0.f;
+	_spawnDt = 0.f;
 
 	if (_imgEffect == NULL)
 		_imgEffect = createImgEffect(imgEffectInfo, this);
@@ -102,6 +119,13 @@ void ProcEffect::initEffect(int idx, iPoint p)
 
 	imgs[idx]->startAnimation(cbAniEffect, this);
 }
+void ProcEffect::initEffect(int idx, iPoint p, float spawnDt)
+{
+	this->spawnDt = spawnDt - 1.f;
+	this->_spawnDt = spawnDt;
+	initEffect(idx, p);
+}
+
 
 void ProcEffect::updateEffect(float dt)
 {
@@ -111,7 +135,6 @@ void ProcEffect::updateEffect(float dt)
 bool ProcEffect::drawEffect(float dt, iPoint off)
 {
 	setRGBA(1, 1, 1, 1);
-
 	imgCurr = imgs[index];
 	imgCurr->paint(dt, p + off);
 
@@ -167,6 +190,22 @@ ImageInfo imgEffectInfo[] =
 		0.08f,
 		1,
 		{63,72,204,255},
+		ProcEffect::cbAniEffect,
+	},
+	{
+		"assets/Effect/Blast_%02d.png",
+		6, 1.0f, { -64 / 2, 0},
+		0.06f,
+		1,
+		{0,248,0,255},
+		ProcEffect::cbAniEffect,
+	},
+	{
+		"assets/Effect/Blast_%02d.png",
+		22, 1.0f, { -64 / 2, 0},
+		0.06f,
+		1,
+		{0,248,0,255},
 		ProcEffect::cbAniEffect,
 	},
 };

@@ -132,6 +132,12 @@
     <ClInclude Include="1.GameSetup\Select.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="3.Enemies\Kessie.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Sorting.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp">
@@ -246,6 +252,12 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="1.GameSetup\Select.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="3.Enemies\Kessie.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Sorting.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

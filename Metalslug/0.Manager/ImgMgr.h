@@ -32,5 +32,5 @@ iImage** createImgSingleEach(ImageInfo* imageInfo, void* c);
 
 
 
-iImage** createMosqueBaseImage(ImageInfo* imageInfo, int size, void* c);
+iImage** createSingleImage(ImageInfo* imageInfo, int size, void* c);
 

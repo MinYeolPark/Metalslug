@@ -1,12 +1,13 @@
 #include "EnemyMgr.h"
 
 #include "Mosque.h"
-
+#include "Kessie.h"
 #include "ArabMelee.h"
 #include "ArabBurserker.h"
 
 /////////////////////////////////
 Mosque* mosque;
+Kessie* kessie;
 /////////////////////////////////
 ProcEnemy*** _enemies;
 ProcEnemy** enemies;
@@ -38,6 +39,9 @@ void loadProcEnemy()
 #if 1
 	mosque = new Mosque();
 	mosque->initObj();
+
+	kessie = new Kessie();
+	kessie->init();
 #endif
 
 }
@@ -61,9 +65,13 @@ void freeProcEnemy()
 }
 void drawProcEnemy(float dt, iPoint off)
 {
-#if 1
+#if 0
 	mosque->updateObj(dt);
 	mosque->drawObj(dt, off);
+#endif
+#if 1
+	kessie->update(dt);
+	kessie->draw(dt, off);
 #endif
 	for (int i = 0; i < enemyCount; i++)
 	{

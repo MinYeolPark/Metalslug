@@ -53,9 +53,9 @@ Mosque::Mosque()
 	_rate = 0.f;
 
 	if (_imgMosqueBase == NULL)
-		_imgMosqueBase = createMosqueBaseImage(imgMosqueBaseInfo, 16, this);
+		_imgMosqueBase = createSingleImage(imgMosqueBaseInfo, 16, this);
 	if (_imgMosqueAdd == NULL)
-		_imgMosqueAdd = createMosqueBaseImage(imgMosqueAddInfo, 4, this);
+		_imgMosqueAdd = createSingleImage(imgMosqueAddInfo, 4, this);
 }
 
 Mosque::~Mosque()
