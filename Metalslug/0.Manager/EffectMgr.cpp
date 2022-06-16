@@ -57,7 +57,6 @@ void addProcEffect(int index, iPoint p)
 			e->initEffect(index, p);
 			effect[effectNum] = e;
 			effectNum++;
-			printf("add effect\n");
 			return;
 		}
 	}
@@ -117,8 +116,7 @@ bool ProcEffect::drawEffect(float dt, iPoint off)
 	imgCurr->paint(dt, p + off);
 
 #ifdef _DEBUG
-	drawRect(p.x-imgCurr->tex->width/2, p.y-imgCurr->tex->height/2,
-		imgCurr->tex->width / 2, imgCurr->tex->height / 2);
+	
 #endif
 	setRGBA(1, 1, 1, 1);
 

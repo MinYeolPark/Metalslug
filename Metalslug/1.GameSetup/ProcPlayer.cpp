@@ -75,80 +75,57 @@ void ProcPlayer::updateObj(float dt)
 	firePoint = iPointMake(p.x, p.y - 20);
 	if (getKeyStat(keyboard_left))
 		v.x = -1;
-	else if (getKeyStat(keyboard_right))
+	else if (getKeyStat(keyboard_right))	
 		v.x = 1;
 	if (getKeyStat(keyboard_up))
 		v.y = -1;
 	else if (getKeyStat(keyboard_down))
 		v.y = 1;
 	
-	if (v.x > 0)
-		isRight = true;
-	else
-		isRight = false;
-
 	if (v != iPointZero)
 	{
 		v /= iPointLength(v);
 		v *= (moveSpeed * dt);
 
+		if (v.x < 0)
+			isRight = false;
+		else if (v.x > 0)
+			isRight = true;
+
 		if (!up)
 		{
-			if (v.x > 0)
+			if (v.x>0)
 			{
 				setBotState(WalkR, v);
 				if (!isAttacking)
-					setTopState(WalkR, v);					
+					setTopState(WalkR, v);
 			}
-			else if (v.x < 0)
+			else if(v.x<0)// if (v.x < 0)
 			{
 				setBotState(WalkL, v);
 				if (!isAttacking)
-					setTopState(WalkL, v);					
+					setTopState(WalkL, v);
 			}
 		}
 	}
-	else//v==iPointzero
+	else//
 	{
-		if(topState==WalkR || topState==WalkL)
-			//|| topState == JumpR || topState == JumpL
-			//|| topState == RunJumpR || topState == RunJumpL)
+		if (topState == WalkR || topState == WalkL)
 			setTopState((PlayerBehave)(BrakeR + topState % 2), v);
 	}
-
-	if (getKeyDown(keyboard_up))
-	{
-#if 0
-		if (getKeyDown(keyboard_space))
-			addFB(0, p, fireDegree);
-		else if (getKeyStat(keyboard_up))
-		{
-			if (fireDegree < 90)
-			{
-				fireDegree += (90 / 3.0f * dt);
-				if (fireDegree > 90)
-					fireDegree = 90;
-			}
-			else if (fireDegree > 90)
-			{
-				fireDegree -= (90 / 3.0f * dt);
-				if (fireDegree < 90)
-					fireDegree = 90;
-			}
-		}
-#endif
-		aimUp();	
-	}
-	else if (getKeyUp(keyboard_up))
-		setTopState(IdleR, v);
-	if (getKeyDown(keyboard_down))
-		crouch();
+	
 	if (getKeyDown(keyboard_z))
 		jump(v);
-	if (getKeyDown(keyboard_x))
-		fire(v);
-	if (getKeyDown(keyboard_space))
-		bomb(v);
+
+	if (getKeyDown(keyboard_up))
+		aimUp();
+	else if (getKeyUp(keyboard_up))
+		setTopState((PlayerBehave)(IdleR + topState % 2), v);
+
+	if (getKeyDown(keyboard_down))
+		crouch();
+	else if(getKeyUp(keyboard_down))
+		setTopState((PlayerBehave)(IdleR + topState % 2), v);
 
 	p.x += v.x;
 
@@ -275,6 +252,9 @@ void ProcPlayer::setTopState(PlayerBehave pb, iPoint v)
 	}
 	if (pb == FireR || pb == FireL)
 	{
+		//#issue
+		topImgCurr[FireR].frame;//bottom sync
+
 		topImgs[pb]->startAnimation(cbAniFire, this);
 	}
 	if (pb == MeleeR || pb == MeleeL)
@@ -333,6 +313,7 @@ void ProcPlayer::jump(iPoint v)
 void ProcPlayer::crouch()
 {
 	setTopState((PlayerBehave)(CrouchR + topState % 2), v);
+	setBotState((PlayerBehave)(IdleR + botState % 2), v);
 }
 
 void ProcPlayer::aimUp()
@@ -340,6 +321,7 @@ void ProcPlayer::aimUp()
 	isAimup = !isAimup;
 	
 	setTopState((PlayerBehave)(AimtoUpR + topState % 2), v);
+	setBotState((PlayerBehave)(IdleR + botState % 2), v);
 }
 
 void ProcPlayer::fire(iPoint v)
@@ -393,17 +375,13 @@ iRect ProcPlayer::collider()
 }
 void ProcPlayer::cbAniJump(void* parm)
 {
-	printf("cbAniJump\n");
-
 	ProcPlayer* pp = (ProcPlayer*)parm;
-	pp->setTopState((PlayerBehave)(IdleR + pp->topState % 2), iPointZero);
-	pp->setBotState((PlayerBehave)(IdleR + pp->botState % 2), iPointZero);
+	pp->setTopState((PlayerBehave)(WalkR + pp->topState % 2), iPointZero);
+	pp->setBotState((PlayerBehave)(WalkR + pp->botState % 2), iPointZero);
 }
 
 void ProcPlayer::cbAniBrake(void* parm)
 {
-	printf("cbAniBrake\n");
-
 	ProcPlayer* pp = (ProcPlayer*)parm;
 	pp->setTopState((PlayerBehave)(IdleR + pp->topState % 2), iPointZero);
 	pp->setBotState((PlayerBehave)(IdleR + pp->botState % 2), iPointZero);
@@ -411,8 +389,6 @@ void ProcPlayer::cbAniBrake(void* parm)
 
 void ProcPlayer::cbAniFire(void* parm)
 {
-	printf("cbAniFire\n");
-
 	ProcPlayer* pp = (ProcPlayer*)parm;	
 	pp->isAttacking = false;
 	pp->setTopState((PlayerBehave)(IdleR + pp->topState % 2), iPointZero);

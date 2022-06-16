@@ -3,7 +3,7 @@
 #include <stdio.h>
 static int keyStat = 0;
 static int keyDown = 0;
-static bool keyUp = false;
+static int keyUp = 0;
 static void _setKeyboard(int& keys, bool down, int key)
 {
 	if (down)
@@ -20,10 +20,11 @@ static void _setKeyboard(int& keys, bool down, int key)
 		case 90: keys |= keyboard_z;	break;
 		case 88: keys |= keyboard_x;	break;
 		}
-		keyUp = false;
 	}
 	else
 	{
+		keyUp = keys;
+
 		switch (key) {
 		case 'a': case 'A':case 37: keys &= ~keyboard_left; break;
 		case 'd': case 'D':case 39: keys &= ~keyboard_right; break;
@@ -36,8 +37,6 @@ static void _setKeyboard(int& keys, bool down, int key)
 		case 90: keys &= ~keyboard_z;	break;
 		case 88: keys &= ~keyboard_x;	break;
 		}
-		printf("%d, %d\n", keys, down);
-		keyUp = true;
 	}
 }
 
@@ -55,6 +54,7 @@ void setKeyboard(bool down, int key)
 void updateKeyboard()
 {
 	keyDown = 0;
+	keyUp = 0;
 }
 
 bool getKeyStat(int key)
@@ -63,10 +63,11 @@ bool getKeyStat(int key)
 }
 
 bool getKeyDown(int key)
-{	
+{
 	return keyDown & key;
 }
+
 bool getKeyUp(int key)
 {
-	return keyUp && key;
+	return keyUp == key;
 }

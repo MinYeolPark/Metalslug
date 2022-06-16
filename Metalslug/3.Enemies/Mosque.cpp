@@ -181,24 +181,6 @@ bool Mosque::drawObj(float dt, iPoint off)
 	{
 		imgShutter[j][shutterState[j]]->paint(dt, shutterP[j] + off);
 	}
-
-	#ifdef _DEBUG
-		setRGBA(1, 0, 1, 1);
-		drawRect(off.x + p.x - imgBase[0]->tex->width / 2,
-			off.y + p.y - imgBase[0]->tex->height,
-			imgBase[0]->tex->width,
-			imgBase[0]->tex->height);
-
-		for (int i = 0; i < 3; i++)
-		{
-			drawRect(
-				shutterP[i].x + off.x - imgShutter[i][soldierState[i]]->tex->width/2,
-				shutterP[i].y + off.y - imgShutter[i][soldierState[i]]->tex->height,
-				imgShutter[i][shutterState[i]]->tex->width,
-				imgShutter[i][shutterState[i]]->tex->height);
-		};
-		setRGBA(1, 1, 1, 1);
-	#endif // DEBUG
 	return !isActive;
 }
 

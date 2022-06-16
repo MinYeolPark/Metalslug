@@ -48,7 +48,6 @@ void iImage::paint(float dt, iPoint p)
 					frame = 0;
 				else// if (_repeatNum)
 				{
-					printf("repeatNum = %d\n", repeatNum);
 					repeatNum++;
 					if (repeatNum < _repeatNum)
 						frame = 0;

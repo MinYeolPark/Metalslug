@@ -82,7 +82,7 @@ public:
 	float down;
 	bool fall;	
 
-	bool isRight;				//check is Right.
+	bool isRight;
 	bool isAttacking;
 	bool isAimup;
 	bool isCrouching;

@@ -1,0 +1,197 @@
+﻿  InputMgr.cpp
+  UIMgr.cpp
+C:\workspace\Metalslug\Metalslug\0.Manager\UIMgr.h(3,10): fatal error C1083: 포함 파일을 열 수 없습니다. 'iStd.h': No such file or directory
+  Loading.cpp
+C:\workspace\Metalslug\Metalslug\1.GameSetup\Loading.h(3,10): fatal error C1083: 포함 파일을 열 수 없습니다. 'iStd.h': No such file or directory
+  Map.cpp
+C:\workspace\Metalslug\Metalslug\1.GameSetup\Map.h(4,10): fatal error C1083: 포함 파일을 열 수 없습니다. 'iStd.h': No such file or directory
+  Menu.cpp
+C:\workspace\Metalslug\Metalslug\1.GameSetup\Menu.h(3,10): fatal error C1083: 포함 파일을 열 수 없습니다. 'iStd.h': No such file or directory
+  Proc.cpp
+C:\workspace\Metalslug\Metalslug\1.GameSetup\Proc.h(3,10): fatal error C1083: 포함 파일을 열 수 없습니다. 'iStd.h': No such file or directory
+  ProcBullets.cpp
+C:\workspace\Metalslug\Metalslug\1.GameSetup\ProcBullets.h(3,10): fatal error C1083: 포함 파일을 열 수 없습니다. 'iStd.h': No such file or directory
+  ProcEnemy.cpp
+C:\workspace\Metalslug\Metalslug\1.GameSetup\ProcObject.h(3,10): fatal error C1083: 포함 파일을 열 수 없습니다. 'iStd.h': No such file or directory
+  ProcField.cpp
+C:\workspace\Metalslug\Metalslug\1.GameSetup\ProcField.h(3,10): fatal error C1083: 포함 파일을 열 수 없습니다. 'iStd.h': No such file or directory
+  ProcObject.cpp
+C:\workspace\Metalslug\Metalslug\1.GameSetup\ProcObject.h(3,10): fatal error C1083: 포함 파일을 열 수 없습니다. 'iStd.h': No such file or directory
+  ProcPlayer.cpp
+C:\workspace\Metalslug\Metalslug\1.GameSetup\ProcObject.h(3,10): fatal error C1083: 포함 파일을 열 수 없습니다. 'iStd.h': No such file or directory
+  ArabMelee.cpp
+C:\workspace\Metalslug\Metalslug\3.Enemies\ArabMelee.h(2,10): fatal error C1083: 포함 파일을 열 수 없습니다. 'ProcEnemy.h': No such file or directory
+  Mosque.cpp
+C:\workspace\Metalslug\Metalslug\3.Enemies\Mosque.h(3,10): fatal error C1083: 포함 파일을 열 수 없습니다. 'iStd.h': No such file or directory
+  App.cpp
+C:\workspace\Metalslug\Metalslug\App.cpp(3,10): fatal error C1083: 포함 파일을 열 수 없습니다. 'iWindow.h': No such file or directory
+  GameMgr.cpp
+C:\workspace\Metalslug\Metalslug\0.Manager\GameMgr.h(3,10): fatal error C1083: 포함 파일을 열 수 없습니다. 'iStd.h': No such file or directory
+  BulletMgr.cpp
+C:\workspace\Metalslug\Metalslug\0.Manager\BulletMgr.h(3,10): fatal error C1083: 포함 파일을 열 수 없습니다. 'iStd.h': No such file or directory
+  EnemyMgr.cpp
+C:\workspace\Metalslug\Metalslug\0.Manager\EnemyMgr.h(2,10): fatal error C1083: 포함 파일을 열 수 없습니다. 'iStd.h': No such file or directory
+  EffectMgr.cpp
+C:\workspace\Metalslug\Metalslug\0.Manager\EffectMgr.h(3,10): fatal error C1083: 포함 파일을 열 수 없습니다. 'iStd.h': No such file or directory
+  ImgMgr.cpp
+C:\workspace\Metalslug\Metalslug\0.Manager\ImgMgr.h(3,10): fatal error C1083: 포함 파일을 열 수 없습니다. 'iStd.h': No such file or directory
+  StatusUI.cpp
+C:\workspace\Metalslug\Metalslug\2.UI\StatusUI.cpp(1,10): fatal error C1083: 포함 파일을 열 수 없습니다. 'StatusUI.h': No such file or directory
+  코드를 생성하고 있습니다...
+  컴파일하고 있습니다...
+  Item.cpp
+C:\workspace\Metalslug\Metalslug\Item.h(3,10): fatal error C1083: 포함 파일을 열 수 없습니다. 'iStd.h': No such file or directory
+  Select.cpp
+C:\workspace\Metalslug\Metalslug\1.GameSetup\Select.h(3,10): fatal error C1083: 포함 파일을 열 수 없습니다. 'iStd.h': No such file or directory
+  iGraphics.cpp
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\workspace\Metalslug\Metalslug\std\iOpenGL.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\workspace\Metalslug\Metalslug\std\iWindow.h(15,1): warning C4005: 'GDIPVER': 매크로 재정의
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\um\gdiplus.h(31): message : 'GDIPVER'의 이전 정의를 참조하십시오.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(33,23): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(33,11): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(61,7): warning C4244: '인수': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(60,7): warning C4244: '인수': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(59,7): warning C4244: '인수': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(58,21): warning C4244: '인수': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(97,22): error C2065: 'SmoothingModeAntiAlias8x8': 선언되지 않은 식별자입니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(118,6): warning C4244: '인수': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(117,6): warning C4244: '인수': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(116,6): warning C4244: '인수': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(115,19): warning C4244: '인수': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(145,6): warning C4244: '인수': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(144,6): warning C4244: '인수': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(143,6): warning C4244: '인수': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(142,19): warning C4244: '인수': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(170,6): warning C4244: '인수': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(169,6): warning C4244: '인수': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(168,6): warning C4244: '인수': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(167,28): warning C4244: '인수': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(203,20): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(205,21): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(323,43): error C2065: 'M_PI': 선언되지 않은 식별자입니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(324,42): error C2065: 'M_PI': 선언되지 않은 식별자입니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(329,43): error C2065: 'M_PI': 선언되지 않은 식별자입니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(330,42): error C2065: 'M_PI': 선언되지 않은 식별자입니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(336,48): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(369,54): warning C4244: '인수': 'int'에서 'Gdiplus::REAL'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(369,50): warning C4244: '인수': 'int'에서 'Gdiplus::REAL'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(369,46): warning C4244: '인수': 'int'에서 'Gdiplus::REAL'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(369,42): warning C4244: '인수': 'int'에서 'Gdiplus::REAL'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(413,79): warning C4267: '인수': 'size_t'에서 'INT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(423,7): warning C4244: '인수': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(422,7): warning C4244: '인수': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(421,7): warning C4244: '인수': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(420,20): warning C4244: '인수': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(430,6): warning C4244: '인수': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(429,6): warning C4244: '인수': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(428,6): warning C4244: '인수': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(427,28): warning C4244: '인수': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(447,41): warning C4244: '인수': 'float'에서 'INT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(447,26): warning C4244: '인수': 'float'에서 'INT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(518,79): warning C4267: '인수': 'size_t'에서 'INT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(528,7): warning C4244: '인수': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(527,7): warning C4244: '인수': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(526,7): warning C4244: '인수': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(525,20): warning C4244: '인수': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(535,6): warning C4244: '인수': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(534,6): warning C4244: '인수': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(533,6): warning C4244: '인수': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(532,28): warning C4244: '인수': 'float'에서 'BYTE'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(629,61): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(629,43): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(629,25): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iGraphics.cpp(629,19): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  iImage.cpp
+C:\workspace\Metalslug\Metalslug\std\iOpenGL.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\workspace\Metalslug\Metalslug\std\iImage.cpp(103,6): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iImage.cpp(102,24): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iImage.cpp(102,12): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iImage.cpp(152,7): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iImage.cpp(151,25): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iImage.cpp(151,13): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  iOpenGL.cpp
+C:\workspace\Metalslug\Metalslug\std\iOpenGL.cpp(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\workspace\Metalslug\Metalslug\std\iOpenGL.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\workspace\Metalslug\Metalslug\std\iOpenGL.cpp(5,10): fatal error C1083: 포함 파일을 열 수 없습니다. 'InputMgr.h': No such file or directory
+  iPoint.cpp
+C:\workspace\Metalslug\Metalslug\std\iPoint.cpp(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\workspace\Metalslug\Metalslug\std\iOpenGL.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\workspace\Metalslug\Metalslug\std\iPoint.cpp(125,22): error C2065: 'M_PI': 선언되지 않은 식별자입니다.
+C:\workspace\Metalslug\Metalslug\std\iPoint.cpp(126,22): error C2065: 'M_PI': 선언되지 않은 식별자입니다.
+C:\workspace\Metalslug\Metalslug\std\iPoint.cpp(143,81): error C2065: 'M_PI': 선언되지 않은 식별자입니다.
+C:\workspace\Metalslug\Metalslug\std\iPoint.cpp(195,23): error C2065: 'M_PI': 선언되지 않은 식별자입니다.
+C:\workspace\Metalslug\Metalslug\std\iPoint.cpp(201,23): error C2065: 'M_PI': 선언되지 않은 식별자입니다.
+  iPopup.cpp
+C:\workspace\Metalslug\Metalslug\std\iOpenGL.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\workspace\Metalslug\Metalslug\std\iPopup.cpp(23,48): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iPopup.cpp(23,33): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iPopup.cpp(242,44): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iPopup.cpp(242,31): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iPopup.cpp(242,16): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iPopup.cpp(248,23): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  iStd.cpp
+C:\workspace\Metalslug\Metalslug\std\iOpenGL.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\workspace\Metalslug\Metalslug\std\iWindow.h(15,1): warning C4005: 'GDIPVER': 매크로 재정의
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\um\gdiplus.h(31): message : 'GDIPVER'의 이전 정의를 참조하십시오.
+C:\workspace\Metalslug\Metalslug\std\iStd.cpp(36,35): warning C4244: '인수': 'float'에서 'GLint'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iStd.cpp(125,10): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iStd.cpp(216,28): error C2065: 'M_PI': 선언되지 않은 식별자입니다.
+C:\workspace\Metalslug\Metalslug\std\iStd.cpp(216,38): error C2198: 'PFNGLUNIFORM1FPROC': 호출에 인수가 너무 적습니다.
+C:\workspace\Metalslug\Metalslug\std\iStd.cpp(273,28): error C2065: 'M_PI': 선언되지 않은 식별자입니다.
+C:\workspace\Metalslug\Metalslug\std\iStd.cpp(273,38): error C2198: 'PFNGLUNIFORM1FPROC': 호출에 인수가 너무 적습니다.
+C:\workspace\Metalslug\Metalslug\std\iStd.cpp(311,65): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iStd.cpp(311,53): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iStd.cpp(315,61): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iStd.cpp(315,49): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iStd.cpp(319,61): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iStd.cpp(319,49): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iStd.cpp(384,57): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iStd.cpp(471,15): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iStd.cpp(472,16): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iStd.cpp(576,22): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iStd.cpp(578,2): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\workspace\Metalslug\Metalslug\std\iStd.cpp(655,3): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\workspace\Metalslug\Metalslug\std\iStd.cpp(680,15): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iStd.cpp(681,16): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  iString.cpp
+C:\workspace\Metalslug\Metalslug\std\iString.cpp(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\workspace\Metalslug\Metalslug\std\iOpenGL.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\workspace\Metalslug\Metalslug\std\iString.cpp(63,24): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iString.cpp(64,22): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iString.cpp(80,2): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\workspace\Metalslug\Metalslug\std\iString.cpp(81,2): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\workspace\Metalslug\Metalslug\std\iString.cpp(88,24): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iString.cpp(89,22): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iString.cpp(105,2): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\workspace\Metalslug\Metalslug\std\iString.cpp(106,2): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\workspace\Metalslug\Metalslug\std\iString.cpp(112,21): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iString.cpp(119,2): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\workspace\Metalslug\Metalslug\std\iString.cpp(124,24): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iString.cpp(125,22): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iString.cpp(129,3): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\workspace\Metalslug\Metalslug\std\iString.cpp(134,2): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\workspace\Metalslug\Metalslug\std\iString.cpp(162,29): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  iStrTex.cpp
+C:\workspace\Metalslug\Metalslug\std\iOpenGL.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\workspace\Metalslug\Metalslug\std\iStrTex.cpp(33,31): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iStrTex.cpp(41,3): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  iUtil.cpp
+C:\workspace\Metalslug\Metalslug\std\iOpenGL.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\workspace\Metalslug\Metalslug\std\iUtil.cpp(7,13): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\workspace\Metalslug\Metalslug\std\iUtil.cpp(16,13): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\workspace\Metalslug\Metalslug\std\iUtil.cpp(34,13): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  iWindow.cpp
+C:\workspace\Metalslug\Metalslug\std\iOpenGL.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\workspace\Metalslug\Metalslug\std\iWindow.cpp(11,72): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iWindow.cpp(36,15): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iWindow.cpp(49,52): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iWindow.cpp(55,52): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iWindow.cpp(68,52): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iWindow.cpp(74,52): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iWindow.cpp(84,15): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iWindow.cpp(97,52): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iWindow.cpp(103,52): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iWindow.cpp(116,52): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\std\iWindow.cpp(122,52): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  코드를 생성하고 있습니다...

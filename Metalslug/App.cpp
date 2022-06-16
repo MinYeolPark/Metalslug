@@ -127,9 +127,9 @@ LRESULT CALLBACK wndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
         break;
     }
     case WM_KEYUP:
-    {
+    {            
         setKeyboard(false, wParam);
-        keys[wParam] = false;
+        keys[wParam] = false;        
         break;
     }
     case WM_LBUTTONDOWN:

@@ -112,11 +112,6 @@ void Bg::paint(float dt)
 			drawLine(bd->p[i].x + bg->off.x, bd->p[i].y + bg->off.y,
 				bd->p[i + 1].x + bg->off.x, bd->p[i + 1].y + bg->off.y);
 		}
-		for (int j = 0; j < 3; j++)
-		{
-			if (bd->trigger[j].x!= 0)
-				fillRect(bd->trigger[j].x, bd->trigger[j].y, 20, 100);
-		}
 	}
 #endif // DEBUG
 

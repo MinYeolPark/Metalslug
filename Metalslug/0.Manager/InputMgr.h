@@ -18,3 +18,4 @@ void updateKeyboard();
 bool getKeyStat(int key);
 bool getKeyDown(int key);
 bool getKeyUp(int key);
+
