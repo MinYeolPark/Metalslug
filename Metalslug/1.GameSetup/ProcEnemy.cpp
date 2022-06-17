@@ -6,6 +6,7 @@ ProcEnemy::ProcEnemy(int idx)
 {
 	p = iPointZero;
 	s = iSizeZero;
+	v = iPointZero;
 
 	isActive = false;
 
@@ -18,33 +19,39 @@ ProcEnemy::ProcEnemy(int idx)
 	fall = true;
 
 	sight = 0;
+	moveSpeed = 0.f;
 	attkRange = 0;
 	attkRate = 0.f, _attkRate = 0.f;
 	aiDt = 0.f, _aiDt = 0.f;
-	tp = iPointZero;
+	tp = { -1, -1 };
 }
 
 ProcEnemy::~ProcEnemy()
 {
 }
 
-iRect ProcEnemy::collider()
-{
-	return iRectMake(p.x + bg->off.x - 25, p.y + bg->off.y -50, 50, 50);
-}
-
-void ProcEnemy::updateAi(ProcEnemy* e, float dt)
-{
-}
-
-void ProcEnemy::methodDead(void* parm)
+void ProcEnemy::cbAniDead(void* parm)
 {
 	ProcEnemy* e = (ProcEnemy*)parm;
 
 	e->isActive = false;
 }
 
-void ProcEnemy::methodAttack(void* parm)
+void ProcEnemy::cbAniAttack(void* parm)
 {
+	ProcEnemy* e = (ProcEnemy*)parm;
 
+	printf("cb Ani Attack\n");
+	e->setState((EnemyBehave)(IdleEnemyL + e->state % 2));
+}
+
+void ProcEnemy::initObj(iPoint v)
+{
+	this->v = v;
+}
+
+void ProcEnemy::initObj(iPoint v, EnemyAI ai)
+{
+	this->v = v;
+	this->ai = ai;
 }

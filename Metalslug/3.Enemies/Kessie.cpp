@@ -3,7 +3,7 @@
 #include "ImgMgr.h"
 #include "EffectMgr.h"
 #include "BulletMgr.h"
-
+#include "EnemyMgr.h"
 ImageInfo imgKessieInfo[];
 static iImage** _imgKessie = NULL;
 Kessie::Kessie()
@@ -22,7 +22,7 @@ Kessie::Kessie()
 	effDt = 0.f;
 	_effDt = 3.0f;
 	aiDt = 0.f;
-	_aiDt = 3.f;
+	_aiDt = 5.f;
 	_hp = 5000.f;
 	hpLeft = 1500.f;
 	hpRight = 1500.f;
@@ -68,9 +68,12 @@ void Kessie::init()
 
 void Kessie::update(float dt)
 {	
-	aiDt += _aiDt;
+	aiDt += dt;
 	if (aiDt > _aiDt)
+	{
 		aiDt -= _aiDt;
+		addProcEnemy(ArMelee, { p.x + 100, p.y - 100 }, iPointMake(-1, 0), AI::enemyAI0);
+	}
 	if (!isHeadOpen)
 	{
 		imgHead->startAnimation();

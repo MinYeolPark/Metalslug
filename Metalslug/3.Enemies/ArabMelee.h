@@ -13,15 +13,13 @@ public:
 	iImage* imgCurr;
 
 	int idx;
-
 public:
-	float speed;
-	float up;
-	float down;
-	bool fall;
-
+	virtual iRect collider() { return iRectMake(0, 0, 0, 0); }
+public:
+	virtual void setState(EnemyBehave newState);
 public:
 	virtual void initObj();
+	virtual void initObj(iPoint v);
 	virtual void updateObj(float dt);
 	virtual void fixedUpdate(float dt);
 	virtual void drawObj(float dt, iPoint off);

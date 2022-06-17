@@ -266,7 +266,7 @@ bool movePoint(iPoint& p, iPoint sp, iPoint ep, float speedDt)
 
 static float r = 0;
 bool movePoint(iPoint& p, iPoint sp, iPoint ep, float speedDt, float maxH)
-{
+{	
 	iPoint v = (ep - sp);
 	v /= iPointLength(v);
 

@@ -150,7 +150,7 @@ iImage** createImgEnemy(ImageInfo* imageInfo, void* c)
 	return nullptr;
 }
 
-iImage** createImgEnemyReverse(ImageInfo* imageInfo, int size, void* c)
+iImage** createImgReverse(ImageInfo* imageInfo, int size, void* c)
 {
 	iImage** _imgEnemy = new iImage * [size];
 	memset(_imgEnemy, 0x00, sizeof(iImage*) * size);
@@ -181,7 +181,7 @@ iImage** createImgEnemyReverse(ImageInfo* imageInfo, int size, void* c)
 
 			img->anc = TOP | LEFT;
 			if (ii->cbAni)
-				img->startAnimation(ii->cbAni, c);
+				img->startAnimation();
 			else
 				img->startAnimation();
 

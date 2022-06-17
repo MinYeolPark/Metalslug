@@ -139,6 +139,7 @@
     <ClInclude Include="1.GameSetup\ProcField.h" />
     <ClInclude Include="1.GameSetup\ProcObject.h" />
     <ClInclude Include="1.GameSetup\ProcPlayer.h" />
+    <ClInclude Include="3.Enemies\ArabBurserker.h" />
     <ClInclude Include="3.Enemies\ArabMelee.h" />
     <ClInclude Include="3.Enemies\Mosque.h" />
     <ClInclude Include="App.h" />
@@ -182,6 +183,7 @@
     <ClCompile Include="1.GameSetup\ProcField.cpp" />
     <ClCompile Include="1.GameSetup\ProcObject.cpp" />
     <ClCompile Include="1.GameSetup\ProcPlayer.cpp" />
+    <ClCompile Include="3.Enemies\ArabBurserker.cpp" />
     <ClCompile Include="3.Enemies\ArabMelee.cpp" />
     <ClCompile Include="3.Enemies\Mosque.cpp" />
     <ClCompile Include="App.cpp" />

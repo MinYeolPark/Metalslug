@@ -1,111 +1,170 @@
 #include "ArabBurserker.h"
 
 #include "EnemyMgr.h"
-
-static EnemyImageInfo imageInfo[3] =
-{
-	{
-		"Resources/Character/Enemies/Arab_Bur/Arab_Bur_Idle_%02d.png",
-		4, 2.0f, { -28, -56},
-		0.1f,
-		0,
-		NULL,
-	},
-	{
-		"Resources/Character/Enemies/Arab_Bur/Arab_Bur_Walk_%02d.png",
-		6, 2.0f, { -28, -56},
-		0.1f,
-		0,
-		NULL,
-	},
-	{
-		"Resources/Character/Enemies/Arab_Bur/Arab_Bur_Dead_%02d.png",
-		9, 2.0f, { -28, -56},
-		0.15f,
-		1,
-		ProcEnemy::methodDead,
-	},
-};
-
+#include "ImgMgr.h"
+ImageInfo imgBurserkInfo[];
 static iImage** imgEnemy = NULL;
-ArabBurserker::ArabBurserker(int idx): ProcEnemy(idx)
+ArabBurserker::ArabBurserker(int idx) : ProcEnemy(idx)
 {
-	//stats init
-	moveSpeed = 150;
+	idx = (int)EnemyIndex::ArMelee;
+	state = IdleEnemyL;
+
+	ai = AI::enemyAI0;
+
+	up = 0.f;
+	down = 0.f;
+	fall = false;
+
+	hp = 100;
+	dmg = 100;
 	sight = 200;
-	attkRange = 0;
-	attkRate = 0.f, _attkRate = 2.f;
-	aiDt = 0.f, _aiDt = 2.f;
+	moveSpeed = 200;
+	attkRange = 70;
+	attkRate = 0.f;
+	_attkRate = 2.f;
+	aiDt = 0.f;
+	_aiDt = 2.f;
+	tp = iPointMake(-1, -1);
+
+	imgs = NULL;
+	imgCurr = NULL;
+
+	state = EnemyBehave::IdleEnemyL;
 
 	if (imgEnemy == NULL)
-		imgEnemy = createImgCharReverse(imageInfo, this);
+		imgEnemy = createImgReverse(imgBurserkInfo, EnemyBehaveMax, this);
 
-	imgs = new iImage * [6];
-	memset(imgs, 0x00, sizeof(iImage*) * 6);
-	for (int i = 0; i < 6; i++)
+	imgs = new iImage * [EnemyBehaveMax];
+	memset(imgs, 0x00, sizeof(iImage*) * EnemyBehaveMax);
+	for (int i = 0; i < EnemyBehaveMax; i++)
 		imgs[i] = imgEnemy[i]->clone();
 }
 
 ArabBurserker::~ArabBurserker()
 {
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < EnemyBehaveMax; i++)
+		delete imgs[i];
+	delete imgs;
+}
+
+void ArabBurserker::setState(EnemyBehave newState)
+{
+	state = newState;
+
+	if (state == AttackEnemyL || state == AttackEnemyR)
 	{
-		if (imgs[i])
-			delete imgs[i];
+		imgs[newState]->startAnimation(ProcEnemy::cbAniAttack, this);
 	}
-	delete imgs;	
 }
 
 void ArabBurserker::initObj()
 {
+	ai = AI::enemyAIBurserker;
 }
 
+void ArabBurserker::initObj(iPoint v)
+{
+	ai = AI::enemyAIBurserker;
+	this->v = v;
+	//tp = { p.x - 100, p.y };
+}
 void ArabBurserker::updateObj(float dt)
 {
-	ProcEnemy::updateObj(dt);
-
-	iPoint v = player->p - p;
-	v /= iPointLength(v);
-	if (v.x > 0)
+	aiDt += dt;
+	if (aiDt > _aiDt)
 	{
-		//setState((EnemyBehave)(eMoveR));
-		//tp.x = bg->maxW + bg->off.x + 20;
-	}
-	else
-	{
-		//setState((EnemyBehave)(eMoveL));
-		//tp.x = bg->off.x + 20;
+		aiDt -= _aiDt;
+		ai(this, dt);
 	}
 
-	int d = getDistance(p, tp);
+	if (tp != iPointMake(-1, -1))
+	{
+		if (movePoint(p, p, tp, moveSpeed * dt))
+		{
+			
+		}
+	}
+	p.y = *(bg->maxY + (int)p.x);
+	return;
+	fixedUpdate(dt);
 }
 
 void ArabBurserker::fixedUpdate(float dt)
 {
-	ProcEnemy::fixedUpdate(dt);
+	int maxY = *(bg->maxY + (int)p.x);
+	if (p.y >= maxY)
+	{
+		up = 0;
+		down = 0;
+		fall = false;
+
+		p.y = maxY;
+	}
+	else
+		fall = true;
+
+	if (fall)
+	{
+		if (p.y < maxY)
+		{
+			down += jumpDecrease * dt;
+			p = (iPointMake(p.x, p.y += down));
+		}
+	}
+
+	if (tp != iPointZero)
+		tp.y = maxY;
 }
 
-void ArabBurserker::renderObj(float dt, iPoint off)
+void ArabBurserker::drawObj(float dt, iPoint off)
 {
 	setRGBA(1, 1, 1, 1);
 	imgCurr = imgs[state];
 	imgCurr->paint(dt, p + off);
 
 #ifdef _DEBUG
-	drawDot(p + off);
-	drawRect(collider());
-	drawRect(attkCollider());
-
+	//drawDot(p + off);
+	//drawRect(collider());
 #endif // DEBUG
 	setRGBA(1, 1, 1, 1);
 }
 
-void ArabBurserker::releaseObj()
+void ArabBurserker::freeObj()
 {
-	for (int i = 0; i < 6; i++)
-		delete imgEnemy[i];
-	delete imgEnemy;
-	imgEnemy = NULL;
+	//#issue한번만 지우기
+	if (imgEnemy != NULL)
+	{
+		for (int i = 0; i < EnemyBehaveMax; i++)
+			delete imgEnemy[i];
+		delete imgEnemy;
+		imgEnemy = NULL;
+	}
 }
 
-
+ImageInfo imgBurserkInfo[] =
+{
+	{
+		"assets/ArabBurserker/Arab_Bur_Idle_%02d.png",
+		4, 1.0f, { -36, 0},
+		0.18f,
+		0,			//repeat
+		{255, 0, 0, 255},
+		NULL,
+	},
+	{
+		"assets/ArabBurserker/Arab_Bur_Walk_%02d.png",
+		6, 1.0f, { -36, 0},
+		0.1f,
+		0,
+		{255, 0, 0, 255},
+		NULL,
+	},
+	{
+		"assets/ArabBurserker/Arab_Bur_Dead_%02d.png",
+		8, 1.0f, { -36, 0},
+		0.1f,
+		1,
+		{255, 0, 0, 255},
+		ProcEnemy::cbAniDead,
+	},
+};

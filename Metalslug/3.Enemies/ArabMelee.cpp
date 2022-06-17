@@ -1,26 +1,30 @@
 #include "ArabMelee.h"
 
+#include "EnemyMgr.h"
 #include "ImgMgr.h"
 ImageInfo imgMeleeInfo[];
 static iImage** imgEnemy = NULL;
 ArabMelee::ArabMelee(int idx) : ProcEnemy(idx)
 {
 	idx = (int)EnemyIndex::ArMelee;
+	state = IdleEnemyL;
+	
+	ai = AI::enemyAI0;
 
-	speed = 80;
 	up = 0.f;
 	down = 0.f;
 	fall = false;
 
 	hp = 100;
 	dmg = 100;
-	sight = 100;
-	attkRange = 50;
+	sight = 200;
+	moveSpeed = 100;
+	attkRange = 70;
 	attkRate = 0.f;
 	_attkRate = 2.f;
 	aiDt = 0.f;
 	_aiDt = 2.f;
-	tp = iPointZero;
+	tp = iPointMake(-1,-1);
 
 	imgs = NULL;
 	imgCurr = NULL;
@@ -28,7 +32,7 @@ ArabMelee::ArabMelee(int idx) : ProcEnemy(idx)
 	state = EnemyBehave::IdleEnemyL;
 
 	if( imgEnemy==NULL )
-		imgEnemy = createImgEnemyReverse(imgMeleeInfo, EnemyBehaveMax, this);
+		imgEnemy = createImgReverse(imgMeleeInfo, EnemyBehaveMax, this);
 
 	imgs = new iImage * [EnemyBehaveMax];
 	memset(imgs, 0x00, sizeof(iImage*) * EnemyBehaveMax);
@@ -43,12 +47,46 @@ ArabMelee::~ArabMelee()
 	delete imgs;
 }
 
-void ArabMelee::initObj()
+void ArabMelee::setState(EnemyBehave newState)
 {
+	state = newState;
+
+	if (state == AttackEnemyL || state == AttackEnemyR)
+	{
+		imgs[newState]->startAnimation(ProcEnemy::cbAniAttack, this);
+	}
 }
 
+void ArabMelee::initObj()
+{
+
+}
+
+void ArabMelee::initObj(iPoint v)
+{
+	ai = AI::enemyAI1;
+	this->v = v;
+
+	tp = { p.x - 100, p.y };
+}
 void ArabMelee::updateObj(float dt)
 {
+	aiDt += dt;
+	if (aiDt > _aiDt)
+	{
+		aiDt -= _aiDt;
+		ai(this, dt);
+	}
+
+	if (tp != iPointMake(-1, -1))
+	{
+		printf("update");
+		if (movePoint(p, p, tp, moveSpeed * dt))
+		{
+			setState((EnemyBehave)(ShuffleEnemyL + state % 2));
+		}
+	}
+#if 0			//Test Code
 	//Checking Dead
 	if (state == DeadEnemyL || state == DeadEnemyR)
 	{
@@ -112,9 +150,10 @@ void ArabMelee::updateObj(float dt)
 		}
 	}
 #endif
+#endif
 	p.y = *(bg->maxY + (int)p.x);
 	return;
-	fixedUpdate(dt);
+	//fixedUpdate(dt);
 }
 
 void ArabMelee::fixedUpdate(float dt)
@@ -152,7 +191,6 @@ void ArabMelee::drawObj(float dt, iPoint off)
 
 #ifdef _DEBUG
 	drawDot(p + off);
-	drawRect(collider());
 #endif // DEBUG
 	setRGBA(1, 1, 1, 1);
 }
@@ -193,7 +231,7 @@ ImageInfo imgMeleeInfo[] =
 		0.1f,
 		1,
 		{255, 0, 0, 255},
-		ProcEnemy::methodDead,
+		ProcEnemy::cbAniDead,
 	},
 	{
 		"assets/ArabMelee/ArabMelee_Shuffle_%02d.png",
@@ -204,18 +242,18 @@ ImageInfo imgMeleeInfo[] =
 		NULL,
 	},
 	{
-		"assets/ArabMelee/ArabMelee_AttackPre_%02d.png",
-		4, 2.0f, { -36, 0},
-		0.18f,
-		0,
+		"assets/ArabMelee/ArabMelee_AttackMelee_%02d.png",
+		8, 1.0f, { -36, 0},
+		0.1f,
+		1,
 		{255, 0, 0, 255},
 		NULL,
 	},
 	{
-		"assets/ArabMelee/ArabMelee_AttackMelee_%02d.png",
-		8, 2.0f, { -36, 0},
-		0.1f,
-		1,
+		"assets/ArabMelee/ArabMelee_AttackPre_%02d.png",
+		4, 1.0f, { -36, 0},
+		0.18f,
+		0,
 		{255, 0, 0, 255},
 		NULL,
 	},

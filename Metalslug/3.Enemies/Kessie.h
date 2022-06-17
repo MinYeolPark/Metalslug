@@ -24,10 +24,19 @@ public:
 	bool isActive;
 	bool isHeadOpen;
 
-	float effDt, _effDt;
+	float effDt, _effDt;	
 	float aiDt, _aiDt;
 	int hpLeft, hpRight, _hp;
 
+public:
+	iRect attkCollider()
+	{
+
+	}
+	iRect collider()
+	{
+
+	}
 public:
 	void init();
 	void update(float dt);
