@@ -64,7 +64,6 @@ void addBullet(ProcPlayer* parent, int idx, float degree)
 		if (b->isActive == false)
 		{
 			b->initObj(parent, idx, parent->p, degree);
-
 			bullets[bulletNum] = b;
 			bulletNum++;
 			return;

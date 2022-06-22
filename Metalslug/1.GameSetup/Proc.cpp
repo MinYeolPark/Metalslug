@@ -7,17 +7,23 @@
 #include "EffectMgr.h"
 #include "BulletMgr.h"
 
+#include "Select.h"
 #include "Loading.h"
 
 #include "ProcField.h"
-
+#include "ProcNpc.h"
+#include "ProcItem.h"
 
 void loadProc()
 {
 	loadProcField();
+	loadProcEffect();
+
+	loadProcItem();
+	loadProcNpcs();
 	loadProcEnemy();
 	loadProcBullets();
-	loadProcEffect();
+
 	loadProcPlayer();
 
 	loadUI();
@@ -25,9 +31,13 @@ void loadProc()
 void freeProc()
 {
 	freeProcField();
+	freeProcEffect();
+
+	freeProcItem();
+	freeProcNpcs();
 	freeProcEnemy();
 	freeProcBullets();
-	freeProcEffect();
+
 	freeProcPlayer();
 
 	freeUI();
@@ -36,12 +46,16 @@ void freeProc()
 void drawProc(float dt)
 {
 	iPoint off = drawProcField(dt);
+	drawProcEffect(dt, off);
+
+	drawProcNpcs(dt, off);
+	drawProcItem(dt, off);
 	drawProcEnemy(dt, off);
 	drawProcBullets(dt, off);
-	drawProcEffect(dt, off);
-	drawProcPlayer(dt, off);
-	drawUI(dt, off);
 
+	drawProcPlayer(dt, off);
+
+	drawUI(dt, off);
 	setRGBA(1, 1, 1, 1);
 }
 
@@ -89,7 +103,9 @@ iPoint drawProcField(float dt)
 
 void loadProcPlayer()
 {
-	player = new ProcPlayer();
+	//charIdx=selectedBtn;
+	//#issue
+	player = new ProcPlayer(ERI);
 
 	player->initObj();
 }

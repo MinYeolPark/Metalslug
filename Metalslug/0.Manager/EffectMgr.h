@@ -19,6 +19,7 @@ enum EffectIndex
 	EffectMoskTrail,
 	EffectKessieBlast,
 	EffectKessieBlastRage,
+
 	EffectIndexMax,
 };
 

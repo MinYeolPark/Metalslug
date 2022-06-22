@@ -1,11 +1,11 @@
 #pragma once
 
-#include "iStd.h"
-
-class Kessie
+#include "ProcEnemy.h"
+class Kessie  
+	:public ProcEnemy
 {
 public:
-	Kessie();
+	Kessie(int idx);
 	virtual ~Kessie();
 
 public:
@@ -35,13 +35,13 @@ public:
 	}
 	iRect collider()
 	{
-
+		return iRectMake(p.x- imgBase[0]->tex->width/2, p.y- imgBase[0]->tex->height, imgBase[0]->tex->width, imgBase[0]->tex->height);
 	}
 public:
-	void init();
-	void update(float dt);
+	void initObj();
+	void updateObj(float dt);
 	void fixedUpdate(float dt);
-	bool draw(float dt, iPoint off);
-	void free();
+	bool drawObj(float dt, iPoint off);
+	void freeObj();
 };
 

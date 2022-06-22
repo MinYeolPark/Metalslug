@@ -14,7 +14,7 @@ public:
 
 	int idx;
 public:
-	virtual iRect collider() { return iRectMake(0, 0, 0, 0); }
+	virtual iRect collider() { return iRectMake(p.x - 20, p.y - 45, 40, 45); }
 public:
 	virtual void setState(EnemyBehave newState);
 public:
@@ -22,6 +22,6 @@ public:
 	virtual void initObj(iPoint v);
 	virtual void updateObj(float dt);
 	virtual void fixedUpdate(float dt);
-	virtual void drawObj(float dt, iPoint off);
+	virtual bool drawObj(float dt, iPoint off);
 	virtual void freeObj();
 };

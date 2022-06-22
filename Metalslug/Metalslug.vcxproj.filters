@@ -117,7 +117,7 @@
     <ClInclude Include="3.Enemies\Mosque.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Item.h">
+    <ClInclude Include="ProcItem.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="0.Manager\BulletMgr.h">
@@ -139,6 +139,15 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="3.Enemies\ArabBurserker.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcNpc.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="5.NPC\Ichimondi.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="IDamagable.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -242,7 +251,7 @@
     <ClCompile Include="3.Enemies\Mosque.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Item.cpp">
+    <ClCompile Include="ProcItem.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="0.Manager\BulletMgr.cpp">
@@ -264,6 +273,15 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="3.Enemies\ArabBurserker.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcNpc.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="5.NPC\Ichimondi.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="IDamagable.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

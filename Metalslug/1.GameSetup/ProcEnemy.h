@@ -3,8 +3,8 @@
 
 enum EnemyIndex
 {
-	ArMelee = 0,
-	ArBurserker,
+	IdxArMelee = 0,
+	IdxArBurserker,
 
 	IdxMasknell,
 	IdxMosque,
@@ -14,7 +14,7 @@ enum EnemyIndex
 
 enum EnemyBehave
 {
-	IdleEnemyL,
+	IdleEnemyL = 0,
 	IdleEnemyR,
 
 	WalkEnemyL,
@@ -34,9 +34,11 @@ enum EnemyBehave
 
 class ProcEnemy;
 typedef void(*EnemyAI)(ProcEnemy* e, float dt);
-class ProcEnemy
+class ProcEnemy: 
+	public ProcObject
 {
 public:
+	ProcEnemy() { ; }
 	ProcEnemy(int idx);
 	virtual ~ProcEnemy();
 
@@ -72,7 +74,7 @@ public:
 	virtual void initObj(iPoint v, EnemyAI ai);
 	virtual void updateObj(float dt) = 0;
 	virtual void fixedUpdate(float dt) = 0;
-	virtual void drawObj(float dt, iPoint off) = 0;
+	virtual bool drawObj(float dt, iPoint off) = 0;
 	virtual void freeObj() = 0;
 public:
 

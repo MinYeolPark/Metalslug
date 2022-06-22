@@ -6,6 +6,7 @@
 #include "ArabMelee.h"
 #include "ArabBurserker.h"
 
+#include "Kessie.h"
 #include "ProcPlayer.h"
 #include "ProcField.h"
 
@@ -22,24 +23,28 @@ void loadProcEnemy()
 	for (int i = 0; i < EnemyIndexMax; i++)
 	{
 		_enemies[i] = new ProcEnemy * [enemyMax];
-		if (i == 0)
+		if (i == IdxArMelee)
 		{
 			for (int j = 0; j < enemyMax; j++)
 				_enemies[i][j] = new ArabMelee(i);
 		}
-		else if (i == 1)
+		else if (i == IdxArBurserker)
 		{
 			for (int j = 0; j < enemyMax; j++)
 				_enemies[i][j] = new ArabBurserker(i);
+		}		
+		else if (i == IdxKessie)
+		{
+			for (int j = 0; j < 1; j++)
+				_enemies[i][j] = new Kessie(i);
 		}
 	}
 	enemies = new ProcEnemy * [EnemyIndexMax * enemyMax];
 	enemyCount = 0;
 
-	//addProcEnemy(ArMelee, iPointMake(200, 50));
-	addProcEnemy(ArMelee, iPointMake(200, 50), iPointMake(-1,0), AI::enemyAI1);
-	addProcEnemy(ArBurserker, iPointMake(230, 50), iPointMake(-1, 0), AI::enemyAIBurserker);
-#if 1
+	//addProcEnemy(IdxArMelee, iPointMake(250, 50), iPointMake(-1,0), AI::enemyAI1);
+	//addProcEnemy(IdxKessie, iPointMake(200, 50), iPointMake(-1, 0), AI::enemyAI1);
+#if 0
 	mosque = new Mosque();
 	mosque->initObj();
 
@@ -72,9 +77,9 @@ void drawProcEnemy(float dt, iPoint off)
 	mosque->updateObj(dt);
 	mosque->drawObj(dt, off);
 #endif
-#if 1
-	kessie->update(dt);
-	kessie->draw(dt, off);
+#if 0
+	kessie->updateObj(dt);
+	kessie->drawObj(dt, off);
 #endif
 	for (int i = 0; i < enemyCount; i++)
 	{
@@ -82,8 +87,8 @@ void drawProcEnemy(float dt, iPoint off)
 
 		if (e->isActive)
 		{
-			//if (e->getState() != (EnemyBehave)(eDeadL + (e->state % 2)))
-			e->updateObj(dt);
+			if (e->getState() != (EnemyBehave)(DeadEnemyL + (e->state % 2)))
+				e->updateObj(dt);
 			e->drawObj(dt, off);
 		}
 
@@ -167,9 +172,6 @@ void AI::enemyAI0(ProcEnemy* e, float dt)		//Check Player
 
 void AI::enemyAI1(ProcEnemy* e, float dt)
 {
-	if (movePoint(e->p, e->p, e->tp, e->moveSpeed))
-	{
-	}
 	//e->p += e->v * e->moveSpeed * dt;
 }
 

@@ -35,6 +35,7 @@ void ProcEnemy::cbAniDead(void* parm)
 	ProcEnemy* e = (ProcEnemy*)parm;
 
 	e->isActive = false;
+	printf("%s", e->isActive ? "true" : "false");
 }
 
 void ProcEnemy::cbAniAttack(void* parm)

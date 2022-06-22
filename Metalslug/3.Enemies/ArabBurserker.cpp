@@ -6,7 +6,7 @@ ImageInfo imgBurserkInfo[];
 static iImage** imgEnemy = NULL;
 ArabBurserker::ArabBurserker(int idx) : ProcEnemy(idx)
 {
-	idx = (int)EnemyIndex::ArMelee;
+	idx = (int)EnemyIndex::IdxArMelee;
 	state = IdleEnemyL;
 
 	ai = AI::enemyAI0;
@@ -116,7 +116,7 @@ void ArabBurserker::fixedUpdate(float dt)
 		tp.y = maxY;
 }
 
-void ArabBurserker::drawObj(float dt, iPoint off)
+bool ArabBurserker::drawObj(float dt, iPoint off)
 {
 	setRGBA(1, 1, 1, 1);
 	imgCurr = imgs[state];
@@ -127,6 +127,8 @@ void ArabBurserker::drawObj(float dt, iPoint off)
 	//drawRect(collider());
 #endif // DEBUG
 	setRGBA(1, 1, 1, 1);
+
+	return !isActive;
 }
 
 void ArabBurserker::freeObj()

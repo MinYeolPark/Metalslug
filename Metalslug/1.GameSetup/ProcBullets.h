@@ -17,6 +17,7 @@ enum BulletIndex
 
 	BulletMosque,
 	BulletMosqueTrace,
+
 	BulletIndexMax,
 };
 
@@ -58,7 +59,7 @@ public:
 	virtual iRect collider();
 
 public:
-	static void patDefault(ProcBullets* b, float dt);
+	static void patternDefault(ProcBullets* b, float dt);
 	static void patBomb(ProcBullets* b, float dt);
 
 	static void patMosque(ProcBullets* b, float dt);

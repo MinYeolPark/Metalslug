@@ -21,6 +21,6 @@ public:
 	virtual void initObj(iPoint v);
 	virtual void updateObj(float dt);
 	virtual void fixedUpdate(float dt);
-	virtual void drawObj(float dt, iPoint off);
+	virtual bool drawObj(float dt, iPoint off);
 	virtual void freeObj();
 };

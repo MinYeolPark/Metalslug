@@ -20,7 +20,6 @@ void loadProcEffect()
 
 void freeProcEffect()
 {
-#if 1
 	for (int i = 0; i < EffectIndexMax; i++)
 	{
 		delete _effect[i];
@@ -28,7 +27,6 @@ void freeProcEffect()
 	}
 	delete _effect;
 	delete effect;
-#endif
 }
 
 void drawProcEffect(float dt, iPoint off)
@@ -48,7 +46,6 @@ void drawProcEffect(float dt, iPoint off)
 
 void addProcEffect(int index, iPoint p)
 {	
-#if 1
 	for (int i = 0; i < effectMax; i++)
 	{
 		ProcEffect* e = &_effect[index][i];
@@ -60,7 +57,6 @@ void addProcEffect(int index, iPoint p)
 			return;
 		}
 	}
-#endif
 }
 
 void addProcEffect(int index, iPoint p, float spawnDt)
@@ -81,6 +77,7 @@ void addProcEffect(int index, iPoint p, float spawnDt)
 ProcEffect::ProcEffect()
 {
 	imgs = NULL;
+	imgCurr = NULL;
 	p = iPointZero;
 	s = iSizeZero;
 

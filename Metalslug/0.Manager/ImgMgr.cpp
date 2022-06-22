@@ -152,14 +152,14 @@ iImage** createImgEnemy(ImageInfo* imageInfo, void* c)
 
 iImage** createImgReverse(ImageInfo* imageInfo, int size, void* c)
 {
-	iImage** _imgEnemy = new iImage * [size];
-	memset(_imgEnemy, 0x00, sizeof(iImage*) * size);
+	iImage** _imgs = new iImage * [size * 2];
+	//memset(_imgs, 0x00, sizeof(iImage*) * size * 2);
 	for (int i = 0; i < size; i++)
 	{
 		iImage* img;
 		if (i % 2 == 1)
 		{
-			img = _imgEnemy[i - 1]->clone();
+			img = _imgs[i - 1]->clone();
 			img->reverse = REVERSE_WIDTH;
 		}
 		else
@@ -181,14 +181,14 @@ iImage** createImgReverse(ImageInfo* imageInfo, int size, void* c)
 
 			img->anc = TOP | LEFT;
 			if (ii->cbAni)
-				img->startAnimation();
+				img->startAnimation(ii->cbAni, c);
 			else
 				img->startAnimation();
 
 		}
-		_imgEnemy[i] = img;
+		_imgs[i] = img;
 	}
-	return _imgEnemy;
+	return _imgs;
 }
 
 iImage** createImgSingleBehave(ImageInfo* imageInfo, void* c)

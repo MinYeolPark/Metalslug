@@ -198,7 +198,7 @@ bool StatusUI::paint(float dt)
 	stLife->drawString(devSize.width/6, 22, TOP | LEFT, "%d", player->life);
 			
 	stAmmo->drawString(115, 31, VCENTER | HCENTER, "%d", player->curGun->remain);
-	stBomb->drawString(145, 31, VCENTER | HCENTER, "%d", player->hp);
+	stBomb->drawString(145, 31, VCENTER | HCENTER, "%d", player->bombs);
 
 	playtime += dt;
 	stPlaytime->setString("%.0f", playtime);

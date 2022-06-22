@@ -11,17 +11,23 @@
 #include "ProcField.h"
 
 
-#include "Item.h"
+#include "ProcItem.h"
 ProcPlayer* player;
+static iImage** _imgEriTop = NULL;
+static iImage** _imgEriBot = NULL;
+static iImage** _imgEriHeavyTop = NULL;
 ImageInfo topImageInfo[];
 ImageInfo botImageInfo[];
-ProcPlayer::ProcPlayer()
-{
+ImageInfo infoEriTopHeavy[];
+
+ProcPlayer::ProcPlayer(int idx) : ProcObject(idx)
+{    
     layer = ObjLayer::Player;
     p = iPointZero;
     s = iSizeZero;
     isActive = false;
 
+    this->idx = (CharacterIndex)idx;
     topImgs = NULL;
     topImgCurr = NULL;
     botImgs = NULL;
@@ -29,6 +35,7 @@ ProcPlayer::ProcPlayer()
 
     curGun = new Gun();//{ HandGun, 100, 100, 0 };
     //firePoint
+    bombPoint = { -1, -1 };
     up = 0;
     down = 0;
     fall = true;
@@ -49,22 +56,45 @@ ProcPlayer::ProcPlayer()
 
     topState = IdleR;
     botState = IdleR;
-    topImgs = createImgPlayer(topImageInfo, 13 * 2, this);
-    botImgs = createImgPlayer(botImageInfo, 4 * 2, this);
 
-    loadFB();
+    _imgEriTop = createImgReverse(topImageInfo, PlayerBehaveMax, this);
+    _imgEriHeavyTop = createImgReverse(infoEriTopHeavy, PlayerBehaveMax, this);
+    _imgEriBot = createImgReverse(botImageInfo, 8, this);
+
+    switch (idx)
+    {
+    case MARCO:   printf("No imgs");                            break;
+    case ERI:     topImgs = _imgEriTop; botImgs = _imgEriBot;   break;
+    case TAMA:    printf("No imgs");                            break;
+    case PIO:     printf("No imgs");                            break;
+    }
 }
 
 ProcPlayer::~ProcPlayer()
 {
+    for (int i = 0; i < 16; i++)
+    {
+        delete _imgEriTop[i];
+        delete _imgEriHeavyTop[i];
+    }
+    for (int i = 0; i < 4; i++)
+        delete _imgEriBot[i];
+    delete _imgEriTop;
+    delete _imgEriHeavyTop;
+    delete _imgEriBot;
+
     delete curGun;
     delete player;
+
+    _imgEriTop = NULL;
+    _imgEriHeavyTop = NULL;
+    _imgEriBot = NULL;
 }
 
 void ProcPlayer::initObj()
 {
     this->isActive = true;
-    topState = SpawnR;
+    topState = JumpL;
     botState = IdleR;
     this->p = iPointMake(100, 200);
 }
@@ -89,7 +119,7 @@ void ProcPlayer::updateObj(float dt)
 
         if (v.x < 0)
             isRight = false;
-        else
+        else if (v.x > 0)
             isRight = true;
 
         if (!up)
@@ -99,55 +129,44 @@ void ProcPlayer::updateObj(float dt)
                 setBotState(WalkR, v);
                 if (!isAttacking)
                     setTopState(WalkR, v);
+
+                fireDeg = 0;
             }
-            else if (v.x < 0)
-            {
+            else if (v.x < 0)// if (v.x < 0)
+            {                
                 setBotState(WalkL, v);
                 if (!isAttacking)
                     setTopState(WalkL, v);
+
+                fireDeg = 180;
             }
         }
     }
-    else//v==iPointzero
+    else//
     {
-        if (topState == WalkR || topState == WalkL)            
+        if (topState == WalkR || topState == WalkL
+            ||topState==JumpR || topState == JumpL)
             setTopState((PlayerBehave)(BrakeR + topState % 2), v);
     }
 
-    if (getKeyDown(keyboard_up))
-    {
-#if 0
-        if (getKeyDown(keyboard_space))
-            addFB(0, p, fireDegree);
-        else if (getKeyStat(keyboard_up))
-        {
-            if (fireDegree < 90)
-            {
-                fireDegree += (90 / 3.0f * dt);
-                if (fireDegree > 90)
-                    fireDegree = 90;
-            }
-            else if (fireDegree > 90)
-            {
-                fireDegree -= (90 / 3.0f * dt);
-                if (fireDegree < 90)
-                    fireDegree = 90;
-            }
-        }
-#endif
-        aimUp();
-    }
-    else if (getKeyUp(keyboard_up))
-        setTopState((PlayerBehave)(IdleR + topState % 2), v);
-
     if (getKeyDown(keyboard_z))
         jump(v);
+    if (getKeyDown(keyboard_up))
+        aimUp();
     if (getKeyDown(keyboard_x))
         fire(v);
-    if (getKeyDown(keyboard_down))
-        crouch();
     if (getKeyDown(keyboard_space))
         bomb(v);
+    else if (getKeyUp(keyboard_up))
+        setTopState((PlayerBehave)(AimtoNormR + topState % 2), v);
+    if (getKeyDown(keyboard_down))
+        crouch();
+    else if (getKeyUp(keyboard_down))
+        setTopState((PlayerBehave)(IdleR + topState % 2), v);
+
+
+
+
 
     p.x += v.x;
 
@@ -195,20 +214,17 @@ void ProcPlayer::fixedUpdate(float dt)
             down += jumpDecrease * dt;
             p = (iPointMake(p.x, p.y += down));
         }
-    }
-
-    //Check Item collider
-    if (containPoint(p, item->collider()))
-    {
-        //if item is gun
-        //curGun->changeGun();
-    }
+    }   
 }
 bool ProcPlayer::drawObj(float dt, iPoint off)
 {
     setRGBA(1, 1, 1, 1);
 
     botImgCurr = botImgs[botState];
+    if (curGun->gunIndex == 1)
+        topImgs = _imgEriHeavyTop;
+    else if (curGun->gunIndex == 0)
+        topImgs = _imgEriTop;
     topImgCurr = topImgs[topState];
 
     if (topState < SpawnR)
@@ -219,6 +235,7 @@ bool ProcPlayer::drawObj(float dt, iPoint off)
         setRGBA(1, 0, 1, 0.5);
         setDotSize(10);
         drawDot(p + off);
+        drawRect(collider());
 #endif
     }
 
@@ -256,13 +273,13 @@ void ProcPlayer::setTopState(PlayerBehave pb, iPoint v)
 {
     if (pb == JumpR || pb == JumpL)
     {
-        topImgs[pb]->startAnimation(cbAniJump, this);
-        botImgs[pb]->startAnimation(cbAniJump, this);
+        topImgs[pb]->startAnimation(cbAniToWalk, this);
+        botImgs[pb]->startAnimation(cbAniToWalk, this);
     }
     if (pb == RunJumpR || pb == RunJumpL)
     {
-        topImgs[pb]->startAnimation(cbAniJump, this);
-        botImgs[pb]->startAnimation(cbAniJump, this);
+        topImgs[pb]->startAnimation(cbAniToWalk, this);
+        botImgs[pb]->startAnimation(cbAniToWalk, this);
     }
     if (pb == AimtoUpR || pb == AimtoUpL)
     {
@@ -270,9 +287,24 @@ void ProcPlayer::setTopState(PlayerBehave pb, iPoint v)
     }
     if (pb == AimtoNormR || pb == AimtoUpL)
     {
+        topImgs[pb]->startAnimation(cbAniToIdle, this);
+    }
+    if (pb == AimDownR || pb == AimDownL)
+    {
         topImgs[pb]->startAnimation();
     }
     if (pb == FireR || pb == FireL)
+    {
+        //#issue
+        topImgCurr[FireR].frame;//bottom sync
+
+        topImgs[pb]->startAnimation(cbAniFire, this);
+    }
+    if (pb == FireUpR || pb == FireUpL)
+    {
+        topImgs[pb]->startAnimation(cbAniFire, this);
+    }
+    if (pb == FireDownR || pb == FireDownL)
     {
         topImgs[pb]->startAnimation(cbAniFire, this);
     }
@@ -331,14 +363,32 @@ void ProcPlayer::jump(iPoint v)
 
 void ProcPlayer::crouch()
 {
-    setTopState((PlayerBehave)(CrouchR + topState % 2), v);
+    isCrouching = !isCrouching;
+    if (!up)
+    {
+        setTopState((PlayerBehave)(CrouchR + topState % 2), v);
+        setBotState((PlayerBehave)(IdleR + botState % 2), v);
+    }
+    else
+    {
+        setTopState((PlayerBehave)(AimDownR + topState % 2), v);
+        setBotState((PlayerBehave)(JumpR + botState % 2), v);
+    }
 }
 
 void ProcPlayer::aimUp()
 {
     isAimup = !isAimup;
-
-    setTopState((PlayerBehave)(AimtoUpR + topState % 2), v);
+    if (!up)
+    {
+        setTopState((PlayerBehave)(AimtoUpR + topState % 2), v);
+        //setBotState((PlayerBehave)(IdleR + botState % 2), v);
+    }
+    else
+    {
+        setTopState((PlayerBehave)(AimtoUpR + topState % 2), v);
+        //setBotState((PlayerBehave)(JumpR + botState % 2), v);
+    }
 }
 
 void ProcPlayer::fire(iPoint v)
@@ -356,7 +406,7 @@ void ProcPlayer::fire(iPoint v)
             if (e->getState() != (EnemyBehave)(DeadEnemyL + e->state % 2))
                 eNear = e;
         }
-    }
+    }    
 
     if (eNear)
     {
@@ -367,42 +417,79 @@ void ProcPlayer::fire(iPoint v)
     }
     else
     {
-        setTopState((PlayerBehave)(FireR + topState % 2), v);
-        addBullet(this, 0, fireDegree);
+        if (v.y < 0)           //aim up
+        {
+            setTopState((PlayerBehave)(FireUpR + topState % 2), v);
+            fireDeg = 270;
+        }
+        else if (v.y > 0)   //aim down
+        {
+            setTopState((PlayerBehave)(FireDownR + topState % 2), v);
+            fireDeg = 90;
+        }
+        else
+            setTopState((PlayerBehave)(FireR + topState % 2), v);
+
+        addBullet(this, curGun->gunIndex, fireDeg);
     }
 
-    if (v.x > 0)
-        setBotState(WalkR, v);
-    else if (v.x < 0)
-        setBotState(WalkL, v);
-    else
-        setBotState((PlayerBehave)(IdleR + botState % 2), v);
+    if (!up)
+    {
+        if (v.x > 0)
+            setBotState(WalkR, v);
+        else if (v.x < 0)
+            setBotState(WalkL, v);
+        else
+            setBotState((PlayerBehave)(IdleR + botState % 2), v);
+    }
 }
 
 void ProcPlayer::bomb(iPoint v)
 {
     setTopState((PlayerBehave)(BombR + topState % 2), v);
 
-    addBullet(this, curGun->Bomb, fireDegree);
+    addBullet(this, Bomb, 45);
+}
+
+void ProcPlayer::addScore(int score)
+{
+    this->score += score;
+}
+
+void ProcPlayer::addBomb(int bomb)
+{
+    printf("%d\n", bomb);
+    this->bombs += bomb;
+}
+
+void ProcPlayer::changeGun(int index)
+{
+    this->curGun->gunIndex = (GunIndex)index;
 }
 
 iRect ProcPlayer::collider()
 {
-    return iRectMake(p.x - 20 + bg->off.x, p.y - 70 + bg->off.y, 40, 70);
+    return iRectMake(p.x - 20 + bg->off.x, p.y - 40 + bg->off.y, 40, 40);
 }
-void ProcPlayer::cbAniJump(void* parm)
+void ProcPlayer::cbAniToIdle(void* parm)
 {
-    printf("cbAniJump\n");
-
     ProcPlayer* pp = (ProcPlayer*)parm;
     pp->setTopState((PlayerBehave)(IdleR + pp->topState % 2), iPointZero);
     pp->setBotState((PlayerBehave)(IdleR + pp->botState % 2), iPointZero);
 }
 
+void ProcPlayer::cbAniToWalk(void* parm)
+{
+    ProcPlayer* pp = (ProcPlayer*)parm;
+    if (pp->v.x)
+    {
+        pp->setTopState((PlayerBehave)(WalkR + pp->topState % 2), iPointZero);
+        pp->setBotState((PlayerBehave)(WalkR + pp->botState % 2), iPointZero);
+    }
+}
+
 void ProcPlayer::cbAniBrake(void* parm)
 {
-    printf("cbAniBrake\n");
-
     ProcPlayer* pp = (ProcPlayer*)parm;
     pp->setTopState((PlayerBehave)(IdleR + pp->topState % 2), iPointZero);
     pp->setBotState((PlayerBehave)(IdleR + pp->botState % 2), iPointZero);
@@ -410,8 +497,6 @@ void ProcPlayer::cbAniBrake(void* parm)
 
 void ProcPlayer::cbAniFire(void* parm)
 {
-    printf("cbAniFire\n");
-
     ProcPlayer* pp = (ProcPlayer*)parm;
     pp->isAttacking = false;
     pp->setTopState((PlayerBehave)(IdleR + pp->topState % 2), iPointZero);
@@ -430,7 +515,7 @@ ImageInfo botImageInfo[] =
    },
    {
       "assets/Player/Bot_Walk_%02d.png",
-      12, 1.0f, { -20 / 2, 0 },
+      12, 1.0f, { -24 / 2, 0 },
       0.1f,
       0,
       {255,0,0,255},
@@ -488,6 +573,31 @@ ImageInfo topImageInfo[] =
       NULL,
    },
    {
+      "assets/Player/Brake_%02d.png",
+      4, 1.0f, { -20 / 2, 0 },
+      0.12f,
+      1,
+      {255, 255, 255, 255},
+      ProcPlayer::cbAniBrake,
+   },
+   {
+      "assets/Player/Crouch_%02d.png",
+      11, 1.0f, { -51 / 2, 0 },
+      0.06f,
+      1,
+      {255,0,0,255},
+      NULL,
+   },
+   {
+      "assets/Player/Crouch_Melee_%02d.png",
+      11, 1.0f, { -51 / 2, 0 },
+      0.06f,
+      1,
+      {255,0,0,255},
+      NULL,
+   },
+  
+   {
       "assets/Player/AimUp_%02d.png",
       6, 1.0f, { -32 / 2, 16 },
       0.06f,
@@ -497,15 +607,15 @@ ImageInfo topImageInfo[] =
    },
    {
       "assets/Player/AimtoNorm_%02d.png",
-      4, 1.0f, { -32 / 2, 16 },
+      4, 1.0f, { -26 / 2, 16 },
       0.06f,
       1,
       {255, 0, 0, 255},
-      NULL,
+      ProcPlayer::cbAniToIdle,
    },
    {
       "assets/Player/AimDown_%02d.png",
-      3, 1.0f, { -20 / 2, 16 },
+      3, 1.0f, { -20 / 2, 4 },
       0.06f,
       1,
       {255,0,0,255},
@@ -513,10 +623,26 @@ ImageInfo topImageInfo[] =
    },
    {
       "assets/Player/Top_Fire_%02d.png",
-      9, 1.0f, { -20 / 2, 16 },
+      9, 1.0f, { -26 / 2, 12 },
       0.06f,
       1,
-      {255,0,0,255},
+      {255,255,255,255},
+      ProcPlayer::cbAniFire,
+   },
+   {
+      "assets/Player/Top_FireUp_%02d.png",
+      10, 1.0f, { -34 / 2, 16 },
+      0.06f,
+      1,
+      {255,255,255,255},
+      ProcPlayer::cbAniFire,
+   },
+   {
+      "assets/Player/Top_FireDown_%02d.png",
+      6, 1.0f, { -30 / 2, -10 },
+      0.06f,
+      1,
+      {255,255,255,255},
       ProcPlayer::cbAniFire,
    },
    {
@@ -544,167 +670,153 @@ ImageInfo topImageInfo[] =
       NULL,
    },
    {
-      "assets/Player/Crouch_%02d.png",
-      11, 1.0f, { -51 / 2, 0 },
+      "assets/Player/Dead_%02d.png",
+      19, 1.0f, { -41 / 2, 0 },
+      0.04f,
+      1,
+      {255,0,0,255},
+      NULL,
+   },
+};
+
+ImageInfo infoEriTopHeavy[] =
+{
+   {
+      "assets/Player/Heavy_Idle_%02d.png",
+      4, 1.0f, { -28 / 2, 10 },
+      0.18f,
+      0,
+      {255,0,0,255},
+      NULL,
+   },
+   {
+      "assets/Player/Heavy_Walk_%02d.png",
+      12, 1.0f, { -48 / 2, 12 },
+      0.1f,
+      0,
+      {255,0,0,255},
+      NULL,
+   },
+   {
+      "assets/Player/Heavy_Jump_%02d.png",
+      6, 1.0f, { -48 / 2, 12 },
+      0.1f,
+      0,
+      {255,0,0,255},
+      NULL,
+   },
+   {
+      "assets/Player/Heavy_RunJump_%02d.png",
+      6, 1.0f, { -58 / 2, 12 },
+      0.1f,
+      0,
+      {255,0,0,255},
+      NULL,
+   },
+   {
+      "assets/Player/Heavy_Brake_%02d.png",
+      4, 1.0f, { -42 / 2, 0 },
+      0.1f,
+      1,
+      {255,0,0,255},
+      ProcPlayer::cbAniBrake,
+   },
+   {
+      "assets/Player/Heavy_Crouch_%02d.png",
+      7, 1.0f, { -42 / 2, 0 },
+      0.1f,
+      1,
+      {255,0,0,255},
+      NULL,
+   },
+   {
+      "assets/Player/Heavy_Crouch_Melee_%02d.png",
+      9, 1.0f, { -42 / 2, 0 },
+      0.1f,
+      1,
+      {255,0,0,255},
+      NULL,
+   },
+   {
+      "assets/Player/Heavy_AimUp_%02d.png",
+      6, 1.0f, { -60 / 2, 16 },
       0.06f,
       1,
       {255,0,0,255},
       NULL,
    },
    {
-      "assets/Player/Brake_%02d.png",
-      4, 1.0f, { -20 / 2, 0 },
-      0.12f,
+      "assets/Player/Heavy_AimtoNorm_%02d.png",
+      3, 1.0f, { -60 / 2, 16 },
+      0.06f,
       1,
-      {255, 255, 255, 255},
-      ProcPlayer::cbAniBrake,
+      {255,0,0,255},
+      NULL,
+   },
+   {
+      "assets/Player/Heavy_AimDown_%02d.png",
+      3, 1.0f, { -60 / 2, 4 },
+      0.06f,
+      1,
+      {255,0,0,255},
+      NULL,
+   },
+   {
+      "assets/Player/Heavy_Fire_%02d.png",
+      7, 1.0f, { -32 / 2, 12 },
+      0.06f,
+      1,
+      {255,255,255,255},
+      NULL,
+   },
+   {
+      "assets/Player/Heavy_FireUp_%02d.png",
+      4, 1.0f, { -76 / 2, 18 },
+      0.06f,
+      1,
+      {255,255,255,255},
+      NULL,
+   },
+   {
+      "assets/Player/Heavy_FireDown_%02d.png",
+      4, 1.0f, { -68 / 2, -36 },
+      0.06f,
+      1,
+      {255,255,255,255},
+      NULL,
+   },
+   {
+      "assets/Player/Heavy_Melee_%02d.png",
+      6, 1.0f, { -76 / 2, 18 },
+      0.06f,
+      1,
+      {255,255,255,255},
+      NULL,
+   },
+   {
+      "assets/Player/Hevay_Bomb_%02d.png",
+      6, 1.0f, { -54 / 2, 10 },
+      0.06f,
+      1,
+      {255,0,0,255},
+      NULL,
+   },
+   ///////////////////////////////////////////
+   {
+      "assets/Player/Spawn_%02d.png",
+      7, 1.0f, { -29 / 2, 0 },
+      0.04f,
+      1,
+      {255,0,0,255},
+      NULL,
+   },
+   {
+      "assets/Player/Dead_%02d.png",
+      19, 1.0f, { -41 / 2, 0 },
+      0.04f,
+      1,
+      {255,0,0,255},
+      NULL,
    },
 };
 
-
-#if 1
-Texture** texRecord;
-Record* _record;
-Record** record;
-int recordNum;
-
-void loadRecord()
-{
-    texRecord = new Texture * [1];
-    texRecord[0] = createImage("assets/ .png");
-
-    _record = new Record[recordMax];
-    memset(_record, 0x00, sizeof(Record) * recordMax);
-    record = new Record * [recordMax];
-    recordNum = 0;
-}
-
-void freeRecord()
-{
-    for (int i = 0; i < 1; i++)
-        freeImage(texRecord[i]);
-    delete texRecord;
-
-    delete _record;
-    delete record;
-}
-
-void drawRecord(float dt, iPoint off)
-{
-    for (int i = 0; i < recordNum; i++)
-    {
-        if (record[i]->paint(dt, off))
-        {
-            recordNum--;
-            record[i] = record[recordNum];
-            i--;
-        }
-    }
-    setRGBA(1, 1, 1, 1);
-}
-
-static iPoint prevRecordPosition;
-void addRecord(RecordKind index, iPoint p)
-{
-    if (prevRecordPosition == p)
-        return;
-
-    for (int i = 0; i < recordMax; i++)
-    {
-        Record* r = &_record[i];
-        if (r->remindDt > 0.0f) continue;
-
-        r->set(index, p);
-
-        record[recordNum] = r;
-        recordNum++;
-        return;
-    }
-}
-
-float fireDegree;
-Texture** texsFB;
-
-struct FB
-{
-    bool alive;
-    int index;
-    iPoint position, v;
-    float degree;
-
-    void set(int index, iPoint p, float degree)
-    {
-        alive = true;
-        this->index = index;
-        position = p;
-        this->degree = degree;
-
-        v = iPointRotate(iPointMake(1, 0), iPointZero, degree) * 300;
-    }
-
-    bool paint(float dt, iPoint off)
-    {
-        Texture* t = texsFB[index];
-        position += v * dt;
-        iPoint p = position + off;
-        drawImage(t, p.x, p.y, 1.0f, 1.0f,
-            VCENTER | HCENTER, 0, 0, t->width, t->height, 2, degree);
-
-        alive = containPoint(p, iRectMake(-20, -20, devSize.width + 40, devSize.height + 40));
-        return !alive;
-    }
-};
-
-FB* _fb;
-FB** fb;
-int fbNum;
-#define fbMax 100
-
-void loadFB()
-{
-    fireDegree = 0;
-
-    texsFB = new Texture * [1];
-    texsFB[0] = createImage("assets/Bullets/HeavyMachineGun_00.png");
-
-    _fb = new FB[fbMax];
-    memset(_fb, 0x00, sizeof(FB) * fbMax);
-    fb = new FB * [fbMax];
-    fbNum = 0;
-}
-void freeFB()
-{
-    for (int i = 0; i < 1; i++)
-        freeImage(texsFB[i]);
-    delete texsFB;
-
-    delete _fb;
-    delete fb;
-}
-void drawFB(float dt, iPoint off)
-{
-    for (int i = 0; i < fbNum; i++)
-    {
-        if (fb[i]->paint(dt, off))
-        {
-            fbNum--;
-            fb[i] = fb[fbNum];
-            i--;
-        }
-    }
-}
-void addFB(int index, iPoint p, float degree)
-{
-    for (int i = 0; i < fbMax; i++)
-    {
-        FB* f = &_fb[i];
-        if (f->alive == false)
-        {
-            f->set(index, p, degree);
-            fb[fbNum] = f;
-            fbNum++;
-            return;
-        }
-    }
-}
-#endif

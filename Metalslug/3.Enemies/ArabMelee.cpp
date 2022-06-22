@@ -6,7 +6,7 @@ ImageInfo imgMeleeInfo[];
 static iImage** imgEnemy = NULL;
 ArabMelee::ArabMelee(int idx) : ProcEnemy(idx)
 {
-	idx = (int)EnemyIndex::ArMelee;
+	idx = (int)EnemyIndex::IdxArMelee;
 	state = IdleEnemyL;
 	
 	ai = AI::enemyAI0;
@@ -55,6 +55,10 @@ void ArabMelee::setState(EnemyBehave newState)
 	{
 		imgs[newState]->startAnimation(ProcEnemy::cbAniAttack, this);
 	}
+	if (state == DeadEnemyL || state == DeadEnemyR)
+	{
+		imgs[newState]->startAnimation(ProcEnemy::cbAniDead, this);
+	}
 }
 
 void ArabMelee::initObj()
@@ -71,89 +75,16 @@ void ArabMelee::initObj(iPoint v)
 }
 void ArabMelee::updateObj(float dt)
 {
+	isActive = containPoint(p,
+		iRectMake(-bg->off.x - 20, -bg->off.y - 20,
+			devSize.width + 40, devSize.height + 40));
 	aiDt += dt;
 	if (aiDt > _aiDt)
 	{
 		aiDt -= _aiDt;
 		ai(this, dt);
 	}
-
-	if (tp != iPointMake(-1, -1))
-	{
-		printf("update");
-		if (movePoint(p, p, tp, moveSpeed * dt))
-		{
-			setState((EnemyBehave)(ShuffleEnemyL + state % 2));
-		}
-	}
-#if 0			//Test Code
-	//Checking Dead
-	if (state == DeadEnemyL || state == DeadEnemyR)
-	{
-		state = (EnemyBehave)(DeadEnemyL + state % 2);
-		return;
-	}
-	float len = iPointLength(player->p - p);
-	if (len < sight)
-		tp = player->p;
-#if 1
-	if (tp != iPointZero)
-	{
-		iPoint v = tp - p;
-		v /= iPointLength(v);
-
-		if (v.x > 0)
-		{
-			state = WalkEnemyR;
-		}
-		else if (v.x < 0)
-		{
-			state = WalkEnemyL;
-		}
-		else
-			state = (EnemyBehave)(IdleEnemyL + state % 2);
-	}	
-#endif
-
-#if 1
-	if (!fall)
-	{
-		if (tp != iPointZero)
-		{
-#if 1
-			if (movePoint(p, p, tp, speed * dt))
-#else
-			iPoint p0 = p;
-			float moveDistance = speed * dt;
-			bool arrive = movePoint(p, p, tp, moveDistance);
-			iPoint p1 = p;
-			p1.y = *(bg->maxY + (int)p.x);
-
-			iPoint v = p1 - p0;
-			if (v != iPointZero)
-				v /= iPointLength(v);
-			p = p0 + v * moveDistance;
-
-			if (arrive)
-#endif
-			{
-				float dp = 0xffffff;
-				if (containPoint(p, player->collider()))
-				{
-					float d = iPointLength(p - player->p);
-					if (dp > d)
-					{
-						dp = d;
-					}
-				}
-			}
-		}
-	}
-#endif
-#endif
 	p.y = *(bg->maxY + (int)p.x);
-	return;
-	//fixedUpdate(dt);
 }
 
 void ArabMelee::fixedUpdate(float dt)
@@ -183,7 +114,7 @@ void ArabMelee::fixedUpdate(float dt)
 		tp.y = maxY;
 }
 
-void ArabMelee::drawObj(float dt, iPoint off)
+bool ArabMelee::drawObj(float dt, iPoint off)
 {
 	setRGBA(1, 1, 1, 1);
 	imgCurr = imgs[state];
@@ -191,8 +122,11 @@ void ArabMelee::drawObj(float dt, iPoint off)
 
 #ifdef _DEBUG
 	drawDot(p + off);
+	drawRect(collider());
 #endif // DEBUG
 	setRGBA(1, 1, 1, 1);
+
+	return !isActive;
 }
 
 void ArabMelee::freeObj()

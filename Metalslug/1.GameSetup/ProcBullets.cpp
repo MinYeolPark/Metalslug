@@ -60,7 +60,7 @@ void ProcBullets::initObj(Mosque* parent, int idx, iPoint p, float degree)
 		this->pattern = patMosqueTrace;
 	else
 		this->pattern = patMosque;
-
+	
 	imgs[this->bulletIdx]->startAnimation(cbAniBullet, this);
 }
 
@@ -81,9 +81,10 @@ void ProcBullets::initObj(ProcPlayer* parent, int idx, iPoint p, float degree)
 	this->bulletIdx = idx;	
 	this->p = parent->firePoint;
 	this->degree = degree;
-	this->pattern = patDefault;
-	speed = 300;
-	dmg = 100;
+	this->pattern = patternDefault;
+	this->speed = player->curGun->speed;
+	dmg = player->curGun->dmg;
+	v = iPointRotate(iPointMake(1, 0), iPointZero, degree);
 	imgs[this->bulletIdx]->startAnimation();
 }
 
@@ -100,9 +101,7 @@ void ProcBullets::updateObj(float dt)
 }
 
 void ProcBullets::fixedUpdate(float dt)
-{
-	if (!parent)
-		return;
+{	
 	if (parent->layer == Player)
 	{
 		ProcEnemy* eNear = NULL;
@@ -165,11 +164,8 @@ iRect ProcBullets::collider()
 		imgCurr->tex->width, imgCurr->tex->height);
 }
 
-void ProcBullets::patDefault(ProcBullets* b, float dt)
+void ProcBullets::patternDefault(ProcBullets* b, float dt)
 {
-	//degree?
-	b->v = iPointRotate(iPointMake(1, 0), iPointZero, 0);
-
 	b->p += b->v * b->speed * dt;
 }
 
@@ -177,77 +173,6 @@ static float r = 0;
 void ProcBullets::patBomb(ProcBullets* b, float dt)
 {
 
-#if 0
-	dt = 1.0 / (b->speed * cos(45));
-	b->v.x = b->speed * cos(45);
-	b->v.y = b->speed * sin(45);
-
-	int maxY = (*bg->maxY + int(b->p.x));
-	while (b->p.y < maxY)
-	{
-		b->v.x = b->v.x * dt;
-		b->v.y = (9.81 + b->v.y) * dt;
-		b->p.x += b->v.x * dt;
-		b->p.y += b->v.y * dt;
-	}
-#elif 0
-	b->v = iPointRotate(iPointMake(0, -1), iPointZero, degree) * b->speed;
-#elif 0
-	float td = iPointLength(b->p - iPointMake(player->firePoint.x + 50, player->firePoint.y));
-
-	float vx = sqrt(b->speed) * _cos(45);
-	float vy = sqrt(b->speed) * _sin(45);
-
-	//airborn time
-	float duration = td / vx;
-	float elaspe_time = 0;
-	while (elaspe_time < duration)
-	{
-		elaspe_time += dt;
-	}
-#elif 0
-	b->v = iPointRotate(iPointMake(1, 0), iPointZero, 45) * b->speed;
-#elif 0	
-	float maxY = *(bg->maxY + (int)b->p.x);
-	player->targetPoint = tp;
-	
-	//if (movePoint(b->p, b->p, player->targetPoint, player->bombSpeed))
-	//	b->isActive = false;
-	iPoint v = (player->targetPoint, b->p);
-	v /= iPointLength(v);
-#elif 1
-	float maxY = *(bg->maxY + (int)b->p.x);
-	iPoint tp = { player->p.x + 150, maxY };
-
-	iPoint sp = player -> p;
-	iPoint ep = tp;
-
-	iPoint v = (ep - sp);
-	v /= iPointLength(v);
-	v *= 3;
-	if (b->p.x < ep.x)
-	{
-		b->p.x += v.x;
-		if (b->p.x > ep.x)
-			b->p.x = ep.x;
-	}
-	else if (b->p.x > ep.x)
-	{
-		b->p.x += v.x;
-		if (b->p.x < ep.x)
-			b->p.x = ep.x;
-	}
-	if (b->p.y < ep.y)
-	{
-		for (int i = 0; i < 180; i ++)
-		{			
-			if (i > 90)
-				b->p.y += _sin(i) * 2;
-			else
-				b->p.y -= _sin(i) * 2;
-		}	
-	}
-#endif
 }
 void ProcBullets::patMosque(ProcBullets* b, float dt)
 {
@@ -266,7 +191,7 @@ void ProcBullets::patMosqueTrace(ProcBullets* b, float dt)
 		if (containPoint(b->p, player->collider()))
 		{
 			b->isActive = false;
-			//player->hp -= b->dmg;
+			player->hp -= b->dmg;
 
 			//dead
 			//addProcEffect(bulletIdx, bp);

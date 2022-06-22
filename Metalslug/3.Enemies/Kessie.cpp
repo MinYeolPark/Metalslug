@@ -1,14 +1,15 @@
 #include "Kessie.h"
 
+#include "EnemyMgr.h"
 #include "ImgMgr.h"
 #include "EffectMgr.h"
 #include "BulletMgr.h"
-#include "EnemyMgr.h"
 ImageInfo imgKessieInfo[];
 static iImage** _imgKessie = NULL;
-Kessie::Kessie()
+
+Kessie::Kessie(int idx) : ProcEnemy(idx)
 {
-	memset(imgBase, 0x00, sizeof(imgBase));	
+	memset(imgBase, 0x00, sizeof(imgBase));
 	memset(imgLeftCrater, 0x00, sizeof(imgLeftCrater));
 	memset(imgRightCrater, 0x00, sizeof(imgRightCrater));
 	memset(imgLeftFan, 0x00, sizeof(imgLeftFan));
@@ -16,7 +17,7 @@ Kessie::Kessie()
 	imgHead = 0;
 	memset(imgLeftBlast, 0x00, sizeof(imgLeftBlast));
 	memset(imgRightBlast, 0x00, sizeof(imgRightBlast));
-		
+
 	isActive = true;
 	isHeadOpen = false;
 	effDt = 0.f;
@@ -24,13 +25,14 @@ Kessie::Kessie()
 	aiDt = 0.f;
 	_aiDt = 5.f;
 	_hp = 5000.f;
+	hp = _hp;
 	hpLeft = 1500.f;
 	hpRight = 1500.f;
 
 	if (_imgKessie == NULL)
 		_imgKessie = createSingleImage(imgKessieInfo, 21, this);
 
-	for(int i=0;i<8;i++)
+	for (int i = 0; i < 8; i++)
 		imgBase[i] = _imgKessie[i];
 	imgLeftCrater[0] = _imgKessie[8]->clone();
 	imgLeftCrater[1] = _imgKessie[9]->clone();
@@ -42,11 +44,11 @@ Kessie::Kessie()
 	imgLeftFan[1] = _imgKessie[15]->clone();
 	imgRightFan[0] = _imgKessie[16]->clone();
 	imgRightFan[1] = _imgKessie[17]->clone();
-	imgHead = _imgKessie[18]->clone();	
+	imgHead = _imgKessie[18]->clone();
 	imgHead->stopAnimation();
-	imgLeftBlast[0] = _imgKessie[19]->clone();	
+	imgLeftBlast[0] = _imgKessie[19]->clone();
 	imgRightBlast[0] = _imgKessie[19]->clone();
-	imgRightBlast[0]->reverse = REVERSE_WIDTH;	
+	imgRightBlast[0]->reverse = REVERSE_WIDTH;
 	imgLeftBlast[1] = _imgKessie[20]->clone();
 	imgRightBlast[1] = _imgKessie[20]->clone();
 	imgRightBlast[1]->reverse = REVERSE_WIDTH;
@@ -61,18 +63,18 @@ Kessie::~Kessie()
 	_imgKessie = NULL;
 }
 
-void Kessie::init()
+void Kessie::initObj()
 {
 	p = iPointMake(230, 150);
 }
 
-void Kessie::update(float dt)
+void Kessie::updateObj(float dt)
 {	
 	aiDt += dt;
 	if (aiDt > _aiDt)
 	{
 		aiDt -= _aiDt;
-		addProcEnemy(ArMelee, { p.x + 100, p.y - 100 }, iPointMake(-1, 0), AI::enemyAI0);
+		//addProcEnemy(ArMelee, { p.x + 100, p.y - 100 }, iPointMake(-1, 0), AI::enemyAI0);
 	}
 	if (!isHeadOpen)
 	{
@@ -92,9 +94,9 @@ void Kessie::fixedUpdate(float dt)
 
 }
 
-bool Kessie::draw(float dt, iPoint off)
+bool Kessie::drawObj(float dt, iPoint off)
 {
-	imgHead->paint(dt, { p.x, p.y - 90 });
+	imgHead->paint(dt, { p.x + off.x, p.y + off.y - 95 });
 		
 	imgBase[0]->paint(dt, p + off);
 
@@ -106,20 +108,15 @@ bool Kessie::draw(float dt, iPoint off)
 	imgLeftBlast[0]->paint(dt, { p.x + off.x - 88, p.y + off.y + imgLeftBlast[0]->tex->height - 40 });
 	imgRightBlast[1]->paint(dt, { p.x + off.x + 88, p.y + off.y + imgRightBlast[1]->tex->height - 40 } );
 #ifdef _DEBUG	
-	drawDot(p + off);	
-	drawDot({ p.x + off.x - 88, p.y + off.y - 25 });
-	drawDot({ p.x + off.x + 88, p.y + off.y - 25 });
-	drawRect(p.x + off.x - 88,
-		p.y + off.y + imgLeftBlast[0]->tex->height - 40,
-		imgLeftBlast[0]->tex->width,
-		imgLeftBlast[0]->tex->height);
+	drawDot(p + off);
+	drawRect(collider());
 #endif // DEBUG
 
 	
 	return !isActive;
 }
 
-void Kessie::free()
+void Kessie::freeObj()
 {
 }
 

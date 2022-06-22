@@ -8,14 +8,16 @@
 #define jumpPow			3
 #define jumpDecrease	7
 
+enum GunIndex
+{
+	Handgun = 0,
+	HeavyMachinegun,
+
+
+	Bomb,
+};
 struct Gun
 {	
-	enum GunIndex
-	{
-		Handgun = 0,
-		HeavyMachinegun,
-		Bomb,
-	};
 	struct GunInfo
 	{
 		GunIndex gunIndex;
@@ -26,7 +28,7 @@ struct Gun
 	};
 	GunInfo gi[3] =
 	{
-		{GunIndex::Handgun, 100, 100, 0},
+		{GunIndex::Handgun, 100, 300, 0},
 		{GunIndex::HeavyMachinegun, 100, 150, 200},
 		{GunIndex::Bomb, 100, 150, 200},
 	};
@@ -37,6 +39,11 @@ struct Gun
 		this->speed = (gi + Handgun)->speed;
 		this->remain = (gi + Handgun)->remain;
 		this->rate = (gi + Handgun)->rate;
+		//this->gunIndex = (gi + 1)->gunIndex;
+		//this->dmg = (gi + HeavyMachinegun)->dmg;
+		//this->speed = (gi + HeavyMachinegun)->speed;
+		//this->remain = (gi + HeavyMachinegun)->remain;
+		//this->rate = (gi + HeavyMachinegun)->rate;
 	};
 	~Gun()
 	{
@@ -64,10 +71,11 @@ class ProcPlayer :
 	public ProcObject
 {
 public:
-	ProcPlayer();
+	ProcPlayer(int idx);
 	virtual ~ProcPlayer();
 
 public:
+	CharacterIndex idx;
 	iImage** topImgs;
 	iImage* topImgCurr;
 	iImage** botImgs;
@@ -75,12 +83,14 @@ public:
 		
 	Gun* curGun;
 	iPoint firePoint;
-	iPoint targetPoint;
+	iPoint bombPoint;
 	iPoint v;
 
 	float up;
 	float down;
 	bool fall;	
+
+	float fireDeg;
 
 	bool isRight;
 	bool isAttacking;
@@ -110,6 +120,10 @@ public:
 	void aimUp();
 	void fire(iPoint v);
 	void bomb(iPoint v);
+
+	void addScore(int score);
+	void addBomb(int bomb);
+	void changeGun(int index);
 public:
 	virtual void initObj() ;
 	virtual void updateObj(float dt);
@@ -122,7 +136,8 @@ public:
 	iRect collider();
 
 public:
-	static void cbAniJump(void* parm);
+	static void cbAniToIdle(void* parm);
+	static void cbAniToWalk(void* parm);
 	static void cbAniBrake(void* parm);
 	static void cbAniFire(void* parm);
 
@@ -157,6 +172,18 @@ enum PlayerBehave
 	RunJumpL,
 
 	//===========================================
+	// Whole
+	//===========================================
+	BrakeR,
+	BrakeL,
+
+	CrouchR,
+	CrouchL,
+	
+	CrouchMeleeR,
+	CrouchMeleeL,
+
+	//===========================================
 	//Top
 	//===========================================
 
@@ -172,23 +199,17 @@ enum PlayerBehave
 	FireR,
 	FireL,
 
+	FireUpR,
+	FireUpL,
+
+	FireDownR,
+	FireDownL,
+
 	MeleeR,
 	MeleeL,
 
 	BombR,
 	BombL,
-
-	/// 
-	/// Whole
-	/// 
-	SpawnR,
-	SpawnL,
-
-	CrouchR,
-	CrouchL,
-
-	BrakeR,
-	BrakeL,
 
 
 	////===========================================
@@ -203,63 +224,16 @@ enum PlayerBehave
 	//BrakeR,
 	//BrakeL,
 
-	//DeadR,
-	//DeadL,
+
+
+	//===========================================
+	//Only
+	//===========================================
+	SpawnR,
+	SpawnL,
+
+	DeadR,
+	DeadL,
 
 	PlayerBehaveMax,
 };
-
-
-
-enum RecordKind
-{
-	RecordStep = 0,
-
-
-
-};
-
-#define recordMax 1000
-#define recordDt 1.0f
-extern Texture** texRecord;
-
-struct Record
-{
-	RecordKind index;
-	iPoint position;
-	float remindDt;
-
-	void set(RecordKind index, iPoint p)
-	{
-		this->index = index;
-		position = p;
-		remindDt = recordDt;
-	}
-
-	bool paint(float dt, iPoint off)
-	{
-		remindDt -= dt;
-		if (remindDt < 0.0f)
-			return true;
-
-		float a = 1.0f - remindDt / recordDt;
-		setRGBA(1, 1, 1, a);
-
-		iPoint p = position + off;
-		drawImage(texRecord[index], p.x, p.y, VCENTER | HCENTER);
-
-		return false;
-	}
-};
-
-void loadRecord();
-void freeRecord();
-void drawRecord(float dt, iPoint off);
-void addRecord(RecordKind index, iPoint p);
-
-extern float fireDegree;
-
-void loadFB();
-void freeFB();
-void drawFB(float dt, iPoint off);
-void addFB(int index, iPoint p, float degree);
