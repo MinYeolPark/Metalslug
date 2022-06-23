@@ -1,8 +1,79 @@
-﻿  Proc.cpp
+﻿  AnimationMgr.cpp
 C:\workspace\Metalslug\Metalslug\std\iOpenGL.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+  BulletMgr.cpp
+C:\workspace\Metalslug\Metalslug\std\iOpenGL.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+  EffectMgr.cpp
+C:\workspace\Metalslug\Metalslug\std\iOpenGL.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+  EnemyMgr.cpp
+C:\workspace\Metalslug\Metalslug\std\iOpenGL.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\workspace\Metalslug\Metalslug\0.Manager\EnemyMgr.cpp(122,10): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\0.Manager\EnemyMgr.cpp(158,10): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  GameMgr.cpp
+C:\workspace\Metalslug\Metalslug\std\iOpenGL.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+  ImgMgr.cpp
+C:\workspace\Metalslug\Metalslug\std\iOpenGL.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\workspace\Metalslug\Metalslug\0.Manager\ImgMgr.cpp(16,33): warning C4244: '*=': 'float'에서 'uint32'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\0.Manager\ImgMgr.cpp(18,35): warning C4244: '*=': 'float'에서 'uint32'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Menu.cpp
+C:\workspace\Metalslug\Metalslug\std\iOpenGL.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+  Proc.cpp
+C:\workspace\Metalslug\Metalslug\std\iOpenGL.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+  ProcBullets.cpp
+C:\workspace\Metalslug\Metalslug\std\iOpenGL.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\workspace\Metalslug\Metalslug\1.GameSetup\ProcBullets.cpp(84,30): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\1.GameSetup\ProcBullets.cpp(85,22): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\1.GameSetup\ProcBullets.cpp(227,19): warning C4244: '-=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  ProcEnemy.cpp
+C:\workspace\Metalslug\Metalslug\std\iOpenGL.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\workspace\Metalslug\Metalslug\1.GameSetup\ProcEnemy.cpp(32,8): warning C4244: '-=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  ProcItem.cpp
+C:\workspace\Metalslug\Metalslug\std\iOpenGL.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+  ProcObject.cpp
+C:\workspace\Metalslug\Metalslug\std\iOpenGL.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\workspace\Metalslug\Metalslug\1.GameSetup\ProcObject.cpp(27,8): warning C4244: '-=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  ProcPlayer.cpp
+C:\workspace\Metalslug\Metalslug\std\iOpenGL.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\workspace\Metalslug\Metalslug\1.GameSetup\ProcPlayer.cpp(194,15): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Select.cpp
+C:\workspace\Metalslug\Metalslug\std\iOpenGL.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\workspace\Metalslug\Metalslug\1.GameSetup\Select.cpp(35,33): warning C4244: '*=': 'float'에서 'uint32'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\1.GameSetup\Select.cpp(37,35): warning C4244: '*=': 'float'에서 'uint32'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\1.GameSetup\Select.cpp(44,33): warning C4244: '*=': 'float'에서 'uint32'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\1.GameSetup\Select.cpp(46,35): warning C4244: '*=': 'float'에서 'uint32'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\1.GameSetup\Select.cpp(68,31): warning C4244: '*=': 'float'에서 'uint32'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\1.GameSetup\Select.cpp(70,33): warning C4244: '*=': 'float'에서 'uint32'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\1.GameSetup\Select.cpp(124,23): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  StatusUI.cpp
+C:\workspace\Metalslug\Metalslug\std\iOpenGL.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\workspace\Metalslug\Metalslug\2.UI\StatusUI.cpp(21,6): warning C4101: 'i' :참조되지 않은 지역 변수입니다.
+C:\workspace\Metalslug\Metalslug\2.UI\StatusUI.cpp(55,6): warning C4101: 'i' :참조되지 않은 지역 변수입니다.
+C:\workspace\Metalslug\Metalslug\2.UI\StatusUI.cpp(77,6): warning C4101: 'i' :참조되지 않은 지역 변수입니다.
+C:\workspace\Metalslug\Metalslug\2.UI\StatusUI.cpp(98,6): warning C4101: 'i' :참조되지 않은 지역 변수입니다.
+C:\workspace\Metalslug\Metalslug\2.UI\StatusUI.cpp(120,6): warning C4101: 'i' :참조되지 않은 지역 변수입니다.
+C:\workspace\Metalslug\Metalslug\2.UI\StatusUI.cpp(194,56): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+  ArabBurserker.cpp
+C:\workspace\Metalslug\Metalslug\std\iOpenGL.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\workspace\Metalslug\Metalslug\3.Enemies\ArabBurserker.cpp(84,8): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\3.Enemies\ArabBurserker.cpp(97,9): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\3.Enemies\ArabBurserker.cpp(112,10): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  ArabMelee.cpp
+C:\workspace\Metalslug\Metalslug\std\iOpenGL.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\workspace\Metalslug\Metalslug\3.Enemies\ArabMelee.cpp(80,8): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\3.Enemies\ArabMelee.cpp(92,9): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\3.Enemies\ArabMelee.cpp(107,10): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Kessie.cpp
+C:\workspace\Metalslug\Metalslug\std\iOpenGL.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\workspace\Metalslug\Metalslug\3.Enemies\Kessie.cpp(27,8): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\3.Enemies\Kessie.cpp(29,11): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\3.Enemies\Kessie.cpp(30,12): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Mosque.cpp
+C:\workspace\Metalslug\Metalslug\std\iOpenGL.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\workspace\Metalslug\Metalslug\3.Enemies\Mosque.cpp(116,11): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   Ichimondi.cpp
 C:\workspace\Metalslug\Metalslug\std\iOpenGL.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
 C:\workspace\Metalslug\Metalslug\5.NPC\Ichimondi.cpp(99,9): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  코드를 생성하고 있습니다...
+  컴파일하고 있습니다...
   ProcNpc.cpp
 C:\workspace\Metalslug\Metalslug\std\iOpenGL.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
   코드를 생성하고 있습니다...

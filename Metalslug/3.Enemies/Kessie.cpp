@@ -63,12 +63,16 @@ Kessie::~Kessie()
 	_imgKessie = NULL;
 }
 
-void Kessie::initObj()
+void Kessie::dead()
+{
+}
+
+void Kessie::init()
 {
 	p = iPointMake(230, 150);
 }
 
-void Kessie::updateObj(float dt)
+void Kessie::update(float dt)
 {	
 	aiDt += dt;
 	if (aiDt > _aiDt)
@@ -94,7 +98,7 @@ void Kessie::fixedUpdate(float dt)
 
 }
 
-bool Kessie::drawObj(float dt, iPoint off)
+bool Kessie::draw(float dt, iPoint off)
 {
 	imgHead->paint(dt, { p.x + off.x, p.y + off.y - 95 });
 		
@@ -116,7 +120,7 @@ bool Kessie::drawObj(float dt, iPoint off)
 	return !isActive;
 }
 
-void Kessie::freeObj()
+void Kessie::free()
 {
 }
 

@@ -96,9 +96,6 @@
     <ClInclude Include="1.GameSetup\ProcObject.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="1.GameSetup\ProcPlayer.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="0.Manager\UIMgr.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -117,7 +114,7 @@
     <ClInclude Include="3.Enemies\Mosque.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="ProcItem.h">
+    <ClInclude Include="1.GameSetup\ProcItem.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="0.Manager\BulletMgr.h">
@@ -138,16 +135,16 @@
     <ClInclude Include="Sorting.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="3.Enemies\ArabBurserker.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="ProcNpc.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="5.NPC\Ichimondi.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="IDamagable.h">
+    <ClInclude Include="0.Manager\AnimationMgr.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="3.Enemies\ArabBurserker.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -251,7 +248,7 @@
     <ClCompile Include="3.Enemies\Mosque.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="ProcItem.cpp">
+    <ClCompile Include="1.GameSetup\ProcItem.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="0.Manager\BulletMgr.cpp">
@@ -272,16 +269,16 @@
     <ClCompile Include="Sorting.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="3.Enemies\ArabBurserker.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="ProcNpc.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="5.NPC\Ichimondi.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="IDamagable.cpp">
+    <ClCompile Include="0.Manager\AnimationMgr.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="3.Enemies\ArabBurserker.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

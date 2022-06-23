@@ -1,26 +1,28 @@
 #pragma once
 #include "ProcEnemy.h"
 class ArabBurserker :
-    public ProcEnemy
+	public ProcEnemy
 {
 public:
-	ArabBurserker(int idx);
+	ArabBurserker(int index);
 	~ArabBurserker();
 
 public:
 	iImage** imgs;
 	iImage* imgCurr;
 
-	int idx;
-public:
-	virtual iRect collider() { return iRectMake(0, 0, 0, 0); }
+	//Ground unit
+	float up;
+	float down;
+	bool fall;
+
+	virtual void dead();
 public:
 	virtual void setState(EnemyBehave newState);
 public:
-	virtual void initObj();
-	virtual void initObj(iPoint v);
-	virtual void updateObj(float dt);
+	virtual iRect collider();
+	virtual void update(float dt);
 	virtual void fixedUpdate(float dt);
-	virtual bool drawObj(float dt, iPoint off);
-	virtual void freeObj();
+	virtual bool draw(float dt, iPoint off);
+	virtual void free();
 };

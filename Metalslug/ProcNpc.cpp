@@ -18,8 +18,7 @@ void loadProcNpcs()
 	npc = new ProcNpc * [NpcIndexMax * npcMax];
 	npcNum = 0;
 
-	addNPC(NpcIchimonji, iPointMake(200, 100), ItemBomb);	
-	addNPC(NpcIchimonji, iPointMake(250, 100));
+	//AddProcNpc
 }
 
 void freeProcNpcs()

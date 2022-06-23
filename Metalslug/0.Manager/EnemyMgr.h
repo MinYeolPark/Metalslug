@@ -8,8 +8,7 @@ extern int enemyCount;
 void loadProcEnemy();
 void freeProcEnemy();
 void drawProcEnemy(float dt, iPoint off);
-void addProcEnemy(int idx, iPoint p);
-void addProcEnemy(int idx, iPoint p, iPoint v, EnemyAI ai);
+void addProcEnemy(int index, iPoint p, iPoint v);
 
 struct AI
 {

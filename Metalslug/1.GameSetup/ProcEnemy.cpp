@@ -2,27 +2,24 @@
 
 #include "ProcField.h"
 
-ProcEnemy::ProcEnemy(int idx)
+ProcEnemy::ProcEnemy(int index) : ProcObject()
 {
-	p = iPointZero;
-	s = iSizeZero;
-	v = iPointZero;
+	layer = LayerEnemy;
 
 	isActive = false;
+	this->index = index;
+	////////////////////////
+	state = IdleEnemyL;
+	ai = NULL;
 
-	this->idx = (EnemyIndex)idx;
 	hp = 0;
-	dmg =0;
-
-	up = 0;
-	down = 0;
-	fall = true;
-
+	dmg = 0;
 	sight = 0;
 	moveSpeed = 0.f;
-	attkRange = 0;
+	attkRange = 0.f;
 	attkRate = 0.f, _attkRate = 0.f;
 	aiDt = 0.f, _aiDt = 0.f;
+
 	tp = { -1, -1 };
 }
 
@@ -30,29 +27,30 @@ ProcEnemy::~ProcEnemy()
 {
 }
 
-void ProcEnemy::cbAniDead(void* parm)
+void ProcEnemy::getDamage(float damage, iPoint hitPoint)
 {
-	ProcEnemy* e = (ProcEnemy*)parm;
-
-	e->isActive = false;
-	printf("%s", e->isActive ? "true" : "false");
+	hp -= damage;
+	if (hp <= 0)
+	{
+		if (getState() != (EnemyBehave)(DeadEnemyL + state % 2))
+		{
+			setState((EnemyBehave)(DeadEnemyL + state % 2));
+			dead();
+		}
+		else
+			return;
+	}
 }
 
-void ProcEnemy::cbAniAttack(void* parm)
+void ProcEnemy::init(int index, iPoint p, iPoint v)
 {
-	ProcEnemy* e = (ProcEnemy*)parm;
-
-	printf("cb Ani Attack\n");
-	e->setState((EnemyBehave)(IdleEnemyL + e->state % 2));
-}
-
-void ProcEnemy::initObj(iPoint v)
-{
+	this->index = index;
+	this->p = p;
 	this->v = v;
-}
+	if (v.x > 0)
+		setState(IdleEnemyL);
+	else if(v.x<0)
+		setState(IdleEnemyR);
 
-void ProcEnemy::initObj(iPoint v, EnemyAI ai)
-{
-	this->v = v;
-	this->ai = ai;
+	objects->addObject(this);
 }

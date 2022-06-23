@@ -84,7 +84,6 @@ public:
 	Gun* curGun;
 	iPoint firePoint;
 	iPoint bombPoint;
-	iPoint v;
 
 	float up;
 	float down;
@@ -120,16 +119,17 @@ public:
 	void aimUp();
 	void fire(iPoint v);
 	void bomb(iPoint v);
+	virtual void dead();
 
 	void addScore(int score);
 	void addBomb(int bomb);
 	void changeGun(int index);
 public:
-	virtual void initObj() ;
-	virtual void updateObj(float dt);
+	virtual void init() ;
+	virtual void update(float dt);
 	virtual void fixedUpdate(float dt) ;
-	virtual bool drawObj(float dt, iPoint off) ;
-	virtual void freeObj() ;
+	virtual bool draw(float dt, iPoint off) ;
+	virtual void free() ;
 
 public:
 public:

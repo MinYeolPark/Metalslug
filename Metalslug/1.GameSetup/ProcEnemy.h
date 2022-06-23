@@ -38,24 +38,11 @@ class ProcEnemy:
 	public ProcObject
 {
 public:
-	ProcEnemy() { ; }
-	ProcEnemy(int idx);
+	ProcEnemy(int index);
 	virtual ~ProcEnemy();
-
 public:
-	iPoint p;
-	iPoint v;
-	iSize s;
-
-	bool isActive;
-
-	EnemyIndex idx;
 	EnemyBehave state;
 	EnemyAI ai;
-	float up;
-	float down;
-	bool fall;
-
 	//stats
 	int hp;
 	int dmg;
@@ -64,25 +51,15 @@ public:
 	float attkRange;
 	float attkRate, _attkRate;
 	float aiDt, _aiDt;
+
 	iPoint tp;
-
 public:
-	virtual iRect collider() = 0;
+	virtual void getDamage(float damage, iPoint hitPoint);
+	virtual void setState(EnemyBehave newState) { state=newState; }
+	virtual EnemyBehave getState() { return state; }	
 public:
-	virtual void initObj() = 0;
-	virtual void initObj(iPoint v);
-	virtual void initObj(iPoint v, EnemyAI ai);
-	virtual void updateObj(float dt) = 0;
-	virtual void fixedUpdate(float dt) = 0;
-	virtual bool drawObj(float dt, iPoint off) = 0;
-	virtual void freeObj() = 0;
-public:
-
-	EnemyBehave getState() { return state; }
-	virtual void setState(EnemyBehave newState) { state = newState; }
-	//ai
-public:
-	static void cbAniDead(void* parm);
-	static void cbAniAttack(void* parm);
+	//virtual iRect collider() = 0;
+	virtual void init(int index, iPoint p, iPoint v);
+	virtual void free() = 0;		//freeImage
 };
 

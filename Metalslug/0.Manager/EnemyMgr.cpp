@@ -42,8 +42,8 @@ void loadProcEnemy()
 	enemies = new ProcEnemy * [EnemyIndexMax * enemyMax];
 	enemyCount = 0;
 
-	//addProcEnemy(IdxArMelee, iPointMake(250, 50), iPointMake(-1,0), AI::enemyAI1);
-	//addProcEnemy(IdxKessie, iPointMake(200, 50), iPointMake(-1, 0), AI::enemyAI1);
+	addProcEnemy(IdxArMelee, iPointMake(250, 50), iPointMake(-1,0));	
+	addProcEnemy(IdxArBurserker, iPointMake(200, 50), iPointMake(-1, 0));
 #if 0
 	mosque = new Mosque();
 	mosque->initObj();
@@ -59,7 +59,7 @@ void freeProcEnemy()
 	{
 		for (int j = 0; j < enemyMax; j++)
 		{
-			_enemies[i][j]->freeObj();
+			_enemies[i][j]->free();
 			delete _enemies[i][j];
 		}
 		delete _enemies[i];
@@ -88,12 +88,12 @@ void drawProcEnemy(float dt, iPoint off)
 		if (e->isActive)
 		{
 			if (e->getState() != (EnemyBehave)(DeadEnemyL + (e->state % 2)))
-				e->updateObj(dt);
-			e->drawObj(dt, off);
+				e->update(dt);
+			e->draw(dt, off);
 		}
 
 		if (e->isActive == false)
-		{
+		{			
 			enemyCount--;
 			enemies[i] = enemies[enemyCount];
 			i--;
@@ -101,38 +101,16 @@ void drawProcEnemy(float dt, iPoint off)
 
 	}
 }
-void addProcEnemy(int idx, iPoint p)
+void addProcEnemy(int index, iPoint p, iPoint v)
 {
 	for (int i = 0; i < enemyMax; i++)
 	{
-		ProcEnemy* e = _enemies[idx][i];
+		ProcEnemy* e = _enemies[index][i];
 		if (e->isActive == false)
 		{
 			e->isActive = true;
-			e->p = p;
-			e->idx = (EnemyIndex)idx;
-			e->initObj();
-			enemies[enemyCount] = e;
-			enemyCount++;
-			return;
-		}
-	}
-}
-
-void addProcEnemy(int idx, iPoint p, iPoint v, EnemyAI ai)
-{
-	for (int i = 0; i < enemyMax; i++)
-	{
-		ProcEnemy* e = _enemies[idx][i];
-		if (e->isActive == false)
-		{
-			e->isActive = true;
-			e->p = p;
-			e->idx = (EnemyIndex)idx;
-
-			//#issue
-			e->initObj();
-			enemies[enemyCount] = e;
+			e->init(index, p, v);			//default direction = Left
+			enemies[enemyCount] = e;			
 			enemyCount++;
 			return;
 		}

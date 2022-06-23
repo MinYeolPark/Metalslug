@@ -2,42 +2,37 @@
 
 #include "EnemyMgr.h"
 #include "ImgMgr.h"
+#include "AnimationMgr.h"
 ImageInfo imgBurserkInfo[];
-static iImage** imgEnemy = NULL;
-ArabBurserker::ArabBurserker(int idx) : ProcEnemy(idx)
-{
-	idx = (int)EnemyIndex::IdxArMelee;
+static iImage** _imgBurserk = NULL;
+ArabBurserker::ArabBurserker(int index) : ProcEnemy(index)
+{	
+	index = IdxArBurserker;
 	state = IdleEnemyL;
-
 	ai = AI::enemyAI0;
+
+	hp = 100;
+	dmg = 100;
+	sight = 200;
+	moveSpeed = 100;
+	attkRange = 70;
+	attkRate = 0.f;	_attkRate = 2.f;
+	aiDt = 0.f;	_aiDt = 2.f;
+	///////////////////////////////////
+	imgs = NULL;
+	imgCurr = NULL;
 
 	up = 0.f;
 	down = 0.f;
 	fall = false;
 
-	hp = 100;
-	dmg = 100;
-	sight = 200;
-	moveSpeed = 200;
-	attkRange = 70;
-	attkRate = 0.f;
-	_attkRate = 2.f;
-	aiDt = 0.f;
-	_aiDt = 2.f;
-	tp = iPointMake(-1, -1);
-
-	imgs = NULL;
-	imgCurr = NULL;
-
-	state = EnemyBehave::IdleEnemyL;
-
-	if (imgEnemy == NULL)
-		imgEnemy = createImgReverse(imgBurserkInfo, EnemyBehaveMax, this);
+	if (_imgBurserk == NULL)
+		_imgBurserk = createImgReverse(imgBurserkInfo, EnemyBehaveMax, this);
 
 	imgs = new iImage * [EnemyBehaveMax];
 	memset(imgs, 0x00, sizeof(iImage*) * EnemyBehaveMax);
 	for (int i = 0; i < EnemyBehaveMax; i++)
-		imgs[i] = imgEnemy[i]->clone();
+		imgs[i] = _imgBurserk[i]->clone();
 }
 
 ArabBurserker::~ArabBurserker()
@@ -47,29 +42,31 @@ ArabBurserker::~ArabBurserker()
 	delete imgs;
 }
 
+iRect ArabBurserker::collider()
+{
+	return iRectMake(p.x + bg->off.x - 20, p.y + bg->off.y - 45, 40, 45);
+}
+
+void ArabBurserker::dead()
+{
+}
+
 void ArabBurserker::setState(EnemyBehave newState)
 {
 	state = newState;
 
 	if (state == AttackEnemyL || state == AttackEnemyR)
 	{
-		imgs[newState]->startAnimation(ProcEnemy::cbAniAttack, this);
+		//imgs[newState]->startAnimation(ProcEnemy::cbAniAttack, this);
 	}
 }
 
-void ArabBurserker::initObj()
+void ArabBurserker::update(float dt)
 {
-	ai = AI::enemyAIBurserker;
-}
+	isActive = containPoint(p,
+		iRectMake(-bg->off.x - 20, -bg->off.y - 20,
+			devSize.width + 40, devSize.height + 40));
 
-void ArabBurserker::initObj(iPoint v)
-{
-	ai = AI::enemyAIBurserker;
-	this->v = v;
-	//tp = { p.x - 100, p.y };
-}
-void ArabBurserker::updateObj(float dt)
-{
 	aiDt += dt;
 	if (aiDt > _aiDt)
 	{
@@ -85,7 +82,6 @@ void ArabBurserker::updateObj(float dt)
 		}
 	}
 	p.y = *(bg->maxY + (int)p.x);
-	return;
 	fixedUpdate(dt);
 }
 
@@ -116,30 +112,30 @@ void ArabBurserker::fixedUpdate(float dt)
 		tp.y = maxY;
 }
 
-bool ArabBurserker::drawObj(float dt, iPoint off)
+bool ArabBurserker::draw(float dt, iPoint off)
 {
 	setRGBA(1, 1, 1, 1);
 	imgCurr = imgs[state];
 	imgCurr->paint(dt, p + off);
 
 #ifdef _DEBUG
-	//drawDot(p + off);
-	//drawRect(collider());
-#endif // DEBUG
+	drawDot(p + off);
+	drawRect(collider());
+#endif
 	setRGBA(1, 1, 1, 1);
 
 	return !isActive;
 }
 
-void ArabBurserker::freeObj()
+void ArabBurserker::free()
 {
 	//#issue한번만 지우기
-	if (imgEnemy != NULL)
+	if (_imgBurserk != NULL)
 	{
 		for (int i = 0; i < EnemyBehaveMax; i++)
-			delete imgEnemy[i];
-		delete imgEnemy;
-		imgEnemy = NULL;
+			delete _imgBurserk[i];
+		delete _imgBurserk;
+		_imgBurserk = NULL;
 	}
 }
 
@@ -167,6 +163,6 @@ ImageInfo imgBurserkInfo[] =
 		0.1f,
 		1,
 		{255, 0, 0, 255},
-		ProcEnemy::cbAniDead,
+		AnimationMgr::cbAniDead,
 	},
 };

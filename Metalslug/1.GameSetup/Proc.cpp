@@ -54,7 +54,6 @@ void drawProc(float dt)
 	drawProcBullets(dt, off);
 
 	drawProcPlayer(dt, off);
-
 	drawUI(dt, off);
 	setRGBA(1, 1, 1, 1);
 }
@@ -107,7 +106,7 @@ void loadProcPlayer()
 	//#issue
 	player = new ProcPlayer(ERI);
 
-	player->initObj();
+	player->init();
 }
 
 void freeProcPlayer()
@@ -117,8 +116,8 @@ void freeProcPlayer()
 
 void drawProcPlayer(float dt, iPoint off)
 {
-	player->updateObj(dt);
-	if (player->drawObj(dt, off))
+	player->update(dt);
+	if (player->draw(dt, off))
 	{
 		
 	}

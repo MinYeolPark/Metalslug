@@ -5,23 +5,25 @@ class ArabMelee :
     public ProcEnemy
 {	
 public:
-	ArabMelee(int idx);
+	ArabMelee(int index);
 	~ArabMelee();
 
 public:
 	iImage** imgs;
-	iImage* imgCurr;
+	iImage* imgCurr;	
 
-	int idx;
-public:
-	virtual iRect collider() { return iRectMake(p.x - 20, p.y - 45, 40, 45); }
+	//Ground unit
+	float up;
+	float down;
+	bool fall;
+
+	virtual void dead();
 public:
 	virtual void setState(EnemyBehave newState);
 public:
-	virtual void initObj();
-	virtual void initObj(iPoint v);
-	virtual void updateObj(float dt);
+	//virtual iRect collider();
+	virtual void update(float dt);
 	virtual void fixedUpdate(float dt);
-	virtual bool drawObj(float dt, iPoint off);
-	virtual void freeObj();
+	virtual bool draw(float dt, iPoint off);
+	virtual void free();
 };

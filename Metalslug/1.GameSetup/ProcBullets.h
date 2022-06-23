@@ -22,7 +22,7 @@ enum BulletIndex
 };
 
 typedef void (*BulletPattern)(ProcBullets* b, float dt);
-class ProcBullets: public ProcObject
+class ProcBullets
 {
 public:
 	ProcBullets(int idx);
@@ -37,6 +37,8 @@ public:
 	int bulletIdx;
 
 	float degree;
+	bool isActive;
+	iPoint p;
 	iPoint v;
 
 	float speed;

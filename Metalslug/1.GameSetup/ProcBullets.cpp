@@ -4,10 +4,9 @@
 
 #include "ImgMgr.h"
 #include "BulletMgr.h"
-
 static iImage** _imgBullets = NULL;
 ImageInfo bulletImageInfo[];
-ProcBullets::ProcBullets(int idx) : ProcObject(idx)
+ProcBullets::ProcBullets(int idx)
 {
 	imgs = NULL;
 	imgCurr = NULL;
@@ -102,12 +101,46 @@ void ProcBullets::updateObj(float dt)
 
 void ProcBullets::fixedUpdate(float dt)
 {	
-	if (parent->layer == Player)
+	if (parent->layer == LayerPlayer)
 	{
+		ProcObject* oNear = NULL;
+		float dNear = 0xffffff;
+		for (int i = 0; i < objects->count; i++)
+		{
+			ProcObject* o = (ProcObject*)objects->objectAtIndex(i);
+			if (o->layer != LayerPlayer)
+			{
+				if (containPoint(p, o->collider->getCollider()))
+				{
+					float d = iPointLength(p - o->p);
+					if (dNear > d)
+					{
+						dNear = d;
+						oNear = o;
+					}
+				}
+			}
+		}
+		if (oNear)
+		{
+			if (oNear->isActive)
+			{
+				isActive = false;
+				oNear->getDamage(dmg, p);
+				//#issue, removeObjects
+				iPoint bp = iPointMake(rand() % 10 + p.x, rand() % 10 + p.y);
+				printf("target hp = [%d/%d]\n", oNear->hp, oNear->_hp);
+
+				addProcEffect(bulletIdx, bp);		//bulletIndex=effectIndex
+			}
+		}
+	}
+	
+#if 0
 		ProcEnemy* eNear = NULL;
 		float dNear = 0xffffff;
 		for (int j = 0; j < enemyCount; j++)
-		{
+		{			
 			ProcEnemy* e = enemies[j];
 			if (containPoint(p, e->collider()))
 			{
@@ -119,7 +152,6 @@ void ProcBullets::fixedUpdate(float dt)
 				}
 			}
 		}
-
 		if (eNear)
 		{
 			if (eNear->getState() != (EnemyBehave)(DeadEnemyL + eNear->state % 2))
@@ -135,6 +167,7 @@ void ProcBullets::fixedUpdate(float dt)
 			}
 		}
 	}
+#endif
 }
 
 bool ProcBullets::drawObj(float dt, iPoint off)
@@ -144,12 +177,12 @@ bool ProcBullets::drawObj(float dt, iPoint off)
 	imgCurr = imgs[bulletIdx];
 	imgCurr->paint(dt, p + off);
 
-	setRGBA(1, 1, 1, 1);
 
-#ifdef _DEBUG		
-	drawDot(p + off);
+#ifdef _DEBUG			
+	
 #endif // DEBUG
 	
+	setRGBA(1, 1, 1, 1);
 	return !isActive;
 }
 

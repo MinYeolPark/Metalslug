@@ -29,6 +29,8 @@ public:
 	int hpLeft, hpRight, _hp;
 
 public:
+	virtual void dead();
+public:
 	iRect attkCollider()
 	{
 
@@ -38,10 +40,10 @@ public:
 		return iRectMake(p.x- imgBase[0]->tex->width/2, p.y- imgBase[0]->tex->height, imgBase[0]->tex->width, imgBase[0]->tex->height);
 	}
 public:
-	void initObj();
-	void updateObj(float dt);
+	void init();
+	void update(float dt);
 	void fixedUpdate(float dt);
-	bool drawObj(float dt, iPoint off);
-	void freeObj();
+	bool draw(float dt, iPoint off);
+	void free();
 };
 

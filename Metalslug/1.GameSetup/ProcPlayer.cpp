@@ -9,8 +9,6 @@
 
 #include "Proc.h"
 #include "ProcField.h"
-
-
 #include "ProcItem.h"
 ProcPlayer* player;
 static iImage** _imgEriTop = NULL;
@@ -20,9 +18,9 @@ ImageInfo topImageInfo[];
 ImageInfo botImageInfo[];
 ImageInfo infoEriTopHeavy[];
 
-ProcPlayer::ProcPlayer(int idx) : ProcObject(idx)
+ProcPlayer::ProcPlayer(int idx) : ProcObject()
 {    
-    layer = ObjLayer::Player;
+    layer = ObjLayer::LayerPlayer;
     p = iPointZero;
     s = iSizeZero;
     isActive = false;
@@ -72,6 +70,7 @@ ProcPlayer::ProcPlayer(int idx) : ProcObject(idx)
 
 ProcPlayer::~ProcPlayer()
 {
+    objects->removeObject(this);
     for (int i = 0; i < 16; i++)
     {
         delete _imgEriTop[i];
@@ -91,15 +90,18 @@ ProcPlayer::~ProcPlayer()
     _imgEriBot = NULL;
 }
 
-void ProcPlayer::initObj()
+void ProcPlayer::init()
 {
     this->isActive = true;
     topState = JumpL;
     botState = IdleR;
     this->p = iPointMake(100, 200);
+
+    objects->addObject(this);
+    printf("%d Player============\n", objects->count);
 }
 
-void ProcPlayer::updateObj(float dt)
+void ProcPlayer::update(float dt)
 {
     v = iPointZero;
     firePoint = iPointMake(p.x, p.y - 20);
@@ -216,7 +218,7 @@ void ProcPlayer::fixedUpdate(float dt)
         }
     }   
 }
-bool ProcPlayer::drawObj(float dt, iPoint off)
+bool ProcPlayer::draw(float dt, iPoint off)
 {
     setRGBA(1, 1, 1, 1);
 
@@ -265,7 +267,7 @@ bool ProcPlayer::drawObj(float dt, iPoint off)
     return !isActive;
 }
 
-void ProcPlayer::freeObj()
+void ProcPlayer::free()
 {
 }
 
@@ -449,6 +451,10 @@ void ProcPlayer::bomb(iPoint v)
     setTopState((PlayerBehave)(BombR + topState % 2), v);
 
     addBullet(this, Bomb, 45);
+}
+
+void ProcPlayer::dead()
+{
 }
 
 void ProcPlayer::addScore(int score)
