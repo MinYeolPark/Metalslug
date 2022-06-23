@@ -29,6 +29,12 @@ enum EnemyBehave
 	AttackEnemyL,
 	AttackEnemyR,
 
+	PreAttackEnemyL,
+	PreAttackEnemyR,
+
+	FireEnemyL,
+	FireEnemyR,
+
 	EnemyBehaveMax,
 };
 
@@ -52,14 +58,20 @@ public:
 	float attkRate, _attkRate;
 	float aiDt, _aiDt;
 
+	float up;
+	float down;
+	bool fall;
+
 	iPoint tp;
 public:
-	virtual void getDamage(float damage, iPoint hitPoint);
+	virtual bool dead() = 0;
+
+	virtual void getDamage(float damage);
 	virtual void setState(EnemyBehave newState) { state=newState; }
-	virtual EnemyBehave getState() { return state; }	
+	virtual EnemyBehave getState() { return state; }
 public:
-	//virtual iRect collider() = 0;
 	virtual void init(int index, iPoint p, iPoint v);
+	virtual void fixedUpdate(float dt);
 	virtual void free() = 0;		//freeImage
 };
 

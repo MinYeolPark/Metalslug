@@ -138,6 +138,7 @@
     <ClInclude Include="1.GameSetup\ProcEnemy.h" />
     <ClInclude Include="1.GameSetup\ProcField.h" />
     <ClInclude Include="1.GameSetup\ProcObject.h" />
+    <ClInclude Include="1.GameSetup\ProcPlayer.h" />
     <ClInclude Include="3.Enemies\ArabBurserker.h" />
     <ClInclude Include="3.Enemies\ArabMelee.h" />
     <ClInclude Include="3.Enemies\Mosque.h" />
@@ -151,7 +152,7 @@
     <ClInclude Include="5.NPC\Ichimondi.h" />
     <ClInclude Include="1.GameSetup\ProcItem.h" />
     <ClInclude Include="3.Enemies\Kessie.h" />
-    <ClInclude Include="ProcNpc.h" />
+    <ClInclude Include="1.GameSetup\ProcNpc.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="1.GameSetup\Select.h" />
     <ClInclude Include="Sorting.h" />
@@ -201,7 +202,7 @@
     <ClCompile Include="1.GameSetup\ProcItem.cpp" />
     <ClCompile Include="1.GameSetup\Select.cpp" />
     <ClCompile Include="3.Enemies\Kessie.cpp" />
-    <ClCompile Include="ProcNpc.cpp" />
+    <ClCompile Include="1.GameSetup\ProcNpc.cpp" />
     <ClCompile Include="Sorting.cpp" />
     <ClCompile Include="std\iArray.cpp" />
     <ClCompile Include="std\iColor.cpp" />

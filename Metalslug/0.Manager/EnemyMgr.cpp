@@ -42,8 +42,8 @@ void loadProcEnemy()
 	enemies = new ProcEnemy * [EnemyIndexMax * enemyMax];
 	enemyCount = 0;
 
-	addProcEnemy(IdxArMelee, iPointMake(250, 50), iPointMake(-1,0));	
-	addProcEnemy(IdxArBurserker, iPointMake(200, 50), iPointMake(-1, 0));
+	addProcEnemy(IdxArMelee, iPointMake(250, 50), iPointMake(0,0));	
+	addProcEnemy(IdxArBurserker, iPointMake(200, 50), iPointMake(0, 0));
 #if 0
 	mosque = new Mosque();
 	mosque->initObj();
@@ -117,12 +117,12 @@ void addProcEnemy(int index, iPoint p, iPoint v)
 	}
 }
 
-void AI::enemyAI0(ProcEnemy* e, float dt)		//Check Player
+void ProcEnemyAI::ArabMeleeAI0(ProcEnemy* e, float dt)		//Check Player
 {
 	int len = iPointLength(player->p - e->p);
 
 	if (len < e->sight)
-		e->tp = player->p;
+		e->tp = player->p;	
 	else
 		e->tp = { -1,-1 };
 
@@ -145,15 +145,20 @@ void AI::enemyAI0(ProcEnemy* e, float dt)		//Check Player
 		{
 			e->setState((EnemyBehave)(IdleEnemyL + e->state % 2));
 		}
+
+		if (len < e->attkRange)
+		{
+			e->setState((EnemyBehave)(FireEnemyL + e->state%2));
+		}
 	}
 }
 
-void AI::enemyAI1(ProcEnemy* e, float dt)
+void ProcEnemyAI::ArabMeleeAI1(ProcEnemy* e, float dt)
 {
 	//e->p += e->v * e->moveSpeed * dt;
 }
 
-void AI::enemyAIBurserker(ProcEnemy* e, float dt)		//Spawn From Kessie
+void ProcEnemyAI::ArabBurserkAI0(ProcEnemy* e, float dt)		//Spawn From Kessie
 {
 	int len = iPointLength(player->p - e->p);
 

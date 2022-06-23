@@ -1,14 +1,30 @@
 #include "Ichimondi.h"
 
 #include "ImgMgr.h"
+#include "AnimationMgr.h"
+
 #include "ProcItem.h"
 static iImage** _imgIchi = NULL;
 ImageInfo infoIchi[];
-Ichimondi::Ichimondi(int idx): ProcNpc()
+Ichimondi::Ichimondi(int index): ProcNpc(index)
 {		
+	collider->init(this, iSizeMake(50, 50));
+
+	index = NpcIchimondi;
+	state = IdleNpcL;
+	ai = NULL;
+	complete = false;
+	escape = false;
+	itemIndex = -1;
+	///////////////////////////////////
 	imgs = NULL;
 	imgCurr = NULL;
-	state = (NpcBehave)0;
+
+	moveSpeed = 50.f;
+	up = 0.f;
+	down = 0.f;
+	fall = false;
+
 	if(_imgIchi == NULL)
 		_imgIchi = createImgReverse(infoIchi, NpcBehaveMax, this);
 
@@ -28,90 +44,64 @@ Ichimondi::~Ichimondi()
 	_imgIchi = NULL;
 }
 
-iRect Ichimondi::collider()
+void Ichimondi::dead()
 {
-	return iRectMake(p.x + bg->off.x - 20, p.y + bg->off.y - 40, 40, 40);
+	state = (NpcBehave)(WalkNpcL + state % 2);
+	imgs[state]->startAnimation(AnimationMgr::cbAniDead, this);
 }
 
 void Ichimondi::spawnItem()
 {
 	addProcItem(itemIndex, this->p - bg->off);
 }
-
-void Ichimondi::setState(NpcBehave newState)
-{
-	state = newState;
-}
-
-void Ichimondi::set(int index, iPoint p)
-{
-	isActive = true;
-	int r = rand() % ItemIndexMax;
-	itemIndex = r;
-	this->p = p;
-	this->index = (NpcIndex)index;
-}
-
-void Ichimondi::set(int idex, iPoint p, int itemIndex)
-{
-	isActive = true;
-	this->itemIndex = itemIndex;
-	this->p = p;
-	this->index = (NpcIndex)index;
-}
-
+iPoint initPos = iPointZero;
 void Ichimondi::update(float dt)
 {
 	isActive = containPoint(p,
 		iRectMake(-bg->off.x - 20, -bg->off.y - 20,
 			devSize.width + 40, devSize.height + 40));
 
-	if (!complete)
-	{
-		if (state == WalkR || state == WalkL)
-		{
-			if (containPoint(player->p, collider()))		
-				setState((NpcBehave)(AddItemNpcL + state % 2));
-		}
-	}	
-
 	if (v != iPointZero)
 	{
-		if (v.x > 0)
-			setState(EscapeNpcR);
-		else if (v.x < 0)
-			setState(EscapeNpcL);
-		p += v * moveSpeed * dt;
+		if (getState() == WalkNpcL || getState() == WalkNpcR)
+		{
+			if(initPos==iPointZero)
+				initPos= p;
+			int maxX;
+			if (v.x > 0)
+			{
+				maxX = initPos.x + 100;
+				setState(WalkNpcR);
+				if (p.x > maxX)
+					v.x = -1;
+			}
+			else if (v.x < 0)
+			{
+				maxX = initPos.y - 100;
+				setState(WalkNpcL);			
+				if (p.x < maxX)
+					v.x = 1;
+			}
+		}
+			
 	}
+	if (getState() == WalkNpcL || getState() == WalkNpcR)
+	{
+		if (containPoint(player->p, iRectMake(p.x - 20, p.y - 40, 40, 40)))
+		{
+			v = iPointZero;
+			setState((NpcBehave)(AddItemNpcL + state % 2));
+		}
+	}
+
+	if (getState() == EscapeNpcL || getState() == EscapeNpcR)
+		p += v * moveSpeed * 4 * dt;
+	else
+		p += v * moveSpeed * dt;		
 
 	fixedUpdate(dt);
 }
 
-void Ichimondi::fixedUpdate(float dt)
-{
-	int maxY = *(bg->maxY + (int)p.x);
-	if (p.y >= maxY)
-	{
-		up = 0;
-		down = 0;
-		fall = false;
-
-		p.y = maxY;
-	}
-	else
-		fall = true;
-
-	if (fall)
-	{
-		if (p.y < maxY)
-		{
-			down += jumpDecrease * dt;
-			p = (iPointMake(p.x, p.y += down));
-		}
-	}
-}
-
-#include "InputMgr.h"
 bool Ichimondi::draw(float dt, iPoint off)
 {
 	setRGBA(1, 1, 1, 1);
@@ -121,7 +111,7 @@ bool Ichimondi::draw(float dt, iPoint off)
 
 #ifdef _DEBUG
 	drawDot(p + off);
-	drawRect(collider());
+	drawRect(collider->getCollider());
 #endif // _DEBUG
 
 	return !isActive;
@@ -142,9 +132,9 @@ ImageInfo infoIchi[] =
 		"assets/NPC/Bondage_Release_%02d.png",
 		4, 1.0f, { -91 / 2, 0},
 		0.1f,
-		0,
+		1,
 		{255, 0, 0, 255},
-		NULL,
+		AnimationMgr::cbAniNpcRelease,
 	},
 	{
 		"assets/NPC/Walk_%02d.png",
@@ -160,7 +150,7 @@ ImageInfo infoIchi[] =
 		0.12f,
 		1,
 		{255, 0, 0, 255},
-		ProcNpc::cbAniSpawnItem,
+		AnimationMgr::cbAniNpcSpawnItem,
 	},
 	{
 		"assets/NPC/Salute_%02d.png",
@@ -168,7 +158,7 @@ ImageInfo infoIchi[] =
 		0.08f,
 		1,
 		{255, 0, 0, 255},
-		ProcNpc::cbAniSalute,
+		AnimationMgr::cbAniNpcSalute,
 	},
 	{
 		"assets/NPC/Escape_%02d.png",

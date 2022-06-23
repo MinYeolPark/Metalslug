@@ -14,7 +14,8 @@ ProcBullets::ProcBullets(int idx)
 	bulletIdx = idx;
 
 	v = iPointZero;
-
+	collider = new Collider();
+	collider->isActive = true;
 	pattern = NULL;
 	speed = 0;
 	dmg = 0;
@@ -115,8 +116,11 @@ void ProcBullets::fixedUpdate(float dt)
 					float d = iPointLength(p - o->p);
 					if (dNear > d)
 					{
-						dNear = d;
-						oNear = o;
+						if (o->collider->isActive)
+						{
+							dNear = d;
+							oNear = o;
+						}
 					}
 				}
 			}
@@ -126,11 +130,8 @@ void ProcBullets::fixedUpdate(float dt)
 			if (oNear->isActive)
 			{
 				isActive = false;
-				oNear->getDamage(dmg, p);
-				//#issue, removeObjects
+				oNear->getDamage(dmg);
 				iPoint bp = iPointMake(rand() % 10 + p.x, rand() % 10 + p.y);
-				printf("target hp = [%d/%d]\n", oNear->hp, oNear->_hp);
-
 				addProcEffect(bulletIdx, bp);		//bulletIndex=effectIndex
 			}
 		}
@@ -189,13 +190,13 @@ bool ProcBullets::drawObj(float dt, iPoint off)
 void ProcBullets::freeObj()
 {
 }
-
-iRect ProcBullets::collider()
-{
-	return iRectMake(p.x + bg->off.x - imgCurr->tex->width / 2,
-		p.y + bg->off.y - imgCurr->tex->height / 2,
-		imgCurr->tex->width, imgCurr->tex->height);
-}
+//
+//iRect ProcBullets::collider()
+//{
+//	return iRectMake(p.x + bg->off.x - imgCurr->tex->width / 2,
+//		p.y + bg->off.y - imgCurr->tex->height / 2,
+//		imgCurr->tex->width, imgCurr->tex->height);
+//}
 
 void ProcBullets::patternDefault(ProcBullets* b, float dt)
 {
@@ -221,7 +222,7 @@ void ProcBullets::patMosqueTrace(ProcBullets* b, float dt)
 	b->p += v;
 	if (player)
 	{
-		if (containPoint(b->p, player->collider()))
+		if (containPoint(b->p, player->collider->getCollider()))
 		{
 			b->isActive = false;
 			player->hp -= b->dmg;
@@ -237,7 +238,7 @@ void ProcBullets::cbAniBullet(void* parm)
 	ProcBullets* b = (ProcBullets*)parm;
 	b->isActive = false;
 
-	addBullet(b->m, BulletMosqueTrace, b->p);
+	//addBullet(b->m, BulletMosqueTrace, b->p);
 }
 
 ImageInfo bulletImageInfo[BulletIndexMax] =
@@ -268,6 +269,16 @@ ImageInfo bulletImageInfo[BulletIndexMax] =
 		0,
 		{0, 248, 0, 255},
 		NULL,
+	},
+	///////////////////////////////////////////////////////
+	{
+		"assets/Bullets/MidBoss_Fire_%02d.png",
+		8,
+		1.0f, {-72 / 2,0},
+		0.1f,
+		1,
+		{255, 0, 0, 255},
+		ProcBullets::cbAniBullet,
 	},
 	{
 		"assets/Bullets/MidBoss_Fire_%02d.png",

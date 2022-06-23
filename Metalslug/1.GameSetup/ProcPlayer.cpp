@@ -3,6 +3,7 @@
 #include "iStd.h"
 
 #include "ImgMgr.h"
+#include "AnimationMgr.h"
 #include "BulletMgr.h"
 #include "InputMgr.h"
 #include "EffectMgr.h"
@@ -93,12 +94,11 @@ ProcPlayer::~ProcPlayer()
 void ProcPlayer::init()
 {
     this->isActive = true;
-    topState = JumpL;
+    topState = IdleR;
     botState = IdleR;
     this->p = iPointMake(100, 200);
 
     objects->addObject(this);
-    printf("%d Player============\n", objects->count);
 }
 
 void ProcPlayer::update(float dt)
@@ -131,6 +131,11 @@ void ProcPlayer::update(float dt)
                 setBotState(WalkR, v);
                 if (!isAttacking)
                     setTopState(WalkR, v);
+                else
+                {
+                    if( topState != FireR)
+                        setTopState(WalkR, v);
+                }
 
                 fireDeg = 0;
             }
@@ -139,6 +144,11 @@ void ProcPlayer::update(float dt)
                 setBotState(WalkL, v);
                 if (!isAttacking)
                     setTopState(WalkL, v);
+                else
+                {
+                    if (topState != FireL)
+                        setTopState(WalkL, v);
+                }
 
                 fireDeg = 180;
             }
@@ -237,7 +247,7 @@ bool ProcPlayer::draw(float dt, iPoint off)
         setRGBA(1, 0, 1, 0.5);
         setDotSize(10);
         drawDot(p + off);
-        drawRect(collider());
+        drawRect(collider->getCollider());
 #endif
     }
 
@@ -455,6 +465,12 @@ void ProcPlayer::bomb(iPoint v)
 
 void ProcPlayer::dead()
 {
+    topState = (PlayerBehave)(DeadEnemyL + topState % 2);
+    topImgs[topState]->startAnimation(AnimationMgr::cbAniDead, this);
+}
+
+void ProcPlayer::getDamage(float damage)
+{
 }
 
 void ProcPlayer::addScore(int score)
@@ -473,10 +489,6 @@ void ProcPlayer::changeGun(int index)
     this->curGun->gunIndex = (GunIndex)index;
 }
 
-iRect ProcPlayer::collider()
-{
-    return iRectMake(p.x - 20 + bg->off.x, p.y - 40 + bg->off.y, 40, 40);
-}
 void ProcPlayer::cbAniToIdle(void* parm)
 {
     ProcPlayer* pp = (ProcPlayer*)parm;

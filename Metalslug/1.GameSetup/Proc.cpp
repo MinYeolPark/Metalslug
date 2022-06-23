@@ -55,6 +55,16 @@ void drawProc(float dt)
 
 	drawProcPlayer(dt, off);
 	drawUI(dt, off);
+
+
+	//#issue
+	for (int i = 0; i < objects->count; i++)
+	{
+		ProcObject* o = (ProcObject*)objects->objectAtIndex(i);
+		if (o->isActive == false)
+			objects->removeObject(i);
+		return;		
+	}
 	setRGBA(1, 1, 1, 1);
 }
 

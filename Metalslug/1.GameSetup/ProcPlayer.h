@@ -12,8 +12,6 @@ enum GunIndex
 {
 	Handgun = 0,
 	HeavyMachinegun,
-
-
 	Bomb,
 };
 struct Gun
@@ -121,6 +119,7 @@ public:
 	void bomb(iPoint v);
 	virtual void dead();
 
+	void getDamage(float damage);
 	void addScore(int score);
 	void addBomb(int bomb);
 	void changeGun(int index);
@@ -130,10 +129,6 @@ public:
 	virtual void fixedUpdate(float dt) ;
 	virtual bool draw(float dt, iPoint off) ;
 	virtual void free() ;
-
-public:
-public:
-	iRect collider();
 
 public:
 	static void cbAniToIdle(void* parm);

@@ -6,13 +6,12 @@
 ImageInfo imgMeleeInfo[];
 static iImage** _imgMelee = NULL;
 ArabMelee::ArabMelee(int index) : ProcEnemy(index)
-{
-	collider = new Collider();
-	collider->init(this);
+{	
+	collider->init(this, iSizeMake(50,50));
 
 	index = IdxArMelee;
 	state = IdleEnemyL;	
-	ai = AI::enemyAI0;
+	ai = ProcEnemyAI::ArabMeleeAI0;
 
 	hp = 100;
 	dmg = 100;
@@ -36,6 +35,7 @@ ArabMelee::ArabMelee(int index) : ProcEnemy(index)
 	memset(imgs, 0x00, sizeof(iImage*) * EnemyBehaveMax);
 	for (int i = 0; i < EnemyBehaveMax; i++)
 		imgs[i] = _imgMelee[i]->clone();
+	imgCurr = imgs[index];
 }
 
 ArabMelee::~ArabMelee()
@@ -45,24 +45,19 @@ ArabMelee::~ArabMelee()
 	delete imgs;
 }
 
-void ArabMelee::dead()
+bool ArabMelee::dead()
 {
+	collider->disable();
+
 	state = (EnemyBehave)(DeadEnemyL + state % 2);
 	imgs[state]->startAnimation(AnimationMgr::cbAniDead, this);
+
+	return state == (EnemyBehave)(DeadEnemyL + state % 2);
 }
 
 void ArabMelee::setState(EnemyBehave newState)
 {
 	state = newState;
-
-	if (state == AttackEnemyL || state == AttackEnemyR)
-	{
-		//imgs[newState]->startAnimation(ProcEnemy::cbAniAttack, this);
-	}
-	if (state == DeadEnemyL || state == DeadEnemyR)
-	{
-		//imgs[newState]->startAnimation(ProcEnemy::cbAniDead, this);
-	}
 }
 
 void ArabMelee::update(float dt)
@@ -78,33 +73,8 @@ void ArabMelee::update(float dt)
 		ai(this, dt);
 	}
 	p.y = *(bg->maxY + (int)p.x);
-}
 
-void ArabMelee::fixedUpdate(float dt)
-{
-	int maxY = *(bg->maxY + (int)p.x);
-	if (p.y >= maxY)
-	{
-		up = 0;
-		down = 0;
-		fall = false;
-
-		p.y = maxY;
-	}
-	else
-		fall = true;
-
-	if (fall)
-	{
-		if (p.y < maxY)
-		{
-			down += jumpDecrease * dt;
-			p = (iPointMake(p.x, p.y += down));
-		}
-	}
-
-	if (tp != iPointZero)
-		tp.y = maxY;
+	fixedUpdate(dt);
 }
 
 bool ArabMelee::draw(float dt, iPoint off)
@@ -159,7 +129,7 @@ ImageInfo imgMeleeInfo[] =
 		0.1f,
 		1,
 		{255, 0, 0, 255},
-		AnimationMgr::cbAniDead,		
+		AnimationMgr::cbAniDead,
 	},
 	{
 		"assets/ArabMelee/ArabMelee_Shuffle_%02d.png",
@@ -184,5 +154,13 @@ ImageInfo imgMeleeInfo[] =
 		0,
 		{255, 0, 0, 255},
 		NULL,
+	},
+	{
+		"assets/ArabMelee/ArabMelee_Fire_%02d.png",
+		12, 1.0f, { -36, 0},
+		0.08f,
+		1,
+		{255, 0, 0, 255},
+		AnimationMgr::cbAniMeleeFire,
 	},
 };

@@ -1,5 +1,7 @@
 #include "ProcEnemy.h"
 
+#include "ProcPlayer.h"
+#include "EnemyMgr.h"
 #include "ProcField.h"
 
 ProcEnemy::ProcEnemy(int index) : ProcObject()
@@ -27,18 +29,16 @@ ProcEnemy::~ProcEnemy()
 {
 }
 
-void ProcEnemy::getDamage(float damage, iPoint hitPoint)
+void ProcEnemy::getDamage(float damage)
 {
 	hp -= damage;
 	if (hp <= 0)
 	{
 		if (getState() != (EnemyBehave)(DeadEnemyL + state % 2))
 		{
-			setState((EnemyBehave)(DeadEnemyL + state % 2));
 			dead();
+			//objects->removeObject(this);
 		}
-		else
-			return;
 	}
 }
 
@@ -53,4 +53,31 @@ void ProcEnemy::init(int index, iPoint p, iPoint v)
 		setState(IdleEnemyR);
 
 	objects->addObject(this);
+}
+
+void ProcEnemy::fixedUpdate(float dt)
+{
+	int maxY = *(bg->maxY + (int)p.x);
+	if (p.y >= maxY)
+	{
+		up = 0;
+		down = 0;
+		fall = false;
+
+		p.y = maxY;
+	}
+	else
+		fall = true;
+
+	if (fall)
+	{
+		if (p.y < maxY)
+		{
+			down += jumpDecrease * dt;
+			p = (iPointMake(p.x, p.y += down));
+		}
+	}
+
+	if (tp != iPointZero)
+		tp.y = maxY;
 }

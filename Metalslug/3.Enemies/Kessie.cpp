@@ -9,6 +9,9 @@ static iImage** _imgKessie = NULL;
 
 Kessie::Kessie(int idx) : ProcEnemy(idx)
 {
+	collider->init(this, iSizeMake(150, 50));
+
+	index = IdxKessie;
 	memset(imgBase, 0x00, sizeof(imgBase));
 	memset(imgLeftCrater, 0x00, sizeof(imgLeftCrater));
 	memset(imgRightCrater, 0x00, sizeof(imgRightCrater));
@@ -19,6 +22,7 @@ Kessie::Kessie(int idx) : ProcEnemy(idx)
 	memset(imgRightBlast, 0x00, sizeof(imgRightBlast));
 
 	isActive = true;
+	isAppear = false;
 	isHeadOpen = false;
 	effDt = 0.f;
 	_effDt = 3.0f;
@@ -63,39 +67,34 @@ Kessie::~Kessie()
 	_imgKessie = NULL;
 }
 
-void Kessie::dead()
+bool Kessie::dead()
 {
-}
 
-void Kessie::init()
-{
-	p = iPointMake(230, 150);
+	return true;
 }
 
 void Kessie::update(float dt)
 {	
-	aiDt += dt;
-	if (aiDt > _aiDt)
+	if (!isAppear)
 	{
-		aiDt -= _aiDt;
-		//addProcEnemy(ArMelee, { p.x + 100, p.y - 100 }, iPointMake(-1, 0), AI::enemyAI0);
-	}
-	if (!isHeadOpen)
-	{
-		imgHead->startAnimation();
-		isHeadOpen = true;
+		if (movePoint(p, p, { p.x, p.y - 100 }, moveSpeed))
+			isAppear = true;
 	}
 	else
 	{
-		//spawn ArabMelee
-		//moving pattern
-	}
+		aiDt += dt;
+		if (aiDt > _aiDt)
+		{
+			aiDt -= _aiDt;
+			//addProcEnemy(ArMelee, { p.x + 100, p.y - 100 }, iPointMake(-1, 0), AI::enemyAI0);
+		}
+		if (!isHeadOpen)
+		{
+			imgHead->startAnimation();
+			isHeadOpen = true;
+		}
+	}	
 	fixedUpdate(dt);
-}
-
-void Kessie::fixedUpdate(float dt)
-{
-
 }
 
 bool Kessie::draw(float dt, iPoint off)
@@ -113,7 +112,7 @@ bool Kessie::draw(float dt, iPoint off)
 	imgRightBlast[1]->paint(dt, { p.x + off.x + 88, p.y + off.y + imgRightBlast[1]->tex->height - 40 } );
 #ifdef _DEBUG	
 	drawDot(p + off);
-	drawRect(collider());
+	drawRect(collider->getCollider());
 #endif // DEBUG
 
 	

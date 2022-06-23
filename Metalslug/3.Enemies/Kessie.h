@@ -1,6 +1,6 @@
 #pragma once
-
 #include "ProcEnemy.h"
+
 class Kessie  
 	:public ProcEnemy
 {
@@ -19,30 +19,19 @@ public:
 	iImage* imgRightBlast[3];
 
 public:
-	iPoint p;
-
-	bool isActive;
+	bool isAppear;					//appear state
 	bool isHeadOpen;
 
 	float effDt, _effDt;	
 	float aiDt, _aiDt;
 	int hpLeft, hpRight, _hp;
 
+	Collider* attkCollider;
 public:
-	virtual void dead();
-public:
-	iRect attkCollider()
-	{
+	virtual bool dead();
 
-	}
-	iRect collider()
-	{
-		return iRectMake(p.x- imgBase[0]->tex->width/2, p.y- imgBase[0]->tex->height, imgBase[0]->tex->width, imgBase[0]->tex->height);
-	}
 public:
-	void init();
 	void update(float dt);
-	void fixedUpdate(float dt);
 	bool draw(float dt, iPoint off);
 	void free();
 };

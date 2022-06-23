@@ -28,11 +28,9 @@ public:
 	int score;
 	Collider* collider;
 public:
-	virtual void getDamage(float damage, iPoint hitPoint);
+	virtual void getDamage(float damage) = 0;
 	virtual int getScore();
-	virtual void dead() = 0;
 public:
-	//virtual iRect collider() = 0;
 	virtual void init(iPoint p);
 	virtual void init(iPoint p, iPoint v);
 	virtual void init(int index, iPoint p, iPoint v);
@@ -41,7 +39,8 @@ public:
 };
 static void cb(void* data);
 extern iArray* objects;
-
+extern iArray* objectsRemove;
+#include "ProcField.h"
 struct Collider
 {
 	Collider()
@@ -57,13 +56,15 @@ struct Collider
 
 	iPoint p;
 	iSize s;
-
+	ProcObject* parent;
 	bool isActive;
 
-	void init(ProcObject* parent)
+	void init(ProcObject* parent, iSize s)
 	{
-		p = { parent->p.x - 25, parent->p.y - 50 };
-		s = { 50,50 };
+		this->parent = parent;
+		parent->collider->isActive = true;
+		this->p = { parent->p.x - s.width/2, parent->p.y - s.height };
+		this->s = s;
 	}
 	void setPosition(iPoint p)
 	{
@@ -75,11 +76,12 @@ struct Collider
 	}
 	iRect getCollider()
 	{
-		//if (isActive)
-		//{
-		//	return iRectMake(p.x, p.y, s.width, s.height);
-		//}
-		return iRectMake(p.x, p.y, s.width, s.height);
+		if (isActive)
+		{
+			return iRectMake(parent->p.x+bg->off.x - s.width/2, parent->p.y+bg->off.y-s.height,
+				s.width, s.height);
+		}
+		return iRectMake(0,0,0,0);
 	}
 	void enable() { isActive = true; }
 	void disable() { isActive = false; }

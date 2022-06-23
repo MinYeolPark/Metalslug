@@ -135,7 +135,7 @@
     <ClInclude Include="Sorting.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="ProcNpc.h">
+    <ClInclude Include="1.GameSetup\ProcNpc.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="5.NPC\Ichimondi.h">
@@ -145,6 +145,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="3.Enemies\ArabBurserker.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="1.GameSetup\ProcPlayer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -269,7 +272,7 @@
     <ClCompile Include="Sorting.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="ProcNpc.cpp">
+    <ClCompile Include="1.GameSetup\ProcNpc.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="5.NPC\Ichimondi.cpp">

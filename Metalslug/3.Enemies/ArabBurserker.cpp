@@ -1,15 +1,16 @@
 #include "ArabBurserker.h"
 
-#include "EnemyMgr.h"
 #include "ImgMgr.h"
 #include "AnimationMgr.h"
 ImageInfo imgBurserkInfo[];
 static iImage** _imgBurserk = NULL;
 ArabBurserker::ArabBurserker(int index) : ProcEnemy(index)
 {	
+	collider->init(this, iSizeMake(50, 50));
+
 	index = IdxArBurserker;
 	state = IdleEnemyL;
-	ai = AI::enemyAI0;
+	ai = ProcEnemyAI::ArabBurserkAI0;
 
 	hp = 100;
 	dmg = 100;
@@ -33,6 +34,7 @@ ArabBurserker::ArabBurserker(int index) : ProcEnemy(index)
 	memset(imgs, 0x00, sizeof(iImage*) * EnemyBehaveMax);
 	for (int i = 0; i < EnemyBehaveMax; i++)
 		imgs[i] = _imgBurserk[i]->clone();
+	imgCurr = imgs[index];
 }
 
 ArabBurserker::~ArabBurserker()
@@ -42,13 +44,20 @@ ArabBurserker::~ArabBurserker()
 	delete imgs;
 }
 
-iRect ArabBurserker::collider()
+static iPoint initPos;
+bool ArabBurserker::dead()
 {
-	return iRectMake(p.x + bg->off.x - 20, p.y + bg->off.y - 45, 40, 45);
-}
+	collider->disable();
 
-void ArabBurserker::dead()
-{
+	initPos = p;
+	state = (EnemyBehave)(DeadEnemyL + state % 2);
+	if (state == DeadEnemyL)
+		v.x = 1;
+	else//if(state==DeadEnemyR)
+		v.x = -1;
+
+	imgs[state]->startAnimation(AnimationMgr::cbAniDead, this);
+	return state == (EnemyBehave)(DeadEnemyL + state % 2);
 }
 
 void ArabBurserker::setState(EnemyBehave newState)
@@ -76,42 +85,29 @@ void ArabBurserker::update(float dt)
 
 	if (tp != iPointMake(-1, -1))
 	{
-		if (movePoint(p, p, tp, moveSpeed * dt))
-		{
-			
-		}
+		//if (movePoint(p, p, tp, moveSpeed * dt))
+		//{
+		//	
+		//}
 	}
 	p.y = *(bg->maxY + (int)p.x);
+	printf("%d\n", (int)state);
+	if (getState() == DeadEnemyL)
+	{
+		v.x = 1;
+		movePoint(p, p, { initPos.x + 50, 0 }, moveSpeed);
+		printf("Dead");
+	}
+	else if (getState() == DeadEnemyR)
+	{
+		v.x = -1;
+		movePoint(p, p, { initPos.x - 50, 0 }, moveSpeed);
+		printf("Dead");
+
+	}
+	p += v * moveSpeed * dt;
 	fixedUpdate(dt);
 }
-
-void ArabBurserker::fixedUpdate(float dt)
-{
-	int maxY = *(bg->maxY + (int)p.x);
-	if (p.y >= maxY)
-	{
-		up = 0;
-		down = 0;
-		fall = false;
-
-		p.y = maxY;
-	}
-	else
-		fall = true;
-
-	if (fall)
-	{
-		if (p.y < maxY)
-		{
-			down += jumpDecrease * dt;
-			p = (iPointMake(p.x, p.y += down));
-		}
-	}
-
-	if (tp != iPointZero)
-		tp.y = maxY;
-}
-
 bool ArabBurserker::draw(float dt, iPoint off)
 {
 	setRGBA(1, 1, 1, 1);
@@ -120,7 +116,7 @@ bool ArabBurserker::draw(float dt, iPoint off)
 
 #ifdef _DEBUG
 	drawDot(p + off);
-	drawRect(collider());
+	drawRect(collider->getCollider());
 #endif
 	setRGBA(1, 1, 1, 1);
 

@@ -2,7 +2,7 @@
 
 #include "ProcField.h"
 
-iArray* objects = new iArray(cb);
+iArray* objects = new iArray();
 ProcObject::ProcObject()
 {
 	layer = ObjLayer::LayerDefault;
@@ -15,18 +15,12 @@ ProcObject::ProcObject()
 	isActive = false;
 	hp=0, _hp = 0;
 	score = 0;
-	collider = NULL;
+	collider = new Collider();
+	printf("new Collider\n");
 }
 
 ProcObject::~ProcObject()
 {
-}
-
-void ProcObject::getDamage(float damage, iPoint hitPoint)
-{
-	hp -= damage;
-	if (hp <= 0)
-		dead();
 }
 
 int ProcObject::getScore()

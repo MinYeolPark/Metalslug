@@ -7,6 +7,8 @@
 #include "ProcEnemy.h"
 #include "ProcPlayer.h"
 
+//test
+#include "ProcObject.h"
 class ProcBullets;
 typedef void(*BulletPattern)(ProcBullets* b, float dt);
 enum BulletIndex
@@ -15,6 +17,7 @@ enum BulletIndex
 	BulletHeavyMachinegun,
 	BulletBomb,
 
+	BulletMelee,
 	BulletMosque,
 	BulletMosqueTrace,
 
@@ -33,7 +36,6 @@ public:
 	iImage* imgCurr;
 
 	ProcObject* parent;
-	Mosque* m;
 	int bulletIdx;
 
 	float degree;
@@ -58,7 +60,8 @@ public:
 
 	//Components
 public:
-	virtual iRect collider();
+	//virtual iRect collider();
+	Collider* collider;
 
 public:
 	static void patternDefault(ProcBullets* b, float dt);
