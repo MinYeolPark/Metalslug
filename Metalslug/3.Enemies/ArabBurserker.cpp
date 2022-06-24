@@ -9,7 +9,7 @@ ArabBurserker::ArabBurserker(int index) : ProcEnemy(index)
 	collider->init(this, iSizeMake(50, 50));
 
 	index = IdxArBurserker;
-	state = IdleEnemyL;
+	state = IdleBurserkL;
 	ai = ProcEnemyAI::ArabBurserkAI0;
 
 	hp = 100;
@@ -28,18 +28,18 @@ ArabBurserker::ArabBurserker(int index) : ProcEnemy(index)
 	fall = false;
 
 	if (_imgBurserk == NULL)
-		_imgBurserk = createImgReverse(imgBurserkInfo, EnemyBehaveMax, this);
+		_imgBurserk = createImgReverse(imgBurserkInfo, BurserkBehaveMax, this);
 
-	imgs = new iImage * [EnemyBehaveMax];
-	memset(imgs, 0x00, sizeof(iImage*) * EnemyBehaveMax);
-	for (int i = 0; i < EnemyBehaveMax; i++)
+	imgs = new iImage * [BurserkBehaveMax];
+	memset(imgs, 0x00, sizeof(iImage*) * BurserkBehaveMax);
+	for (int i = 0; i < BurserkBehaveMax; i++)
 		imgs[i] = _imgBurserk[i]->clone();
 	imgCurr = imgs[index];
 }
 
 ArabBurserker::~ArabBurserker()
 {
-	for (int i = 0; i < EnemyBehaveMax; i++)
+	for (int i = 0; i < BurserkBehaveMax; i++)
 		delete imgs[i];
 	delete imgs;
 }
@@ -47,27 +47,29 @@ ArabBurserker::~ArabBurserker()
 static iPoint initPos;
 bool ArabBurserker::dead()
 {
+	isDead = true;
 	collider->disable();
-
 	initPos = p;
-	state = (EnemyBehave)(DeadEnemyL + state % 2);
-	if (state == DeadEnemyL)
+	state = (DeadBurserkL + state % 2);
+	if (state == DeadBurserkL)
 		v.x = 1;
 	else//if(state==DeadEnemyR)
 		v.x = -1;
 
 	imgs[state]->startAnimation(AnimationMgr::cbAniDead, this);
-	return state == (EnemyBehave)(DeadEnemyL + state % 2);
+	return state == (DeadBurserkL + state % 2);
 }
 
-void ArabBurserker::setState(EnemyBehave newState)
+void ArabBurserker::getDamage(float damage)
+{
+	hp -= damage;
+	if (hp <= 0)
+		dead();
+}
+
+void ArabBurserker::setState(int newState)
 {
 	state = newState;
-
-	if (state == AttackEnemyL || state == AttackEnemyR)
-	{
-		//imgs[newState]->startAnimation(ProcEnemy::cbAniAttack, this);
-	}
 }
 
 void ArabBurserker::update(float dt)
@@ -91,20 +93,6 @@ void ArabBurserker::update(float dt)
 		//}
 	}
 	p.y = *(bg->maxY + (int)p.x);
-	printf("%d\n", (int)state);
-	if (getState() == DeadEnemyL)
-	{
-		v.x = 1;
-		movePoint(p, p, { initPos.x + 50, 0 }, moveSpeed);
-		printf("Dead");
-	}
-	else if (getState() == DeadEnemyR)
-	{
-		v.x = -1;
-		movePoint(p, p, { initPos.x - 50, 0 }, moveSpeed);
-		printf("Dead");
-
-	}
 	p += v * moveSpeed * dt;
 	fixedUpdate(dt);
 }
@@ -128,7 +116,7 @@ void ArabBurserker::free()
 	//#issue한번만 지우기
 	if (_imgBurserk != NULL)
 	{
-		for (int i = 0; i < EnemyBehaveMax; i++)
+		for (int i = 0; i < BurserkBehaveMax; i++)
 			delete _imgBurserk[i];
 		delete _imgBurserk;
 		_imgBurserk = NULL;

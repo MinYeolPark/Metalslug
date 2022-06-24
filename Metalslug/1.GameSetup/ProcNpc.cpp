@@ -111,6 +111,7 @@ void ProcNpc::init(int idex, iPoint p, int itemIndex)
 
 void ProcNpc::fixedUpdate(float dt)
 {
+	collider->setPosition(p);
 	int maxY = *(bg->maxY + (int)p.x);
 	if (p.y >= maxY)
 	{

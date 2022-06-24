@@ -153,6 +153,7 @@
     <ClInclude Include="1.GameSetup\ProcItem.h" />
     <ClInclude Include="3.Enemies\Kessie.h" />
     <ClInclude Include="1.GameSetup\ProcNpc.h" />
+    <ClInclude Include="3.Enemies\ArabCamel.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="1.GameSetup\Select.h" />
     <ClInclude Include="Sorting.h" />
@@ -195,6 +196,7 @@
     <ClCompile Include="0.Manager\BulletMgr.cpp" />
     <ClCompile Include="0.Manager\EnemyMgr.cpp" />
     <ClCompile Include="0.Manager\EffectMgr.cpp" />
+    <ClCompile Include="3.Enemies\ArabCamel.cpp" />
     <ClCompile Include="glew.c" />
     <ClCompile Include="0.Manager\ImgMgr.cpp" />
     <ClCompile Include="2.UI\StatusUI.cpp" />

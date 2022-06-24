@@ -1,6 +1,25 @@
 #pragma once
 #include "ProcEnemy.h"
 
+enum ArabMeleeBehave
+{
+	IdleMeleeL = 0,
+	IdleMeleeR,
+	WalkMeleeL,
+	WalkMeleeR,
+	DeadMeleeL,
+	DeadMeleeR,
+	ShuffleMeleeL,
+	ShuffleMeleeR,
+	AttackMeleeL,
+	AttackMeleeR,
+	PreAttackMeleeL,
+	PreAttackMeleeR,
+	FireMeleeL,
+	FireMeleeR,
+
+	MeleeBehaveMax,
+};
 class ArabMelee :
     public ProcEnemy
 {	
@@ -14,7 +33,8 @@ public:
 
 	virtual bool dead();
 public:
-	virtual void setState(EnemyBehave newState);
+	virtual void getDamage(float damage);
+	virtual void setState(int newState);
 public:
 	virtual void update(float dt);
 	virtual bool draw(float dt, iPoint off);

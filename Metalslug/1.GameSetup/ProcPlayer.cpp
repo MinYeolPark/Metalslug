@@ -415,7 +415,7 @@ void ProcPlayer::fire(iPoint v)
         if (attkRange > d)
         {
             dNear = d;
-            if (e->getState() != (EnemyBehave)(DeadEnemyL + e->state % 2))
+            if (!e->isDead)
                 eNear = e;
         }
     }    
@@ -425,7 +425,7 @@ void ProcPlayer::fire(iPoint v)
         setTopState((PlayerBehave)(MeleeR + topState % 2), v);
         eNear->hp -= 100;
         if (eNear->hp <= 0)
-            eNear->setState((EnemyBehave)(DeadEnemyL + eNear->state % 2));
+            eNear->dead();
     }
     else
     {
@@ -465,7 +465,7 @@ void ProcPlayer::bomb(iPoint v)
 
 void ProcPlayer::dead()
 {
-    topState = (PlayerBehave)(DeadEnemyL + topState % 2);
+    topState = (PlayerBehave)(DeadL + topState % 2);
     topImgs[topState]->startAnimation(AnimationMgr::cbAniDead, this);
 }
 

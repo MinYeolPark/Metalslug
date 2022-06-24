@@ -6,11 +6,11 @@
 #include "BulletMgr.h"
 ImageInfo imgKessieInfo[];
 static iImage** _imgKessie = NULL;
-
 Kessie::Kessie(int idx) : ProcEnemy(idx)
-{
-	collider->init(this, iSizeMake(150, 50));
-
+{	
+	layer = LayerKessie;
+	collider->init(this, iSizeMake(110, 144));
+	
 	index = IdxKessie;
 	memset(imgBase, 0x00, sizeof(imgBase));
 	memset(imgLeftCrater, 0x00, sizeof(imgLeftCrater));
@@ -21,9 +21,10 @@ Kessie::Kessie(int idx) : ProcEnemy(idx)
 	memset(imgLeftBlast, 0x00, sizeof(imgLeftBlast));
 	memset(imgRightBlast, 0x00, sizeof(imgRightBlast));
 
-	isActive = true;
+	isActive = false;
 	isAppear = false;
 	isHeadOpen = false;
+	moveSpeed = 100.f;
 	effDt = 0.f;
 	_effDt = 3.0f;
 	aiDt = 0.f;
@@ -34,28 +35,28 @@ Kessie::Kessie(int idx) : ProcEnemy(idx)
 	hpRight = 1500.f;
 
 	if (_imgKessie == NULL)
-		_imgKessie = createSingleImage(imgKessieInfo, 21, this);
+		_imgKessie = createSingleImage(imgKessieInfo, KessieBehaveMax, this);
 
-	for (int i = 0; i < 8; i++)
+	for (int i = 0; i < 7; i++)
 		imgBase[i] = _imgKessie[i];
-	imgLeftCrater[0] = _imgKessie[8]->clone();
-	imgLeftCrater[1] = _imgKessie[9]->clone();
-	imgLeftCrater[2] = _imgKessie[10]->clone();
-	imgRightCrater[0] = _imgKessie[11]->clone();
-	imgRightCrater[1] = _imgKessie[12]->clone();
-	imgRightCrater[2] = _imgKessie[13]->clone();
-	imgLeftFan[0] = _imgKessie[14]->clone();
-	imgLeftFan[1] = _imgKessie[15]->clone();
-	imgRightFan[0] = _imgKessie[16]->clone();
-	imgRightFan[1] = _imgKessie[17]->clone();
-	imgHead = _imgKessie[18]->clone();
+	//imgLeftCrater[0] = _imgKessie[8]->clone();
+	//imgLeftCrater[1] = _imgKessie[9]->clone();
+	//imgLeftCrater[2] = _imgKessie[10]->clone();
+	//imgRightCrater[0] = _imgKessie[11]->clone();
+	//imgRightCrater[1] = _imgKessie[12]->clone();
+	//imgRightCrater[2] = _imgKessie[13]->clone();
+	//imgLeftFan[0] = _imgKessie[14]->clone();
+	//imgLeftFan[1] = _imgKessie[15]->clone();
+	//imgRightFan[0] = _imgKessie[16]->clone();
+	//imgRightFan[1] = _imgKessie[17]->clone();
+	imgHead = _imgKessie[17]->clone();
 	imgHead->stopAnimation();
-	imgLeftBlast[0] = _imgKessie[19]->clone();
-	imgRightBlast[0] = _imgKessie[19]->clone();
-	imgRightBlast[0]->reverse = REVERSE_WIDTH;
-	imgLeftBlast[1] = _imgKessie[20]->clone();
-	imgRightBlast[1] = _imgKessie[20]->clone();
-	imgRightBlast[1]->reverse = REVERSE_WIDTH;
+	//imgLeftBlast[0] = _imgKessie[19]->clone();
+	//imgRightBlast[0] = _imgKessie[19]->clone();
+	//imgRightBlast[0]->reverse = REVERSE_WIDTH;
+	//imgLeftBlast[1] = _imgKessie[20]->clone();
+	//imgRightBlast[1] = _imgKessie[20]->clone();
+	//imgRightBlast[1]->reverse = REVERSE_WIDTH;
 }
 
 Kessie::~Kessie()
@@ -65,6 +66,14 @@ Kessie::~Kessie()
 	delete _imgKessie;
 	
 	_imgKessie = NULL;
+}
+
+void Kessie::getDamage(float damage)
+{
+}
+
+void Kessie::setState(int newState)
+{
 }
 
 bool Kessie::dead()
@@ -77,7 +86,7 @@ void Kessie::update(float dt)
 {	
 	if (!isAppear)
 	{
-		if (movePoint(p, p, { p.x, p.y - 100 }, moveSpeed))
+		if (movePoint(p, p, { p.x, p.y + 70 }, moveSpeed))
 			isAppear = true;
 	}
 	else
@@ -97,24 +106,34 @@ void Kessie::update(float dt)
 	fixedUpdate(dt);
 }
 
+void Kessie::fixedUpdate(float dt)
+{
+	collider->setPosition({p.x, p.y -10});
+	leftCollider->setPosition({ p.x - 90, p.y - 40});
+	rightCollider->setPosition({ p.x + 90, p.y - 40});
+}
+
 bool Kessie::draw(float dt, iPoint off)
 {
+	setRGBA(1, 1, 1, 1);
 	imgHead->paint(dt, { p.x + off.x, p.y + off.y - 95 });
 		
 	imgBase[0]->paint(dt, p + off);
 
-	imgLeftFan[0]-> paint(dt, { p.x + off.x - 96, p.y + off.y - 48 });
-	imgRightFan[1]->paint(dt, { p.x + off.x + 96, p.y + off.y - 48 });
-	imgLeftCrater[0]->paint(dt, { p.x + off.x - 88, p.y + off.y - 25 });
-	imgRightCrater[1]->paint(dt, { p.x + off.x + 88, p.y + off.y - 25 });
-
-	imgLeftBlast[0]->paint(dt, { p.x + off.x - 88, p.y + off.y + imgLeftBlast[0]->tex->height - 40 });
-	imgRightBlast[1]->paint(dt, { p.x + off.x + 88, p.y + off.y + imgRightBlast[1]->tex->height - 40 } );
+	//imgLeftFan[0]-> paint(dt, { p.x + off.x - 96, p.y + off.y - 48 });
+	//imgRightFan[0]->paint(dt, { p.x + off.x + 96, p.y + off.y - 48 });
+	//imgLeftCrater[0]->paint(dt, { p.x + off.x - 88, p.y + off.y - 25 });
+	//imgRightCrater[0]->paint(dt, { p.x + off.x + 88, p.y + off.y - 25 });
+	//
+	//imgLeftBlast[0]->paint(dt, { p.x + off.x - 88, p.y + off.y + imgLeftBlast[0]->tex->height - 40 });
+	//imgRightBlast[0]->paint(dt, { p.x + off.x + 88, p.y + off.y + imgRightBlast[1]->tex->height - 40 } );
 #ifdef _DEBUG	
 	drawDot(p + off);
 	drawRect(collider->getCollider());
+	drawRect(leftCollider->getCollider());
+	drawRect(rightCollider->getCollider());
 #endif // DEBUG
-
+	setRGBA(1, 1, 1, 1);
 	
 	return !isActive;
 }
@@ -176,14 +195,6 @@ ImageInfo imgKessieInfo[] =
 	},
 	{
 		"assets/Kessie/Base_06.png",
-		1, 1.f, { -272 / 2 , 0},
-		0.06f,
-		0,
-		{0,248,0,255},
-		NULL,
-	},
-	{
-		"assets/Kessie/Base_07.png",
 		1, 1.f, { -272 / 2 , 0},
 		0.06f,
 		0,

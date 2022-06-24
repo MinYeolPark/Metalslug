@@ -2,6 +2,7 @@
 #include "iStd.h"
 
 #include "ProcEnemy.h"
+#include "ArabCamel.h"
 #define enemyMax 50
 extern ProcEnemy** enemies;
 extern int enemyCount;
@@ -15,4 +16,6 @@ struct ProcEnemyAI
 	static void ArabMeleeAI0(ProcEnemy* e, float dt);			//Normal
 	static void ArabMeleeAI1(ProcEnemy* e, float dt);			//Kessie
 	static void ArabBurserkAI0(ProcEnemy* e, float dt);
+	static void ArabCamelAI0(ArabCamel* e, float dt);
+
 };

@@ -6,36 +6,11 @@ enum EnemyIndex
 	IdxArMelee = 0,
 	IdxArBurserker,
 
+	IdxArCamel,
+	IdxKessie,
 	IdxMasknell,
 	IdxMosque,
-	IdxKessie,
 	EnemyIndexMax,
-};
-
-enum EnemyBehave
-{
-	IdleEnemyL = 0,
-	IdleEnemyR,
-
-	WalkEnemyL,
-	WalkEnemyR,
-
-	DeadEnemyL,
-	DeadEnemyR,
-
-	ShuffleEnemyL,
-	ShuffleEnemyR,
-
-	AttackEnemyL,
-	AttackEnemyR,
-
-	PreAttackEnemyL,
-	PreAttackEnemyR,
-
-	FireEnemyL,
-	FireEnemyR,
-
-	EnemyBehaveMax,
 };
 
 class ProcEnemy;
@@ -47,7 +22,7 @@ public:
 	ProcEnemy(int index);
 	virtual ~ProcEnemy();
 public:
-	EnemyBehave state;
+	int state;
 	EnemyAI ai;
 	//stats
 	int hp;
@@ -61,14 +36,13 @@ public:
 	float up;
 	float down;
 	bool fall;
-
+	bool isDead;
 	iPoint tp;
 public:
 	virtual bool dead() = 0;
 
-	virtual void getDamage(float damage);
-	virtual void setState(EnemyBehave newState) { state=newState; }
-	virtual EnemyBehave getState() { return state; }
+	virtual void getDamage(float damage) = 0;
+	virtual void setState(int newState) = 0;
 public:
 	virtual void init(int index, iPoint p, iPoint v);
 	virtual void fixedUpdate(float dt);

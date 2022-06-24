@@ -4,6 +4,8 @@
 
 #include "ImgMgr.h"
 #include "BulletMgr.h"
+
+#include "Kessie.h"
 static iImage** _imgBullets = NULL;
 ImageInfo bulletImageInfo[];
 ProcBullets::ProcBullets(int idx)
@@ -124,6 +126,27 @@ void ProcBullets::fixedUpdate(float dt)
 					}
 				}
 			}
+#if 0
+			Kessie* k = (Kessie*)objects->objectAtIndex(i);
+			if (containPoint(p, k->leftCollider->getCollider()) ||
+				containPoint(p, k->rightCollider->getCollider()))
+			{
+				float d = iPointLength(p - k->p);
+				if (dNear > d)
+				{
+					if (k->leftCollider->isActive)
+					{
+						dNear = d;
+						oNear = o;
+					}
+					if (k->rightCollider->isActive)
+					{
+						dNear = d;
+						oNear = o;
+					}
+				}
+			}
+#endif
 		}
 		if (oNear)
 		{

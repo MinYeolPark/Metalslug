@@ -6,6 +6,9 @@ enum ObjLayer
 	LayerDefault = 0,
 	LayerPlayer,
 	LayerEnemy,	
+	LayerMosque,
+	LayerKessie,
+
 	ObjLayerMax = 16
 };
 //Components
@@ -78,7 +81,7 @@ struct Collider
 	{
 		if (isActive)
 		{
-			return iRectMake(parent->p.x+bg->off.x - s.width/2, parent->p.y+bg->off.y-s.height,
+			return iRectMake(p.x+bg->off.x - s.width/2, p.y+bg->off.y-s.height,
 				s.width, s.height);
 		}
 		return iRectMake(0,0,0,0);

@@ -11,7 +11,7 @@ ProcEnemy::ProcEnemy(int index) : ProcObject()
 	isActive = false;
 	this->index = index;
 	////////////////////////
-	state = IdleEnemyL;
+	state = 0;
 	ai = NULL;
 
 	hp = 0;
@@ -21,7 +21,7 @@ ProcEnemy::ProcEnemy(int index) : ProcObject()
 	attkRange = 0.f;
 	attkRate = 0.f, _attkRate = 0.f;
 	aiDt = 0.f, _aiDt = 0.f;
-
+	isDead = false;
 	tp = { -1, -1 };
 }
 
@@ -31,15 +31,12 @@ ProcEnemy::~ProcEnemy()
 
 void ProcEnemy::getDamage(float damage)
 {
-	hp -= damage;
-	if (hp <= 0)
-	{
-		if (getState() != (EnemyBehave)(DeadEnemyL + state % 2))
-		{
-			dead();
-			//objects->removeObject(this);
-		}
-	}
+
+}
+
+void ProcEnemy::setState(int newState)
+{
+	state = newState;
 }
 
 void ProcEnemy::init(int index, iPoint p, iPoint v)
@@ -48,15 +45,17 @@ void ProcEnemy::init(int index, iPoint p, iPoint v)
 	this->p = p;
 	this->v = v;
 	if (v.x > 0)
-		setState(IdleEnemyL);
+		setState(0);
 	else if(v.x<0)
-		setState(IdleEnemyR);
+		setState(1);
 
 	objects->addObject(this);
 }
 
 void ProcEnemy::fixedUpdate(float dt)
 {
+	collider->setPosition(p);
+
 	int maxY = *(bg->maxY + (int)p.x);
 	if (p.y >= maxY)
 	{

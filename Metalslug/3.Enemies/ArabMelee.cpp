@@ -10,7 +10,7 @@ ArabMelee::ArabMelee(int index) : ProcEnemy(index)
 	collider->init(this, iSizeMake(50,50));
 
 	index = IdxArMelee;
-	state = IdleEnemyL;	
+	state = IdleMeleeL;	
 	ai = ProcEnemyAI::ArabMeleeAI0;
 
 	hp = 100;
@@ -29,33 +29,41 @@ ArabMelee::ArabMelee(int index) : ProcEnemy(index)
 	fall = false;
 
 	if( _imgMelee==NULL )
-		_imgMelee = createImgReverse(imgMeleeInfo, EnemyBehaveMax, this);
+		_imgMelee = createImgReverse(imgMeleeInfo, MeleeBehaveMax, this);
 
-	imgs = new iImage * [EnemyBehaveMax];
-	memset(imgs, 0x00, sizeof(iImage*) * EnemyBehaveMax);
-	for (int i = 0; i < EnemyBehaveMax; i++)
+	imgs = new iImage * [MeleeBehaveMax];
+	memset(imgs, 0x00, sizeof(iImage*) * MeleeBehaveMax);
+	for (int i = 0; i < MeleeBehaveMax; i++)
 		imgs[i] = _imgMelee[i]->clone();
 	imgCurr = imgs[index];
 }
 
 ArabMelee::~ArabMelee()
 {	
-	for (int i = 0; i < EnemyBehaveMax; i++)
+	for (int i = 0; i < MeleeBehaveMax; i++)
 		delete imgs[i];
 	delete imgs;
 }
 
 bool ArabMelee::dead()
 {
+	isDead = true;
 	collider->disable();
 
-	state = (EnemyBehave)(DeadEnemyL + state % 2);
+	state = (DeadMeleeL + state % 2);
 	imgs[state]->startAnimation(AnimationMgr::cbAniDead, this);
 
-	return state == (EnemyBehave)(DeadEnemyL + state % 2);
+	return state == (DeadMeleeL + state % 2);
 }
 
-void ArabMelee::setState(EnemyBehave newState)
+void ArabMelee::getDamage(float damage)
+{
+	hp -= damage;
+	if (hp <= 0)
+		dead();
+}
+
+void ArabMelee::setState(int newState)
 {
 	state = newState;
 }
@@ -97,7 +105,7 @@ void ArabMelee::free()
 	//#issue한번만 지우기
 	if (_imgMelee != NULL)
 	{
-		for (int i = 0; i < EnemyBehaveMax; i++)
+		for (int i = 0; i < MeleeBehaveMax; i++)
 			delete _imgMelee[i];
 		delete _imgMelee;
 		_imgMelee = NULL;

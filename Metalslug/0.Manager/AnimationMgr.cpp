@@ -8,6 +8,7 @@ void AnimationMgr::cbAniDead(void* parm)
 {
 	ProcObject* e = (ProcObject*)parm;
 	e->isActive = false;
+	printf("cb Ani dead\n");
 }
 
 //need fix
@@ -16,7 +17,14 @@ void AnimationMgr::cbAniAttack(void* parm)
 	ProcEnemy* e = (ProcEnemy*)parm;
 
 	printf("cb Ani Attack\n");
-	e->setState((EnemyBehave)(IdleEnemyL + e->state % 2));
+	e->setState(0 + e->state % 2);
+}
+
+void AnimationMgr::cbAniEnemyMotion2Idle(void* parm)
+{
+	ProcEnemy* e = (ProcEnemy*)parm;
+
+	e->setState(0 + e->state % 2);
 }
 
 void AnimationMgr::cbAniMeleeFire(void* parm)
