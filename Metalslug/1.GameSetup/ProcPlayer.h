@@ -1,5 +1,6 @@
 #pragma once
 
+#include "iStd.h"
 #include "ProcObject.h"
 
 #define pBOT 0
@@ -15,7 +16,7 @@ enum GunIndex
 	Bomb,
 };
 struct Gun
-{	
+{
 	struct GunInfo
 	{
 		GunIndex gunIndex;
@@ -69,32 +70,30 @@ class ProcPlayer :
 	public ProcObject
 {
 public:
-	ProcPlayer(int idx);
+	ProcPlayer(int index);
 	virtual ~ProcPlayer();
 
 public:
-	CharacterIndex idx;
+	int index;
 	iImage** topImgs;
 	iImage* topImgCurr;
 	iImage** botImgs;
 	iImage* botImgCurr;
-		
+
 	Gun* curGun;
 	iPoint firePoint;
 	iPoint bombPoint;
 
 	float up;
 	float down;
-	bool fall;	
+	bool fall;
+
+	bool dirRight;			//default Right;
+	bool dirUp;
 
 	float fireDeg;
-
-	bool isRight;
-	bool isAttacking;
-	bool isAimup;
-	bool isCrouching;
-	bool isAimDown;
-
+	bool isDead;	
+	bool fireing;
 	int jumpCombo;
 
 	PlayerBehave topState;
@@ -105,37 +104,29 @@ public:
 	float moveSpeed;
 	float bombSpeed;
 	float attkRange;
+	float bombRange;
 
 	int bombs;
 	int score;
+
+	//test
+	float alpha, alphaDt;
+
 public:
-	void setTopState(PlayerBehave pb, iPoint v);
-	void setBotState(PlayerBehave pb, iPoint v);
-public:
-	void jump(iPoint v);
-	void crouch();
-	void aimUp();
 	void fire(iPoint v);
 	void bomb(iPoint v);
-	virtual void dead();
+	void dead();
 
-	void getDamage(float damage);
+	void getDamage(float damage, Collider* c);
 	void addScore(int score);
 	void addBomb(int bomb);
 	void changeGun(int index);
 public:
-	virtual void init() ;
+	virtual void init(iPoint p);
 	virtual void update(float dt);
-	virtual void fixedUpdate(float dt) ;
-	virtual bool draw(float dt, iPoint off) ;
-	virtual void free() ;
-
-public:
-	static void cbAniToIdle(void* parm);
-	static void cbAniToWalk(void* parm);
-	static void cbAniBrake(void* parm);
-	static void cbAniFire(void* parm);
-
+	virtual void fixedUpdate(float dt);
+	virtual bool draw(float dt, iPoint off);
+	virtual void free();
 };
 
 extern ProcPlayer* player;
@@ -153,82 +144,31 @@ enum PlayerBehave
 	//===========================================
 	//Bot //하체는 종류 4개 끝, 나머지는 TopState로 관리
 	//===========================================
-
-	IdleR = 0,
-	IdleL,
-
-	WalkR,
-	WalkL,
-
-	JumpR,
-	JumpL,
-
-	RunJumpR,
-	RunJumpL,
-
-	//===========================================
-	// Whole
-	//===========================================
-	BrakeR,
-	BrakeL,
-
-	CrouchR,
-	CrouchL,
-	
-	CrouchMeleeR,
-	CrouchMeleeL,
-
+	PlayerIdle = 0,
+	PlayerWalk,
+	PlayerJump,
+	PlayerRunJump,
 	//===========================================
 	//Top
 	//===========================================
-
-	AimtoUpR,
-	AimtoUpL,
-
-	AimtoNormR,
-	AimtoNormL,
-
-	AimDownR,
-	AimDownL,
-
-	FireR,
-	FireL,
-
-	FireUpR,
-	FireUpL,
-
-	FireDownR,
-	FireDownL,
-
-	MeleeR,
-	MeleeL,
-
-	BombR,
-	BombL,
-
-
-	////===========================================
-	////Whole
-	////===========================================
-	//CrouchR = 200,
-	//CrouchL,
-
-	//CrouchMoveLeft,
-	//CrouchMoveRight,
-
-	//BrakeR,
-	//BrakeL,
-
-
-
+	PlayerAimtoUp,
+	PlayerAimtoNormal,
+	PlayerAimDown,
+	PlayerFire,
+	PlayerFireUp,
+	PlayerFireDown,
+	PlayerMeleeAttack,
+	PlayerBomb,
+	//===========================================
+	// Whole
+	//===========================================
+	PlayerBrake,
+	PlayerCrouch,
+	PlayerCrouchMelee,
 	//===========================================
 	//Only
 	//===========================================
-	SpawnR,
-	SpawnL,
-
-	DeadR,
-	DeadL,
-
+	PlayerSpawn,
+	PlayerDead,
 	PlayerBehaveMax,
 };

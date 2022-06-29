@@ -100,9 +100,20 @@ iPoint& iPoint::operator /= (float s)
 	return *this;
 }
 
-float iPoint::length()
+float iPoint::getLength()
 {
 	return sqrtf(x * x + y * y);
+}
+
+void iPoint::setLength(float len)
+{
+	float length = getLength();
+	if (length > 0.0f)
+	{
+		length /= len;
+		x /= length;
+		y /= length;
+	}
 }
 
 iPoint iPointMake(float x, float y)
@@ -117,7 +128,7 @@ float iPointLength(iPoint p)
 {
 	return sqrtf(p.x * p.x + p.y * p.y);
 }
- 
+
 iPoint iPointRotate(iPoint p, iPoint t, float degree)
 {
 	while (degree < 0) degree += 360;
@@ -231,10 +242,7 @@ bool movePoint(iPoint& p, iPoint sp, iPoint ep, float speedDt)
 {
 	iPoint v = (ep - sp);
 	v /= iPointLength(v);
-
-	//p += v * (_speed * dt);
 	v *= speedDt;
-
 	if (p.x < ep.x)
 	{
 		p.x += v.x;
@@ -250,6 +258,7 @@ bool movePoint(iPoint& p, iPoint sp, iPoint ep, float speedDt)
 
 	if (p.y < ep.y)
 	{
+		printf("ep = %f\n", ep.y);
 		p.y += v.y;
 		if (p.y > ep.y)
 			p.y = ep.y;
@@ -261,41 +270,5 @@ bool movePoint(iPoint& p, iPoint sp, iPoint ep, float speedDt)
 			p.y = ep.y;
 	}
 
-	return p == ep;
-}
-
-static float r = 0;
-bool movePoint(iPoint& p, iPoint sp, iPoint ep, float speedDt, float maxH)
-{	
-	iPoint v = (ep - sp);
-	v /= iPointLength(v);
-
-	v *= speedDt;
-
-	if (p.x < ep.x)
-	{
-		p.x += v.x;
-		if (p.x > ep.x)
-			p.x = ep.x;
-	}
-	else if (p.x > ep.x)
-	{
-		p.x += v.x;
-		if (p.x < ep.x)
-			p.x = ep.x;
-	}
-
-	if (p.y < ep.y)
-	{
-		p.y += v.y;
-		if (p.y > ep.y)
-			p.y = ep.y;
-	}
-	else if (p.y > ep.y)
-	{
-		p.y += v.y;
-		if (p.y < ep.y)
-			p.y = ep.y;
-	}
 	return p == ep;
 }

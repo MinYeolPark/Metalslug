@@ -29,7 +29,8 @@ struct iPoint
 	iPoint operator / (float s);
 	iPoint& operator /= (float s);
 
-	float length();
+	float getLength();
+	void setLength(float len);	//set vector length
 };
 
 #define iPointZero iPointMake(0, 0)
@@ -52,4 +53,3 @@ float easeInOut(float r, float s, float e);
 iPoint easeInOut(float r, iPoint s, iPoint e);
 
 bool movePoint(iPoint& p, iPoint sp, iPoint ep, float speedDt);
-bool movePoint(iPoint& p, iPoint sp, iPoint ep, float speedDt, float maxH);

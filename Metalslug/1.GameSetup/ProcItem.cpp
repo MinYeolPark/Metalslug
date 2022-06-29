@@ -85,7 +85,7 @@ void ProcItem::init(int index, iPoint p)
 void ProcItem::update(float dt)
 {
 	isActive = containPoint(p,
-		iRectMake(-bg->off.x - 20, -bg->off.y - 20,
+		iRectMake(-map->off.x - 20, -map->off.y - 20,
 			devSize.width + 40, devSize.height + 40));
 	if (containPoint(player->p, collider()))
 	{
@@ -121,8 +121,8 @@ void ProcItem::free()
 
 iRect ProcItem::collider()
 {
-	return iRectMake(	p.x + bg->off.x,
-						p.y + bg->off.y - imgCurr->tex->height,
+	return iRectMake(	p.x + map->off.x,
+						p.y + map->off.y - imgCurr->tex->height,
 						imgCurr->tex->width,
 						imgCurr->tex->height);
 }

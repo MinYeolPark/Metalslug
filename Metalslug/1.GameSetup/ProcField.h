@@ -1,47 +1,44 @@
 ﻿#pragma once
-
 #include "iStd.h"
 
-struct BgData
+struct MapData
 {
-	const char* rscName;
 	iPoint p[20];
 	int pCount;
-	float scale;
 	iPoint trigger[3];
 };
-
-struct BgLayer
+struct LayerData
 {
-	const char* rscName;
-	float scale;	
 	iPoint offSet;
-	float rate;
+	float rate;		//move rate
 };
-
-struct Bg
+class ProcMap
 {
-	Bg();
-	virtual ~Bg();
+public:
+	ProcMap(int stage);
+	virtual ~ProcMap();
 
-	void paint(float dt);
-	iPoint move(iPoint mp);
+public:
+	int stage;
+	int maxW;			//map texture 넓이
+	int* maxY;			//map texture 높이
 
-	BgData* bd;
-	BgLayer* bl;
+	iImage** imgs;
+	iImage** imgsLayer;
+	iImage* imgObj[3];	//0: Step, 2: bossLayer
 
-	Texture** texs;			//main map Layer
-	Texture** bgTexs;		//background Layer
+	MapData* md;
+	LayerData* ld;
+
 	iPoint off;				//좌 상단 anchor
 	iPoint offMin;			//움직일 수 있는 최소 범위
 	iPoint offMax;
 
-	int maxW;			//Bg texture 넓이
-	int* maxY;			//Bg texture 높이
+public:
+	void init(int stage);
+	void update(float dt);
+	void paint(float dt);
+	iPoint move(iPoint mp);
 };
-#define cuts_Stage1 12
-#define layers_Stage1 3
-
-extern BgData bgData_Stage1[cuts_Stage1];
-extern BgLayer bgLayer_Stage1[layers_Stage1];
-extern Bg* bg;
+#define layerNum 3
+extern ProcMap* map;

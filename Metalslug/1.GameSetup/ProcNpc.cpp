@@ -21,7 +21,7 @@ void loadProcNpcs()
 	npcNum = 0;
 
 	//AddProcNpc
-	addProcNPC(NpcIchimondi, iPointMake(150, 100));
+	//addProcNPC(NpcIchimondi, iPointMake(150, 100));
 }
 
 void freeProcNpcs()
@@ -90,12 +90,13 @@ ProcNpc::~ProcNpc()
 
 }
 
-void ProcNpc::getDamage(float damage)
+void ProcNpc::getDamage(float damage, Collider* c)
 {
 	if (getState() == (NpcBehave)(IdleNpcL + state % 2))
 	{
 		setState((NpcBehave)(ReleaseNpcL + state % 2));		
-		collider->disable();
+		for(int i=0;i<1;i++)
+			colliders[i]->disable();
 	}
 }
 
@@ -111,8 +112,9 @@ void ProcNpc::init(int idex, iPoint p, int itemIndex)
 
 void ProcNpc::fixedUpdate(float dt)
 {
-	collider->setPosition(p);
-	int maxY = *(bg->maxY + (int)p.x);
+	//for(int i=0;i<1;i++)
+	//	colliders[i]->setPosition(p);
+	int maxY = *(map->maxY + (int)p.x);
 	if (p.y >= maxY)
 	{
 		up = 0;

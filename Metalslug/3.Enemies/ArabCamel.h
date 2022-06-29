@@ -51,9 +51,11 @@ class ArabCamel:
 		CamelBehave camelState;
 		ArabCamelBehave arabState;
 
+		virtual int getFrame() { return arabImgCurr->frame; }
+
 		virtual bool dead();
 	public:
-		virtual void getDamage(float damage);
+		virtual void getDamage(float damage, Collider* c);
 		virtual void setState(int newState);
 	public:
 		virtual void update(float dt);

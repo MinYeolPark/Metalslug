@@ -7,7 +7,7 @@
 #include "Proc.h"
 #include "ProcPlayer.h"
 
-Texture* selectBg;
+Texture* selectmap;
 iImage** imgSelectBtn;
 iImage** imgSelectPosBtn;
 iImage* imgShutter;
@@ -15,7 +15,7 @@ int selectedBtn;
 bool confirm = false;
 void loadSelect()
 {
-	selectBg = createImage("assets/CharSelect/CharacterSelectBg.png");
+	selectmap = createImage("assets/CharSelect/CharacterSelectmap.png");
 		
 	imgSelectBtn = new iImage * [CharacterIndexMax];
 #if 1
@@ -31,19 +31,19 @@ void loadSelect()
 			_imgSelectBtn->addObject(t);
 			freeImage(t);
 
-			t->width *= devSize.width / selectBg->width;
-			t->potWidth *= devSize.width / selectBg->width;
-			t->height *= devSize.height / selectBg->height;
-			t->potHeight *= devSize.height / selectBg->height;
+			t->width *= devSize.width / selectmap->width;
+			t->potWidth *= devSize.width / selectmap->width;
+			t->height *= devSize.height / selectmap->height;
+			t->potHeight *= devSize.height / selectmap->height;
 
 			t=createImage("assets/CharSelect/P1_%02d.png", j);
 			_imgSelectPos->addObject(t);
 			freeImage(t);
 
-			t->width *= devSize.width / selectBg->width;
-			t->potWidth *= devSize.width / selectBg->width;
-			t->height *= devSize.height / selectBg->height;
-			t->potHeight *= devSize.height / selectBg->height;
+			t->width *= devSize.width / selectmap->width;
+			t->potWidth *= devSize.width / selectmap->width;
+			t->height *= devSize.height / selectmap->height;
+			t->potHeight *= devSize.height / selectmap->height;
 		}
 		_imgSelectBtn->position = iPointMake(15 + (_imgSelectBtn->tex->width + 8) * j, 80);
 
@@ -64,10 +64,10 @@ void loadSelect()
 	img->addObject(t);
 	freeImage(t);
 
-	t->width *= devSize.width / selectBg->width;
-	t->potWidth *= devSize.width / selectBg->width;
-	t->height *= devSize.height / selectBg->height;
-	t->potHeight *= devSize.height / selectBg->height;
+	t->width *= devSize.width / selectmap->width;
+	t->potWidth *= devSize.width / selectmap->width;
+	t->height *= devSize.height / selectmap->height;
+	t->potHeight *= devSize.height / selectmap->height;
 
 	imgShutter = img;
 	selectedBtn = 0;
@@ -82,7 +82,7 @@ void freeSelect()
 	}
 	delete imgSelectBtn;
 	delete imgSelectPosBtn;
-	delete selectBg;
+	delete selectmap;
 }
 void drawSelect(float dt)
 {
@@ -128,9 +128,9 @@ void drawSelect(float dt)
 		if (isLoaded)
 			movePoint(imgShutter[i].position, imgShutter[i].position, tp, 5.f);			
 	}
-	drawImage(selectBg, 0, 0,
-		devSize.width / selectBg->width,
-		devSize.height / selectBg->height, TOP | LEFT);
+	drawImage(selectmap, 0, 0,
+		devSize.width / selectmap->width,
+		devSize.height / selectmap->height, TOP | LEFT);
 
 	for (int i = 0; i < CharacterIndexMax; i++)
 	{

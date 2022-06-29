@@ -195,7 +195,7 @@ uint8* iGraphics::bmp2rgba(Bitmap* bmp, uint32& width, uint32& height)
 	BitmapData bmpData;
 	bmp->LockBits(&rt, ImageLockModeRead, PixelFormat32bppARGB, &bmpData);
 
-	uint8* bgra = (uint8*)bmpData.Scan0;				// stride * height * 4
+	uint8* mapra = (uint8*)bmpData.Scan0;				// stride * height * 4
 	int potWidth = nextPOT(width);
 	int potHeight = nextPOT(height);
 	uint8* rgba = new uint8[potWidth * potHeight * 4];	// width * height * 4
@@ -205,7 +205,7 @@ uint8* iGraphics::bmp2rgba(Bitmap* bmp, uint32& width, uint32& height)
 		for (int i = 0; i < width; i++)
 		{
 			uint8* dst = &rgba[potWidth * 4 * j + 4 * i];
-			uint8* src = &bgra[bmpData.Stride * j + 4 * i];
+			uint8* src = &mapra[bmpData.Stride * j + 4 * i];
 			dst[2] = src[0];
 			dst[1] = src[1];
 			dst[0] = src[2];
@@ -242,12 +242,12 @@ igImage** iGraphics::createIgImageDivide(int numX, int numY, const char* szForma
 			Rect rt(0, 0, w, h);
 			BitmapData bmpData;
 			bmp->LockBits(&rt, ImageLockModeWrite, PixelFormat32bppARGB, &bmpData);
-			uint8* bgra = (uint8*)bmpData.Scan0;
+			uint8* mapra = (uint8*)bmpData.Scan0;
 			for (int n = 0; n < h; n++)
 			{
 				for (int m = 0; m < w; m++)
 				{
-					uint8* dst = &bgra[bmpData.Stride * n + 4 * m];
+					uint8* dst = &mapra[bmpData.Stride * n + 4 * m];
 					uint8* src = &rgba[width * 4 * (h * j + n) + 4 * (w * i + m)];
 					dst[0] = src[2];
 					dst[1] = src[1];
@@ -546,7 +546,7 @@ iRect RectOfString::rectOfString(const char* str)
 	BitmapData bmpData;
 	bmp->LockBits(&rt, ImageLockModeRead, PixelFormat32bppARGB, &bmpData);
 
-	uint8* bgra = (uint8*)bmpData.Scan0;
+	uint8* mapra = (uint8*)bmpData.Scan0;
 	// 왼쪽에서 오른쪽 찾아감
 	int left = 0;
 	for (int i = 0; i < width; i++)
@@ -554,7 +554,7 @@ iRect RectOfString::rectOfString(const char* str)
 		bool meet = false;
 		for (int j = 0; j < height; j++)
 		{
-			if (bgra[bmpData.Stride * j + 4 * i + 3])
+			if (mapra[bmpData.Stride * j + 4 * i + 3])
 			{
 				meet = true;
 				break;
@@ -573,7 +573,7 @@ iRect RectOfString::rectOfString(const char* str)
 		bool meet = false;
 		for (int j = 0; j < height; j++)
 		{
-			if (bgra[bmpData.Stride * j + 4 * i + 3])
+			if (mapra[bmpData.Stride * j + 4 * i + 3])
 			{
 				meet = true;
 				break;
@@ -592,7 +592,7 @@ iRect RectOfString::rectOfString(const char* str)
 		bool meet = false;
 		for (int i = 0; i < width; i++)
 		{
-			if (bgra[bmpData.Stride * j + 4 * i + 3])
+			if (mapra[bmpData.Stride * j + 4 * i + 3])
 			{
 				meet = true;
 				break;
@@ -611,7 +611,7 @@ iRect RectOfString::rectOfString(const char* str)
 		bool meet = false;
 		for (int i = 0; i < width; i++)
 		{
-			if (bgra[bmpData.Stride * j + 4 * i + 3])
+			if (mapra[bmpData.Stride * j + 4 * i + 3])
 			{
 				meet = true;
 				break;

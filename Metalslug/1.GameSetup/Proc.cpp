@@ -17,28 +17,26 @@
 void loadProc()
 {
 	loadProcField();
-	loadProcEffect();
 
+	loadProcPlayer();
 	loadProcItem();
 	loadProcNpcs();
 	loadProcEnemy();
 	loadProcBullets();
-
-	loadProcPlayer();
+	loadProcEffect();
 
 	loadUI();
 }
 void freeProc()
 {
 	freeProcField();
-	freeProcEffect();
 
+	freeProcPlayer();
 	freeProcItem();
 	freeProcNpcs();
 	freeProcEnemy();
 	freeProcBullets();
-
-	freeProcPlayer();
+	freeProcEffect();
 
 	freeUI();
 }
@@ -46,25 +44,26 @@ void freeProc()
 void drawProc(float dt)
 {
 	iPoint off = drawProcField(dt);
-	drawProcEffect(dt, off);
 
 	drawProcNpcs(dt, off);
 	drawProcItem(dt, off);
 	drawProcEnemy(dt, off);
 	drawProcBullets(dt, off);
-
 	drawProcPlayer(dt, off);
+	drawProcEffect(dt, off);
 	drawUI(dt, off);
 
 
+#if 0
 	//#issue
 	for (int i = 0; i < objects->count; i++)
 	{
 		ProcObject* o = (ProcObject*)objects->objectAtIndex(i);
 		if (o->isActive == false)
 			objects->removeObject(i);
-		return;		
+		return;
 	}
+#endif
 	setRGBA(1, 1, 1, 1);
 }
 
@@ -73,6 +72,7 @@ bool keyProc(iKeyState stat, iPoint p)
 	switch (stat) {
 
 	case iKeyStateBegan:
+		printf("Clicked point = %f, %f\n", p.x + map->off.x, p.y + map->off.y);
 		break;
 
 	case iKeyStateMoved:
@@ -88,20 +88,24 @@ bool keyProc(iKeyState stat, iPoint p)
 ///////////////////////////////////////////////////
 //Field
 ///////////////////////////////////////////////////
+static int stage = 0;		//stage1
 void loadProcField()
 {
-	bg = new Bg();
+	map = new ProcMap(stage);
+	
+	map->init(stage);
 }
 
 void freeProcField()
 {
-	delete bg;
+	delete map;
 }
 
 iPoint drawProcField(float dt)
 {
-	iPoint off = bg->off;
-	bg->paint(dt);
+	iPoint off = map->off;
+	map->update(dt);
+	map->paint(dt);
 
 	return off;
 }
@@ -116,7 +120,7 @@ void loadProcPlayer()
 	//#issue
 	player = new ProcPlayer(ERI);
 
-	player->init();
+	player->init({100, 200 });
 }
 
 void freeProcPlayer()
@@ -124,12 +128,24 @@ void freeProcPlayer()
 	delete player;
 }
 
+float spawnDt = 0.f, _spawnDt = 2.f;
 void drawProcPlayer(float dt, iPoint off)
 {
-	player->update(dt);
+	if (player->topState != (PlayerBehave)(PlayerDead + player->topState % 2)
+		&& player->topState != (PlayerBehave(PlayerSpawn + player->topState % 2)))
+		player->update(dt);
 	if (player->draw(dt, off))
 	{
-		
+		//player->life--;
+		spawnDt += dt;
+		if (spawnDt >= _spawnDt)
+		{
+			spawnDt -= _spawnDt;
+			if (player->life > 0)
+				player->init(player->p);
+			else//player->life==0
+				;//gameover
+		}
 	}
 }
 

@@ -2,13 +2,13 @@
 
 #include "ProcField.h"
 
-void freeProcObject(void* data)
+void freeArrCollider(void* data)
 {
-	ProcObject* po = (ProcObject*)data;
-	po->isActive = false;
+	Collider* c = (Collider*)data;
+	c->disable();
 }
-
-iArray* objects = new iArray(freeProcObject);
+//iArray* objects = new iArray(freeArrCollider);
+iArray* objects = new iArray();
 ProcObject::ProcObject()
 {
 	layer = ObjLayer::LayerDefault;
@@ -21,7 +21,10 @@ ProcObject::ProcObject()
 	isActive = false;
 	hp=0, _hp = 0;
 	score = 0;
-	collider = new Collider();
+
+	colNum = 0;	
+	for (int i = 0; i < 3; i++)
+		colliders[i] = new Collider();
 }
 
 ProcObject::~ProcObject()
@@ -49,10 +52,4 @@ void ProcObject::init(int index, iPoint p, iPoint v)
 	this->index = index;
 	this->p = p;
 	this->v = v;
-}
-
-void cb(void* data)
-{
-	ProcObject* obj = (ProcObject*)data;
-	delete obj;
 }

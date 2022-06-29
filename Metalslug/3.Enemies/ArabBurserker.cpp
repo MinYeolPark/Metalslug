@@ -5,9 +5,7 @@
 ImageInfo imgBurserkInfo[];
 static iImage** _imgBurserk = NULL;
 ArabBurserker::ArabBurserker(int index) : ProcEnemy(index)
-{	
-	collider->init(this, iSizeMake(50, 50));
-
+{		
 	index = IdxArBurserker;
 	state = IdleBurserkL;
 	ai = ProcEnemyAI::ArabBurserkAI0;
@@ -20,6 +18,11 @@ ArabBurserker::ArabBurserker(int index) : ProcEnemy(index)
 	attkRate = 0.f;	_attkRate = 2.f;
 	aiDt = 0.f;	_aiDt = 2.f;
 	///////////////////////////////////
+#if 1
+	colNum = 1;
+	for (int i = 0; i < colNum; i++)
+		colliders[i]->init(this, iSizeMake(40, 40));
+#endif
 	imgs = NULL;
 	imgCurr = NULL;
 
@@ -44,23 +47,27 @@ ArabBurserker::~ArabBurserker()
 	delete imgs;
 }
 
-static iPoint initPos;
 bool ArabBurserker::dead()
 {
 	isDead = true;
-	collider->disable();
-	initPos = p;
+	for (int i = 0; i < colNum; i++)
+	{
+		colliders[i]->disable();
+		//objects->removeObject(colliders[i]);
+	}
 	state = (DeadBurserkL + state % 2);
 	if (state == DeadBurserkL)
 		v.x = 1;
 	else//if(state==DeadEnemyR)
 		v.x = -1;
 
+	
+
 	imgs[state]->startAnimation(AnimationMgr::cbAniDead, this);
 	return state == (DeadBurserkL + state % 2);
 }
 
-void ArabBurserker::getDamage(float damage)
+void ArabBurserker::getDamage(float damage, Collider* c)
 {
 	hp -= damage;
 	if (hp <= 0)
@@ -73,9 +80,9 @@ void ArabBurserker::setState(int newState)
 }
 
 void ArabBurserker::update(float dt)
-{
+{	
 	isActive = containPoint(p,
-		iRectMake(-bg->off.x - 20, -bg->off.y - 20,
+		iRectMake(-map->off.x - 20, -map->off.y - 20,
 			devSize.width + 40, devSize.height + 40));
 
 	aiDt += dt;
@@ -85,15 +92,22 @@ void ArabBurserker::update(float dt)
 		ai(this, dt);
 	}
 
-	if (tp != iPointMake(-1, -1))
+	if (v != iPointZero)
 	{
-		//if (movePoint(p, p, tp, moveSpeed * dt))
-		//{
-		//	
-		//}
+		if (v.x > 0)
+			setState(WalkBurserkR);
+		else if (v.x > 0)
+			setState(WalkBurserkL);
 	}
-	p.y = *(bg->maxY + (int)p.x);
-	p += v * moveSpeed * dt;
+	p.y = *(map->maxY + (int)p.x);
+	p += v;
+	if (-map->off.x + 40 > p.x)
+	{
+		v.x = 1;
+	}
+	for (int i = 0; i < colNum; i++)
+		colliders[i]->setPosition(p);
+
 	fixedUpdate(dt);
 }
 bool ArabBurserker::draw(float dt, iPoint off)
@@ -104,8 +118,14 @@ bool ArabBurserker::draw(float dt, iPoint off)
 
 #ifdef _DEBUG
 	drawDot(p + off);
-	drawRect(collider->getCollider());
+	drawRect(colliders[0]->getCollider());
+	for (int i = 0; i < 1; i++)
+	{
+		drawRect(colliders[i]->getCollider());
+	}
 #endif
+	if (isDead)
+		movePoint(p, p, p += (v), dt);
 	setRGBA(1, 1, 1, 1);
 
 	return !isActive;

@@ -47,7 +47,6 @@ Texture* methodStSetting(const char* str, void* parm)
 }
 Texture* methodStScore(const char* str)
 {
-	printf("methodSt Score!\n");
 	iGraphics* g = new iGraphics();
 	iSize size = iSizeMake(devSize.width / 2, 32);
 	g->init(size);
@@ -58,6 +57,8 @@ Texture* methodStScore(const char* str)
 	for (int i = 0; i < j; i++)
 	{
 		igImage* ig = status->number[str[i] - '0'];
+
+		//#issue
 		g->drawIgImage(ig, p.x, p.y, TOP | LEFT);
 		p.x += ig->GetWidth() + 1;
 	}
@@ -194,9 +195,8 @@ bool StatusUI::paint(float dt)
 	drawImage(statsFrame[0], devSize.width/4, 12, 1.1, 1.1);
 	drawImage(gaugeFrame[0], devSize.width/16, 12);
 
-	stScore->drawString(devSize.width / 6, 2, TOP | LEFT, "%d", player->hp);
-	stLife->drawString(devSize.width/6, 22, TOP | LEFT, "%d", player->life);
-			
+	stScore->drawString(devSize.width / 6, 2, TOP | LEFT, "%d", player->score);
+	stLife->drawString(devSize.width / 6, 22, TOP | LEFT, "%d", player->life);
 	stAmmo->drawString(115, 31, VCENTER | HCENTER, "%d", player->curGun->remain);
 	stBomb->drawString(145, 31, VCENTER | HCENTER, "%d", player->bombs);
 

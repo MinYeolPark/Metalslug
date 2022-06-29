@@ -3,9 +3,11 @@
 #include "iStd.h"
 
 #include "ImgMgr.h"
+#include "AnimationMgr.h"
 #include "BulletMgr.h"
 
 #include "Kessie.h"
+
 static iImage** _imgBullets = NULL;
 ImageInfo bulletImageInfo[];
 ProcBullets::ProcBullets(int idx)
@@ -13,14 +15,18 @@ ProcBullets::ProcBullets(int idx)
 	imgs = NULL;
 	imgCurr = NULL;
 	parent = NULL;
-	bulletIdx = idx;
-
+	index = idx;
+	p = iPointZero;
 	v = iPointZero;
+	a = 1.f;
+	pow = 0.f;
+	up = 0.f;
+	down = 0.f;
 	collider = new Collider();
 	collider->isActive = true;
 	pattern = NULL;
 	speed = 0;
-	dmg = 0;
+	damage = 0;
 
 	if (_imgBullets == NULL)
 		_imgBullets = createImgBullets(bulletImageInfo, this);
@@ -44,227 +50,193 @@ ProcBullets::~ProcBullets()
 	_imgBullets = NULL;
 }
 
-void ProcBullets::initObj()
-{
-
-}
-
-void ProcBullets::initObj(Mosque* parent, int idx, iPoint p, float degree)
-{
-	this->isActive = true;
-	this->parent = (ProcObject*)parent;
-	this->bulletIdx = idx;
-	this->p = p;
-	this->degree = degree;
-	speed = 50;
-	dmg = 100;
-	if (bulletIdx == BulletMosqueTrace)
-		this->pattern = patMosqueTrace;
-	else
-		this->pattern = patMosque;
-	
-	imgs[this->bulletIdx]->startAnimation(cbAniBullet, this);
-}
-
-
-
-void ProcBullets::initObj(ProcObject* parent, int idx, iPoint p, float degree)
-{
-}
-
-void ProcBullets::initObj(ProcEnemy* parent, int idx, iPoint p, float degree)
-{
-}
-
-void ProcBullets::initObj(ProcPlayer* parent, int idx, iPoint p, float degree)
+void ProcBullets::init(ProcPlayer* parent, int index, float degree)
 {
 	this->isActive = true;
 	this->parent = parent;
-	this->bulletIdx = idx;	
+	this->index = index;
 	this->p = parent->firePoint;
 	this->degree = degree;
-	this->pattern = patternDefault;
+	BulletPattern bp[BulletIndexMax] = {
+	ProcBulletsPattern::patternHandgun,
+	ProcBulletsPattern::patternHeavyMachinegun,
+	ProcBulletsPattern::patternBomb,
+	ProcBulletsPattern::patternMelee,
+	ProcBulletsPattern::patternMosque,
+	};
+	this->pattern = bp[index];
 	this->speed = player->curGun->speed;
-	dmg = player->curGun->dmg;
-	v = iPointRotate(iPointMake(1, 0), iPointZero, degree);
-	imgs[this->bulletIdx]->startAnimation();
+	this->damage = player->curGun->dmg;
+	this->v = iPointRotate(iPointMake(1, 0), iPointZero, degree);
+	imgs[this->index]->startAnimation();
 }
 
-void ProcBullets::updateObj(float dt)
+void ProcBullets::init(ProcEnemy* parent, int index, float degree)
 {
+	this->isActive = true;
+	this->parent = parent;
+	this->index = index;
+	this->p = parent->fp;
+	this->degree = degree;
+	BulletPattern bp[BulletIndexMax] = {
+		ProcBulletsPattern::patternHandgun,
+		ProcBulletsPattern::patternHeavyMachinegun,
+		ProcBulletsPattern::patternBomb,
+		ProcBulletsPattern::patternMelee,
+		ProcBulletsPattern::patternMosque,
+	};
+	this->pattern = bp[index];
+	//adjust
+	this->speed = 100;
+	this->damage = 100;
+	this->v = iPointRotate(iPointMake(1, 0), iPointZero, degree);
+	imgs[this->index]->startAnimation();
+	if (index == BulletMelee)
+	{
+		pow = 5.f;
+		up = 0.f;
+		down = 0.0f;
+		imgs[BulletMeleeEnd]->startAnimation(AnimationMgr::cbAniBulletDisappearWithAlpha, this);
+	}
+
+}
+
+void ProcBullets::init(ProcObject* parent, int index, float degree)
+{
+	this->isActive = true;
+	this->parent = parent;
+	this->index = index;
+	this->p = parent->p;
+	this->degree = degree;
+	BulletPattern bp[BulletIndexMax] = {
+			ProcBulletsPattern::patternHandgun,
+			ProcBulletsPattern::patternHeavyMachinegun,
+			ProcBulletsPattern::patternBomb,
+			ProcBulletsPattern::patternMelee,
+			ProcBulletsPattern::patternMosque,
+	};
+	this->pattern = bp[index];	this->speed = player->curGun->speed;
+	this->damage = player->curGun->dmg;
+	this->v = iPointRotate(iPointMake(1, 0), iPointZero, degree);
+	imgs[this->index]->startAnimation();
+}
+
+int blinkNum = 5;
+void ProcBullets::update(float dt)
+{	
 #if 1
 	isActive = containPoint(p,
-	iRectMake(-bg->off.x - 20, -bg->off.y - 20,
+	iRectMake(-map->off.x - 20, -map->off.y - 20,
 		devSize.width + 40, devSize.height + 40));
 #endif
+	if (a == 0)
+	{
+		for (int i = 0; i < 100; i++)
+		{
+			while (true)
+			{
+				a += dt;
+				if (a > 100)
+					a = 1;
+				break;
+			}
+			while (true)
+			{
+				a -= dt;
+				if (a < 0)
+					a = 0;
+				break;
+			}
+		}
+	}
 	pattern(this, dt);
-	//Pattern
+	
 	fixedUpdate(dt);
 }
 
 void ProcBullets::fixedUpdate(float dt)
-{	
+{
 	if (parent->layer == LayerPlayer)
 	{
-		ProcObject* oNear = NULL;
+		Collider* cNear = NULL;
 		float dNear = 0xffffff;
 		for (int i = 0; i < objects->count; i++)
 		{
-			ProcObject* o = (ProcObject*)objects->objectAtIndex(i);
-			if (o->layer != LayerPlayer)
+			Collider* c = (Collider*)objects->objectAtIndex(i);
+			if (c->parent->layer != LayerPlayer)
 			{
-				if (containPoint(p, o->collider->getCollider()))
+				if (containPoint(p, c->getCollider()))
 				{
-					float d = iPointLength(p - o->p);
+					float d = iPointLength(p - c->p);
 					if (dNear > d)
 					{
-						if (o->collider->isActive)
+						if (c->isActive)
 						{
 							dNear = d;
-							oNear = o;
+							cNear = c;
 						}
 					}
 				}
-			}
-#if 0
-			Kessie* k = (Kessie*)objects->objectAtIndex(i);
-			if (containPoint(p, k->leftCollider->getCollider()) ||
-				containPoint(p, k->rightCollider->getCollider()))
-			{
-				float d = iPointLength(p - k->p);
-				if (dNear > d)
+				if (cNear)
 				{
-					if (k->leftCollider->isActive)
+					if (cNear->isActive)
 					{
-						dNear = d;
-						oNear = o;
-					}
-					if (k->rightCollider->isActive)
-					{
-						dNear = d;
-						oNear = o;
+						isActive = false;
+						cNear->parent->getDamage(damage, cNear);
+						iPoint bp = iPointMake(rand() % 10 + p.x, rand() % 10 + p.y);
+						addProcEffect(index, bp);		//bulletIndex=effectIndex
 					}
 				}
 			}
-#endif
-		}
-		if (oNear)
-		{
-			if (oNear->isActive)
-			{
-				isActive = false;
-				oNear->getDamage(dmg);
-				iPoint bp = iPointMake(rand() % 10 + p.x, rand() % 10 + p.y);
-				addProcEffect(bulletIdx, bp);		//bulletIndex=effectIndex
-			}
+			cNear = NULL;
 		}
 	}
-	
-#if 0
-		ProcEnemy* eNear = NULL;
-		float dNear = 0xffffff;
-		for (int j = 0; j < enemyCount; j++)
-		{			
-			ProcEnemy* e = enemies[j];
-			if (containPoint(p, e->collider()))
+	else
+	{
+		{
+			for (int i = 0; i < player->colNum; i++)
 			{
-				float d = iPointLength(p - e->p);
-				if (dNear > d)
+				if (containPoint(p, player->colliders[i]->getCollider()))
 				{
-					dNear = d;
-					eNear = e;
+					if (!player->isDead)
+					{
+						isActive = false;
+						player->getDamage(damage, player->colliders[i]);
+						iPoint bp = iPointMake(rand() % 10 + p.x, rand() % 10 + p.y);
+						addProcEffect(index, bp);		//bulletIndex=effectIndex
+					}
 				}
 			}
 		}
-		if (eNear)
-		{
-			if (eNear->getState() != (EnemyBehave)(DeadEnemyL + eNear->state % 2))
-			{
-				isActive = false;
-				eNear->hp -= dmg;				
-				iPoint bp = iPointMake(rand() % 10 + p.x, rand() % 10 + p.y);
-				if (eNear->hp <= 0)
-					eNear->setState((EnemyBehave)(DeadEnemyL + eNear->state % 2));
-
-				//Particles
-				addProcEffect(bulletIdx, bp);		//bulletIndex=effectIndex
-			}
-		}
 	}
-#endif
 }
 
-bool ProcBullets::drawObj(float dt, iPoint off)
+bool ProcBullets::draw(float dt, iPoint off)
 {	
-	setRGBA(1, 1, 1, 1);
-
-	imgCurr = imgs[bulletIdx];
+	setRGBA(1, 1, 1, a);
+	imgCurr = imgs[index];
 	imgCurr->paint(dt, p + off);
 
 
-#ifdef _DEBUG			
-	
+#ifdef _DEBUG				
+	drawRect(collider->getCollider());
 #endif // DEBUG
 	
 	setRGBA(1, 1, 1, 1);
 	return !isActive;
 }
 
-void ProcBullets::freeObj()
+void ProcBullets::free()
 {
 }
-//
-//iRect ProcBullets::collider()
-//{
-//	return iRectMake(p.x + bg->off.x - imgCurr->tex->width / 2,
-//		p.y + bg->off.y - imgCurr->tex->height / 2,
-//		imgCurr->tex->width, imgCurr->tex->height);
-//}
 
-void ProcBullets::patternDefault(ProcBullets* b, float dt)
-{
-	b->p += b->v * b->speed * dt;
-}
 
-static float r = 0;
-void ProcBullets::patBomb(ProcBullets* b, float dt)
-{
 
-}
-void ProcBullets::patMosque(ProcBullets* b, float dt)
-{
-	
-}
 
-void ProcBullets::patMosqueTrace(ProcBullets* b, float dt)
-{
-	iPoint v = player->p - b->p;
-	v /= iPointLength(v);
-	v *= (b->speed * dt);
-	b->v = iPointRotate(v, player->p, 180);	
-	b->p += v;
-	if (player)
-	{
-		if (containPoint(b->p, player->collider->getCollider()))
-		{
-			b->isActive = false;
-			player->hp -= b->dmg;
 
-			//dead
-			//addProcEffect(bulletIdx, bp);
-		}	
-	}
-}
 
-void ProcBullets::cbAniBullet(void* parm)
-{
-	ProcBullets* b = (ProcBullets*)parm;
-	b->isActive = false;
 
-	//addBullet(b->m, BulletMosqueTrace, b->p);
-}
-
-ImageInfo bulletImageInfo[BulletIndexMax] =
+ImageInfo bulletImageInfo[] =
 {
 	{
 		"assets/Bullets/HandGun_%02d.png",
@@ -295,13 +267,31 @@ ImageInfo bulletImageInfo[BulletIndexMax] =
 	},
 	///////////////////////////////////////////////////////
 	{
+		"assets/Bullets/Melee_%02d.png",
+		7,
+		1.0f, {-72 / 2,0},
+		0.04f,
+		0,
+		{255, 0, 0, 255},
+		NULL,
+	},
+	{
+		"assets/Bullets/Melee_07.png",
+		1,
+		1.0f, {-72 / 2,0},
+		0.06f,
+		1,
+		{255, 0, 0, 255},
+		AnimationMgr::cbAniBulletDisappearWithAlpha,
+	},
+	{
 		"assets/Bullets/MidBoss_Fire_%02d.png",
 		8,
 		1.0f, {-72 / 2,0},
 		0.1f,
 		1,
 		{255, 0, 0, 255},
-		ProcBullets::cbAniBullet,
+		AnimationMgr::cbAniBulletDisappear,
 	},
 	{
 		"assets/Bullets/MidBoss_Fire_%02d.png",
@@ -310,7 +300,7 @@ ImageInfo bulletImageInfo[BulletIndexMax] =
 		0.1f,
 		1,
 		{255, 0, 0, 255},
-		ProcBullets::cbAniBullet,
+		AnimationMgr::cbAniBulletDisappear,
 	},
 	{
 		"assets/Bullets/MosqueMissile_%02d.png",

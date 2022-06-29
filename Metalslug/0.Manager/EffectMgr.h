@@ -16,9 +16,13 @@ enum EffectIndex
 	EffectHeavy,
 	EffectExplosion,
 
+	EffectBlood,
+	
 	EffectMoskTrail,
 	EffectKessieBlast,
 	EffectKessieBlastRage,
+	EffectKessieFanFire,
+	EffectKessieExplosion,
 
 	EffectIndexMax,
 };

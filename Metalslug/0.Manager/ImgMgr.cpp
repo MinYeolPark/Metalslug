@@ -1,6 +1,6 @@
 #include "ImgMgr.h"
 
-iImage** createImgSelect(Texture* bg)
+iImage** createImgSelect(Texture* map)
 {
 	iImage** _img = new iImage * [CharacterIndexMax];
 	for (int i = 0; i < CharacterIndexMax; i++)
@@ -12,10 +12,10 @@ iImage** createImgSelect(Texture* bg)
 			img->addObject(t);
 			freeImage(t);
 
-			t->width *= devSize.width / bg->width;
-			t->potWidth *= devSize.width / bg->width;
-			t->height *= devSize.height / bg->height;
-			t->potHeight *= devSize.height / bg->height;
+			t->width *= devSize.width / map->width;
+			t->potWidth *= devSize.width / map->width;
+			t->height *= devSize.height / map->height;
+			t->potHeight *= devSize.height / map->height;
 
 			img->position = iPointMake(30 * i + img->tex->width, 75);
 		}
@@ -152,7 +152,7 @@ iImage** createImgEnemy(ImageInfo* imageInfo, void* c)
 
 iImage** createImgReverse(ImageInfo* imageInfo, int size, void* c)
 {
-	iImage** _imgs = new iImage * [size * 2];
+	iImage** _imgs = new iImage * [size];
 	//memset(_imgs, 0x00, sizeof(iImage*) * size * 2);
 	for (int i = 0; i < size; i++)
 	{

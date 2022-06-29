@@ -6,7 +6,7 @@
 
 #include "iPopup.h"
 
-Texture* titleBg;
+Texture* titlemap;
 iPopup* titleMenu;
 iImage** titleMenuBtn;
 void drawMenuBefore(float dt, iPopup* pop)
@@ -16,7 +16,7 @@ void drawMenuBefore(float dt, iPopup* pop)
 }
 void loadMenu()
 {
-	titleBg = createImage("assets/BG/Title.png");
+	titlemap = createImage("assets/map/Title.png");
 
 	createTitleMenu();
 
@@ -31,9 +31,9 @@ void freeMenu()
 void drawMenu(float dt)
 {
 	setRGBA(1, 1, 1, 1);
-	drawImage(titleBg, 0, 0,
-		devSize.width / titleBg->width,
-		devSize.height / titleBg->height, TOP | LEFT);
+	drawImage(titlemap, 0, 0,
+		devSize.width / titlemap->width,
+		devSize.height / titlemap->height, TOP | LEFT);
 
 	drawTitleMenu(dt);
 	setRGBA(1, 1, 1, 1);

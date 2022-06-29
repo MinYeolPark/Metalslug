@@ -62,7 +62,7 @@ public:
 
 	iPoint tp;
 public:
-	virtual void getDamage(float damage);
+	virtual void getDamage(float damage, Collider* c);
 	virtual void spawnItem() = 0;
 	virtual void setState(NpcBehave newState) { state = newState; }
 	virtual NpcBehave getState() { return state; }

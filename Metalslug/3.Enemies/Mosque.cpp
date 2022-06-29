@@ -133,7 +133,7 @@ void Mosque::updateObj(float dt)
 			if (rate[i] > _rate)
 			{
 				rate[i] = 0.f;
-				addBullet(this ,BulletMosque, soldierP[i]);
+				//addBullet(this ,BulletMosque, soldierP[i]);
 				addProcEffect(EffectMoskTrail, soldierP[i]);
 			}
 		}

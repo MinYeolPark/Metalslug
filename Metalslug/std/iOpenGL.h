@@ -50,8 +50,6 @@ public:
 	void bind(Texture* tex);
 	void unbind();
 
-	void save(const char* path);
-
 public:
 	uint32 fbo;
 

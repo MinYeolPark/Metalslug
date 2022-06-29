@@ -5,18 +5,27 @@ enum ArabMeleeBehave
 {
 	IdleMeleeL = 0,
 	IdleMeleeR,
+
 	WalkMeleeL,
 	WalkMeleeR,
+
 	DeadMeleeL,
 	DeadMeleeR,
+
 	ShuffleMeleeL,
 	ShuffleMeleeR,
+
 	AttackMeleeL,
 	AttackMeleeR,
+
 	PreAttackMeleeL,
 	PreAttackMeleeR,
+
 	FireMeleeL,
 	FireMeleeR,
+
+	JumpMeleeL,
+	JumpMeleeR,
 
 	MeleeBehaveMax,
 };
@@ -31,9 +40,10 @@ public:
 	iImage** imgs;
 	iImage* imgCurr;	
 
+	virtual int getFrame();
 	virtual bool dead();
 public:
-	virtual void getDamage(float damage);
+	virtual void getDamage(float damage, Collider* c);
 	virtual void setState(int newState);
 public:
 	virtual void update(float dt);

@@ -1,35 +1,98 @@
 ﻿#include "ProcField.h"
 
-Bg::Bg()
+#include "ProcPlayer.h"
+#include "ImgMgr.h"
+
+int mapNum[] =
 {
-	/////////////////////////////////////////////////
-	//Main Layer
-	/////////////////////////////////////////////////
-	texs = new Texture * [cuts_Stage1];
-
+	3,
+};
+LayerData layerData[layerNum] =
+{
+	{
+		{0,90},
+		0.2f,
+	},
+	{
+		{0,105},
+		0.5f,
+	},
+	{
+		{0,160},
+		0.8f,
+	},
+};
+ProcMap* map;
+MapData mapData[];
+ImageInfo mapImageInfo[];
+ImageInfo layerImageInfo[];
+ImageInfo mapObjectInfo[];
+static iImage** _mapImage = NULL;
+static iImage** _layerImage = NULL;
+static iImage** _mapObjectImage = NULL;
+ProcMap::ProcMap(int stage)
+{
+	//Map
+	this->stage = stage;
 	maxW = 0;
-	int i = 0;
-	for (i = 0; i < cuts_Stage1; i++)
-	{
-		bd = &bgData_Stage1[i];
-		Texture* t = createImage(iColor4bMake(248, 0, 248, 255),
-			bd->rscName);
-		maxW += t->width;
-		texs[i] = t;		
-	}
-	offMin = iPointMake(devSize.width - maxW, 0);
-	off =
-	offMax = iPointZero;
+	maxY = 0;
 
-	//갈 수 있는 최대 y거리	
-	maxY = new int[maxW];
-	for (int j = 0; j < cuts_Stage1; j++)
+	if (_mapImage == NULL)
+ 		_mapImage = createSingleImage(mapImageInfo,	mapNum[stage], this);
+
+	imgs = new iImage * [mapNum[stage]];
+	memset(imgs, 0x00, sizeof(imgs));
+	for (int i = 0; i < mapNum[stage]; i++)
+		imgs[i] = _mapImage[i]->clone();
+	//
+	
+	//Layer
+	if (_layerImage == NULL)
+		_layerImage = createSingleImage(layerImageInfo, layerNum, this);
+	imgsLayer = new iImage * [layerNum];
+	memset(imgsLayer, 0x00, sizeof(imgsLayer));
+	for (int i = 0; i < layerNum; i++)
 	{
-		bd = &bgData_Stage1[j];
-		for (int i = 0; i < bd->pCount - 1; i++)
+		imgsLayer[i] = _layerImage[i]->clone();
+	}
+	//
+	if (_mapObjectImage == NULL)
+		_mapObjectImage = createSingleImage(mapObjectInfo, layerNum, this);
+	memset(imgObj, 0x00, sizeof(imgObj));
+	for (int i = 0; i < 3; i++)
+	{
+		imgObj[i] = _mapObjectImage[i]->clone();
+	}
+}
+
+ProcMap::~ProcMap()
+{
+	for (int i = 0; i < mapNum[stage]; i++)
+	{
+		delete _mapImage[i];
+		delete _layerImage[i];
+		delete _mapObjectImage[i];
+	}
+	delete _mapImage;
+	delete _layerImage;
+	delete _mapObjectImage;
+}
+
+void ProcMap::init(int stage)
+{
+	for (int i = 0; i < mapNum[stage]; i++)
+	{
+		Texture* t = imgs[i]->tex;
+		maxW += t->width;		
+	}
+	maxY = new int[maxW];
+	for (int j = 0; j < mapNum[stage]; j++)
+	{
+		md = &mapData[j];
+		for (int k = 0; k < md->pCount; k++)
 		{
-			iPoint sp = bd->p[i];
-			iPoint ep = bd->p[1 + i];
+			iPoint sp = md->p[k];
+			iPoint ep = md->p[1 + k];
 
 			for (int m = sp.x; m < ep.x; m++)
 			{
@@ -38,108 +101,61 @@ Bg::Bg()
 			}
 		}
 	}
-
-	/////////////////////////////////////////////////
-	//Background layer
-	/////////////////////////////////////////////////
-#if 1
-	bgTexs = new Texture * [layers_Stage1];
-
-	for (int i = 0; i < layers_Stage1; i++)
-	{
-		bl = &bgLayer_Stage1[i];
-		Texture* t = createImage(iColor4bMake(248, 0, 248, 255),
-			bl->rscName);
-
-		bgTexs[i] = t;
-	}
-	off = iPointZero;
-
-#endif
+	offMin = iPointMake(devSize.width - maxW, 0);
+	off =
+	offMax = iPointZero;
 }
-
-Bg::~Bg()
+void ProcMap::update(float dt)
 {
-	for (int i = 0; i < cuts_Stage1; i++)
-		freeImage(texs[i]);
-	delete texs;
-	delete bgTexs;
-	delete maxY;
+	//Camera Move
+	float x = player->p.x + off.x;
+	float y = player->p.y + off.y;
+	if (x < devSize.width / 3)
+		move(iPointMake(devSize.width / 3 - x, 0));
+	else if (x > devSize.width * 2 / 3)
+		move(iPointMake(devSize.width * 2 / 3 - x, 0));
+
+	if (player->p.x > 1200)
+		move(iPointMake(0, devSize.height - 50 - y));
 }
-
-void Bg::paint(float dt)
+void ProcMap::paint(float dt)
 {
-	setRGBA(1, 1, 1, 1);
-
-	Texture* tex;
 	iPoint p;
-#if 1  BackGround Layer
-	for (int i = 0; i < layers_Stage1; i++)
+	//Layer
+	for (int i = 0; i < layerNum; i++)
 	{
-		tex = bgTexs[i];
-		bl = &bgLayer_Stage1[i];
-
-		p.x = bl->offSet.x + bg->off.x * bl->rate;
-		p.y = bl->offSet.y;
-		while (p.x < -tex->width * bl->scale)
-			p.x += tex->width * bl->scale;
-
-		for (int j = 0; j < 2; j++)
+		ld = &layerData[i];
+		Texture* t = imgsLayer[i]->tex;
+		p.x = ld->offSet.x + off.x * ld->rate;
+		p.y = ld->offSet.y;
+		while (p.x < -t->width * layerImageInfo[i].s)
+			p.x += t->width * layerImageInfo[i].s;
+		for (int j = 0; j < 3; j++)
 		{
-			drawImage(tex, p.x + tex->width * j * bl->scale, p.y, bl->scale, bl->scale, TOP | LEFT,
-				0, 0, tex->width, tex->height, 2, 0);
+			imgsLayer[i]->paint(dt, 
+				iPointMake(p.x + t->width * j * layerImageInfo[i].s, p.y));
 		}
 	}
-#endif
-#if 1 Main Field
-	for (int i = 0; i < cuts_Stage1; i++)
+	//Map
+	for (int i = 0; i < mapNum[stage]; i++)
 	{
-		tex = texs[i];
-		p = off;
-		drawImage(tex, p.x + tex->width * i, p.y);
+		float w;
+		if (i == 0)
+			w = 0;
+		else
+			w = imgs[i-1]->tex->width;
+		imgs[i]->paint(dt, iPointMake(off.x + w, off.y));
 	}
-#endif
-
-#ifdef _DEBUG
-
-	//#issue
-	setLineWidth(2);
-	for (int j = 0; j < 4; j++)
+	//Obj
+	for (int i = 0; i < 3; i++)
 	{
-		bd = &bgData_Stage1[j];
-		for (int i = 0; i < bd->pCount - 1; i++)
-		{
-			drawLine(bd->p[i].x + bg->off.x, bd->p[i].y + bg->off.y,
-				bd->p[i + 1].x + bg->off.x, bd->p[i + 1].y + bg->off.y);
-		}
+		;
 	}
-#endif // DEBUG
-
-
-
-
-
-#if 0 //Collider Render for debug
-	for (int i = 0; i < cuts_Stage1; i++)
-	{
-		bd = &bgData_Stage1[i];
-		for (int j = 0; j < sizeof(bd->bgCollider) / sizeof(BgCollider); j++)
-		{
-			drawRect(bd->bgCollider[j].pos.x + bg->off.x,
-				bd->bgCollider[j].pos.y + bg->off.y,
-				bd->bgCollider[j].size.width,
-				bd->bgCollider[j].size.height);
-		}
-	}
-#endif
-
-	
+	//imgObj[2]->paint(dt, iPointMake(200, -22));	
 }
-
-iPoint Bg::move(iPoint mp)
+iPoint ProcMap::move(iPoint mp)
 {
 	iPoint p = off;
-
 	off += mp;
 	if (off.x < offMin.x)
 		off.x = offMin.x;
@@ -154,101 +170,104 @@ iPoint Bg::move(iPoint mp)
 	return off - p;
 }
 
-BgData bgData_Stage1[cuts_Stage1] = {
+
+MapData mapData[] = {
 	{
-		"assets/BG/BG_00.png",
-		{{331 * 0, 200}, {331 * 0.3, 200}, {331 * 0.6, 200}, {331 * 1, 200}},
+		{{1176 * 0, 200}, {1176 * 0.3, 170}, {1176 * 0.6, 200}, {1176 * 1, 200}},
 		4,
+		{{200,100}},
+	},
+	{
+		{{331 * 1, 200}, {331 * 1.3, 200}, {331 * 1.6, 200}, {331 * 2, 200}},
 		1.2f,
 		{{200,100}},
 	},
 	{
-		"assets/BG/BG_01.png",
-		{{331 * 1, 200}, {331 * 1.3, 200}, {331 * 1.6, 200}, {331 * 2, 200}},
-		4,
-		1.2f,
-	},
-	{
-		"assets/BG/BG_02.png",
 		{{331 * 2, 200}, {331 * 2.3, 200}, {331 * 2.6, 200}, {2024, 200}},
 		4,
-		1.2f,
+		{{200,100}},
 	},
-	{
-		"assets/BG/BG_03.png",
-		{{331 * 0, 200}, {331 * 0.3, 200}, {331 * 0.6, 200}, {331 * 1, 200}},
-		1.2f,
-	},
-	{
-		"assets/BG/BG_04.png",
-		{{331 * 0, 200}, {331 * 0.3, 200}, {331 * 0.6, 200}, {331 * 1, 200}},
-		4,
-		1.2f,
-	},
-	{
-		"assets/BG/BG_05.png",
-		{{331 * 0, 200}, {331 * 0.3, 200}, {331 * 0.6, 200}, {331 * 1, 200}},
-		4,
-		1.2f,
-	},
-	{
-		"assets/BG/BG_06.png",
-		{{331 * 0, 200}, {331 * 0.3, 200}, {331 * 0.6, 200}, {331 * 1, 200}},
-		4,
-		1.2f,
-	},
-	{
-		"assets/BG/BG_07.png",
-		{{331 * 0, 200}, {331 * 0.3, 200}, {331 * 0.6, 200}, {331 * 1, 200}},
-		4,
-		1.2f,
-	},
-	{
-		"assets/BG/BG_08.png",
-		{{331 * 0, 200}, {331 * 0.3, 200}, {331 * 0.6, 200}, {331 * 1, 200}},
-		4,
-		1.2f,
-	},
-	{
-		"assets/BG/BG_09.png",
-		{{331 * 0, 200}, {331 * 0.3, 200}, {331 * 0.6, 200}, {331 * 1, 200}},
-		4,
-		1.2f,
-	},
-	{
-		"assets/BG/BG_10.png",
-		{{331 * 0, 200}, {331 * 0.3, 200}, {331 * 0.6, 200}, {331 * 1, 200}},
-		4,
-		1.2f,
-	},
-	{
-		"assets/BG/BG_11.png",
-		{{331 * 0, 200}, {331 * 0.3, 200}, {331 * 0.6, 200}, {3972, 200}},
-		4,
-		1.2f,
-	}
-
 };
-BgLayer bgLayer_Stage1[layers_Stage1] =
+ImageInfo mapImageInfo[] =
 {
 	{
-		"assets/BG/BG_30.png",
-		1.25f,
-		{0,0},
-		0.2f,
+		"assets/Map/Map_00.png",
+		1, 1.f, { 0 , -224},
+		0.1f,
+		0,
+		{248,0,248,255},
+		NULL,
 	},
 	{
-		"assets/BG/BG_31.png",
-		1.f,
-		{0,105},
-		0.5f,
+		"assets/Map/Map_01.png",
+		1, 1.f, { 0 , -224},
+		0.1f,
+		0,
+		{248,0,248,255},
+		NULL,
 	},
 	{
-		"assets/BG/BG_32.png",
-		1.f,
-		{0,95},
-		0.8f,
+		"assets/Map/Map_02.png",
+		1, 1.f, { 0 , -224},
+		0.1f,
+		0,
+		{248,0,248,255},
+		NULL,
 	},
 };
 
-Bg* bg;
+ImageInfo layerImageInfo[] =
+{
+	{
+		"assets/map/BG_00.png",
+		1, 1.f, { -164 / 2 , 0},
+		0.1f,
+		0,
+		{248,0,248,255},
+		NULL,
+	},
+	{
+		"assets/map/BG_01.png",
+		1, 1.f, { -164 / 2 , 0},
+		0.1f,
+		0,
+		{248,0,248,255},
+		NULL,
+	},
+	{
+		"assets/map/BG_02.png",
+		1, 1.f, { -164 / 2 , 0},
+		0.1f,
+		0,
+		{248,0,248,255},
+		NULL,
+	},
+};
+ImageInfo mapObjectInfo[] =
+{
+	{
+		"assets/map/Apple.png",
+		1, 1.f, { -164 / 2 , 0},
+		0.1f,
+		0,
+		{248,0,248,255},
+		NULL,
+	},
+	{
+		"assets/map/Wall_%02d.png",
+		3, 1.f, { -104 / 2 , 0},
+		0.1f,
+		0,
+		{248,0,248,255},
+		NULL,
+	},
+	{
+		//{2238, 196}
+		"assets/map/Final_%02d.png",
+		3, 1.f, { -304 / 2 , -208},
+		0.1f,
+		0,
+		{248,0,248,255},
+		NULL,
+	},
+};

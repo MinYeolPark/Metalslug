@@ -8,7 +8,7 @@ static iImage** _imgIchi = NULL;
 ImageInfo infoIchi[];
 Ichimondi::Ichimondi(int index): ProcNpc(index)
 {		
-	collider->init(this, iSizeMake(50, 50));
+	//colliders[0]->init(this, iSizeMake(50, 50));
 
 	index = NpcIchimondi;
 	state = IdleNpcL;
@@ -52,13 +52,13 @@ void Ichimondi::dead()
 
 void Ichimondi::spawnItem()
 {
-	addProcItem(itemIndex, this->p - bg->off);
+	addProcItem(itemIndex, this->p - map->off);
 }
 iPoint initPos = iPointZero;
 void Ichimondi::update(float dt)
 {
 	isActive = containPoint(p,
-		iRectMake(-bg->off.x - 20, -bg->off.y - 20,
+		iRectMake(-map->off.x - 20, -map->off.y - 20,
 			devSize.width + 40, devSize.height + 40));
 
 	if (v != iPointZero)
@@ -111,7 +111,7 @@ bool Ichimondi::draw(float dt, iPoint off)
 
 #ifdef _DEBUG
 	drawDot(p + off);
-	drawRect(collider->getCollider());
+	drawRect(colliders[0]->getCollider());
 #endif // _DEBUG
 
 	return !isActive;

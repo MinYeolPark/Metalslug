@@ -3367,7 +3367,7 @@ GLboolean __GLEW_APPLE_row_bytes = GL_FALSE;
 GLboolean __GLEW_APPLE_specular_vector = GL_FALSE;
 GLboolean __GLEW_APPLE_sync = GL_FALSE;
 GLboolean __GLEW_APPLE_texture_2D_limited_npot = GL_FALSE;
-GLboolean __GLEW_APPLE_texture_format_BGRA8888 = GL_FALSE;
+GLboolean __GLEW_APPLE_texture_format_mapRA8888 = GL_FALSE;
 GLboolean __GLEW_APPLE_texture_max_level = GL_FALSE;
 GLboolean __GLEW_APPLE_texture_packed_float = GL_FALSE;
 GLboolean __GLEW_APPLE_texture_range = GL_FALSE;
@@ -3536,7 +3536,7 @@ GLboolean __GLEW_ARB_transform_feedback_instanced = GL_FALSE;
 GLboolean __GLEW_ARB_transform_feedback_overflow_query = GL_FALSE;
 GLboolean __GLEW_ARB_transpose_matrix = GL_FALSE;
 GLboolean __GLEW_ARB_uniform_buffer_object = GL_FALSE;
-GLboolean __GLEW_ARB_vertex_array_bgra = GL_FALSE;
+GLboolean __GLEW_ARB_vertex_array_mapra = GL_FALSE;
 GLboolean __GLEW_ARB_vertex_array_object = GL_FALSE;
 GLboolean __GLEW_ARB_vertex_attrib_64bit = GL_FALSE;
 GLboolean __GLEW_ARB_vertex_attrib_binding = GL_FALSE;
@@ -3580,9 +3580,9 @@ GLboolean __GLEW_EXT_422_pixels = GL_FALSE;
 GLboolean __GLEW_EXT_Cg_shader = GL_FALSE;
 GLboolean __GLEW_EXT_EGL_image_array = GL_FALSE;
 GLboolean __GLEW_EXT_YUV_target = GL_FALSE;
-GLboolean __GLEW_EXT_abgr = GL_FALSE;
+GLboolean __GLEW_EXT_amapr = GL_FALSE;
 GLboolean __GLEW_EXT_base_instance = GL_FALSE;
-GLboolean __GLEW_EXT_bgra = GL_FALSE;
+GLboolean __GLEW_EXT_mapra = GL_FALSE;
 GLboolean __GLEW_EXT_bindable_uniform = GL_FALSE;
 GLboolean __GLEW_EXT_blend_color = GL_FALSE;
 GLboolean __GLEW_EXT_blend_equation_separate = GL_FALSE;
@@ -3668,7 +3668,7 @@ GLboolean __GLEW_EXT_post_depth_coverage = GL_FALSE;
 GLboolean __GLEW_EXT_provoking_vertex = GL_FALSE;
 GLboolean __GLEW_EXT_pvrtc_sRGB = GL_FALSE;
 GLboolean __GLEW_EXT_raster_multisample = GL_FALSE;
-GLboolean __GLEW_EXT_read_format_bgra = GL_FALSE;
+GLboolean __GLEW_EXT_read_format_mapra = GL_FALSE;
 GLboolean __GLEW_EXT_render_snorm = GL_FALSE;
 GLboolean __GLEW_EXT_rescale_normal = GL_FALSE;
 GLboolean __GLEW_EXT_sRGB = GL_FALSE;
@@ -3720,7 +3720,7 @@ GLboolean __GLEW_EXT_texture_env_combine = GL_FALSE;
 GLboolean __GLEW_EXT_texture_env_dot3 = GL_FALSE;
 GLboolean __GLEW_EXT_texture_filter_anisotropic = GL_FALSE;
 GLboolean __GLEW_EXT_texture_filter_minmax = GL_FALSE;
-GLboolean __GLEW_EXT_texture_format_BGRA8888 = GL_FALSE;
+GLboolean __GLEW_EXT_texture_format_mapRA8888 = GL_FALSE;
 GLboolean __GLEW_EXT_texture_integer = GL_FALSE;
 GLboolean __GLEW_EXT_texture_lod_bias = GL_FALSE;
 GLboolean __GLEW_EXT_texture_mirror_clamp = GL_FALSE;
@@ -3743,7 +3743,7 @@ GLboolean __GLEW_EXT_timer_query = GL_FALSE;
 GLboolean __GLEW_EXT_transform_feedback = GL_FALSE;
 GLboolean __GLEW_EXT_unpack_subimage = GL_FALSE;
 GLboolean __GLEW_EXT_vertex_array = GL_FALSE;
-GLboolean __GLEW_EXT_vertex_array_bgra = GL_FALSE;
+GLboolean __GLEW_EXT_vertex_array_mapra = GL_FALSE;
 GLboolean __GLEW_EXT_vertex_array_setXXX = GL_FALSE;
 GLboolean __GLEW_EXT_vertex_attrib_64bit = GL_FALSE;
 GLboolean __GLEW_EXT_vertex_shader = GL_FALSE;
@@ -3797,7 +3797,7 @@ GLboolean __GLEW_NVX_linked_gpu_multicast = GL_FALSE;
 GLboolean __GLEW_NV_3dvision_settings = GL_FALSE;
 GLboolean __GLEW_NV_EGL_stream_consumer_external = GL_FALSE;
 GLboolean __GLEW_NV_alpha_to_coverage_dither_control = GL_FALSE;
-GLboolean __GLEW_NV_bgr = GL_FALSE;
+GLboolean __GLEW_NV_mapr = GL_FALSE;
 GLboolean __GLEW_NV_bindless_multi_draw_indirect = GL_FALSE;
 GLboolean __GLEW_NV_bindless_multi_draw_indirect_count = GL_FALSE;
 GLboolean __GLEW_NV_bindless_texture = GL_FALSE;
@@ -4346,8 +4346,8 @@ static const char * _glewExtensionLookup[] = {
 #ifdef GL_APPLE_texture_2D_limited_npot
   "GL_APPLE_texture_2D_limited_npot",
 #endif
-#ifdef GL_APPLE_texture_format_BGRA8888
-  "GL_APPLE_texture_format_BGRA8888",
+#ifdef GL_APPLE_texture_format_mapRA8888
+  "GL_APPLE_texture_format_mapRA8888",
 #endif
 #ifdef GL_APPLE_texture_max_level
   "GL_APPLE_texture_max_level",
@@ -4853,8 +4853,8 @@ static const char * _glewExtensionLookup[] = {
 #ifdef GL_ARB_uniform_buffer_object
   "GL_ARB_uniform_buffer_object",
 #endif
-#ifdef GL_ARB_vertex_array_bgra
-  "GL_ARB_vertex_array_bgra",
+#ifdef GL_ARB_vertex_array_mapra
+  "GL_ARB_vertex_array_mapra",
 #endif
 #ifdef GL_ARB_vertex_array_object
   "GL_ARB_vertex_array_object",
@@ -4985,14 +4985,14 @@ static const char * _glewExtensionLookup[] = {
 #ifdef GL_EXT_YUV_target
   "GL_EXT_YUV_target",
 #endif
-#ifdef GL_EXT_abgr
-  "GL_EXT_abgr",
+#ifdef GL_EXT_amapr
+  "GL_EXT_amapr",
 #endif
 #ifdef GL_EXT_base_instance
   "GL_EXT_base_instance",
 #endif
-#ifdef GL_EXT_bgra
-  "GL_EXT_bgra",
+#ifdef GL_EXT_mapra
+  "GL_EXT_mapra",
 #endif
 #ifdef GL_EXT_bindable_uniform
   "GL_EXT_bindable_uniform",
@@ -5249,8 +5249,8 @@ static const char * _glewExtensionLookup[] = {
 #ifdef GL_EXT_raster_multisample
   "GL_EXT_raster_multisample",
 #endif
-#ifdef GL_EXT_read_format_bgra
-  "GL_EXT_read_format_bgra",
+#ifdef GL_EXT_read_format_mapra
+  "GL_EXT_read_format_mapra",
 #endif
 #ifdef GL_EXT_render_snorm
   "GL_EXT_render_snorm",
@@ -5405,8 +5405,8 @@ static const char * _glewExtensionLookup[] = {
 #ifdef GL_EXT_texture_filter_minmax
   "GL_EXT_texture_filter_minmax",
 #endif
-#ifdef GL_EXT_texture_format_BGRA8888
-  "GL_EXT_texture_format_BGRA8888",
+#ifdef GL_EXT_texture_format_mapRA8888
+  "GL_EXT_texture_format_mapRA8888",
 #endif
 #ifdef GL_EXT_texture_integer
   "GL_EXT_texture_integer",
@@ -5474,8 +5474,8 @@ static const char * _glewExtensionLookup[] = {
 #ifdef GL_EXT_vertex_array
   "GL_EXT_vertex_array",
 #endif
-#ifdef GL_EXT_vertex_array_bgra
-  "GL_EXT_vertex_array_bgra",
+#ifdef GL_EXT_vertex_array_mapra
+  "GL_EXT_vertex_array_mapra",
 #endif
 #ifdef GL_EXT_vertex_array_setXXX
   "GL_EXT_vertex_array_setXXX",
@@ -5636,8 +5636,8 @@ static const char * _glewExtensionLookup[] = {
 #ifdef GL_NV_alpha_to_coverage_dither_control
   "GL_NV_alpha_to_coverage_dither_control",
 #endif
-#ifdef GL_NV_bgr
-  "GL_NV_bgr",
+#ifdef GL_NV_mapr
+  "GL_NV_mapr",
 #endif
 #ifdef GL_NV_bindless_multi_draw_indirect
   "GL_NV_bindless_multi_draw_indirect",
@@ -6756,8 +6756,8 @@ static GLboolean* _glewExtensionEnabled[] = {
 #ifdef GL_APPLE_texture_2D_limited_npot
   &__GLEW_APPLE_texture_2D_limited_npot,
 #endif
-#ifdef GL_APPLE_texture_format_BGRA8888
-  &__GLEW_APPLE_texture_format_BGRA8888,
+#ifdef GL_APPLE_texture_format_mapRA8888
+  &__GLEW_APPLE_texture_format_mapRA8888,
 #endif
 #ifdef GL_APPLE_texture_max_level
   &__GLEW_APPLE_texture_max_level,
@@ -7263,8 +7263,8 @@ static GLboolean* _glewExtensionEnabled[] = {
 #ifdef GL_ARB_uniform_buffer_object
   &__GLEW_ARB_uniform_buffer_object,
 #endif
-#ifdef GL_ARB_vertex_array_bgra
-  &__GLEW_ARB_vertex_array_bgra,
+#ifdef GL_ARB_vertex_array_mapra
+  &__GLEW_ARB_vertex_array_mapra,
 #endif
 #ifdef GL_ARB_vertex_array_object
   &__GLEW_ARB_vertex_array_object,
@@ -7395,14 +7395,14 @@ static GLboolean* _glewExtensionEnabled[] = {
 #ifdef GL_EXT_YUV_target
   &__GLEW_EXT_YUV_target,
 #endif
-#ifdef GL_EXT_abgr
-  &__GLEW_EXT_abgr,
+#ifdef GL_EXT_amapr
+  &__GLEW_EXT_amapr,
 #endif
 #ifdef GL_EXT_base_instance
   &__GLEW_EXT_base_instance,
 #endif
-#ifdef GL_EXT_bgra
-  &__GLEW_EXT_bgra,
+#ifdef GL_EXT_mapra
+  &__GLEW_EXT_mapra,
 #endif
 #ifdef GL_EXT_bindable_uniform
   &__GLEW_EXT_bindable_uniform,
@@ -7659,8 +7659,8 @@ static GLboolean* _glewExtensionEnabled[] = {
 #ifdef GL_EXT_raster_multisample
   &__GLEW_EXT_raster_multisample,
 #endif
-#ifdef GL_EXT_read_format_bgra
-  &__GLEW_EXT_read_format_bgra,
+#ifdef GL_EXT_read_format_mapra
+  &__GLEW_EXT_read_format_mapra,
 #endif
 #ifdef GL_EXT_render_snorm
   &__GLEW_EXT_render_snorm,
@@ -7815,8 +7815,8 @@ static GLboolean* _glewExtensionEnabled[] = {
 #ifdef GL_EXT_texture_filter_minmax
   &__GLEW_EXT_texture_filter_minmax,
 #endif
-#ifdef GL_EXT_texture_format_BGRA8888
-  &__GLEW_EXT_texture_format_BGRA8888,
+#ifdef GL_EXT_texture_format_mapRA8888
+  &__GLEW_EXT_texture_format_mapRA8888,
 #endif
 #ifdef GL_EXT_texture_integer
   &__GLEW_EXT_texture_integer,
@@ -7884,8 +7884,8 @@ static GLboolean* _glewExtensionEnabled[] = {
 #ifdef GL_EXT_vertex_array
   &__GLEW_EXT_vertex_array,
 #endif
-#ifdef GL_EXT_vertex_array_bgra
-  &__GLEW_EXT_vertex_array_bgra,
+#ifdef GL_EXT_vertex_array_mapra
+  &__GLEW_EXT_vertex_array_mapra,
 #endif
 #ifdef GL_EXT_vertex_array_setXXX
   &__GLEW_EXT_vertex_array_setXXX,
@@ -8046,8 +8046,8 @@ static GLboolean* _glewExtensionEnabled[] = {
 #ifdef GL_NV_alpha_to_coverage_dither_control
   &__GLEW_NV_alpha_to_coverage_dither_control,
 #endif
-#ifdef GL_NV_bgr
-  &__GLEW_NV_bgr,
+#ifdef GL_NV_mapr
+  &__GLEW_NV_mapr,
 #endif
 #ifdef GL_NV_bindless_multi_draw_indirect
   &__GLEW_NV_bindless_multi_draw_indirect,
@@ -19926,7 +19926,7 @@ GLboolean __GLXEW_EXT_create_context_es_profile = GL_FALSE;
 GLboolean __GLXEW_EXT_fbconfig_packed_float = GL_FALSE;
 GLboolean __GLXEW_EXT_framebuffer_sRGB = GL_FALSE;
 GLboolean __GLXEW_EXT_import_context = GL_FALSE;
-GLboolean __GLXEW_EXT_libglvnd = GL_FALSE;
+GLboolean __GLXEW_EXT_limaplvnd = GL_FALSE;
 GLboolean __GLXEW_EXT_scene_marker = GL_FALSE;
 GLboolean __GLXEW_EXT_stereo_tree = GL_FALSE;
 GLboolean __GLXEW_EXT_swap_control = GL_FALSE;
@@ -20649,9 +20649,9 @@ GLenum glxewInit ()
   GLXEW_EXT_import_context = _glewSearchExtension("GLX_EXT_import_context", extStart, extEnd);
   if (glewExperimental || GLXEW_EXT_import_context) GLXEW_EXT_import_context = !_glewInit_GLX_EXT_import_context();
 #endif /* GLX_EXT_import_context */
-#ifdef GLX_EXT_libglvnd
-  GLXEW_EXT_libglvnd = _glewSearchExtension("GLX_EXT_libglvnd", extStart, extEnd);
-#endif /* GLX_EXT_libglvnd */
+#ifdef GLX_EXT_limaplvnd
+  GLXEW_EXT_limaplvnd = _glewSearchExtension("GLX_EXT_limaplvnd", extStart, extEnd);
+#endif /* GLX_EXT_limaplvnd */
 #ifdef GLX_EXT_scene_marker
   GLXEW_EXT_scene_marker = _glewSearchExtension("GLX_EXT_scene_marker", extStart, extEnd);
 #endif /* GLX_EXT_scene_marker */
@@ -21532,10 +21532,10 @@ GLboolean GLEWAPIENTRY glewIsSupported (const char* name)
           continue;
         }
 #endif
-#ifdef GL_APPLE_texture_format_BGRA8888
-        if (_glewStrSame3(&pos, &len, (const GLubyte*)"texture_format_BGRA8888", 23))
+#ifdef GL_APPLE_texture_format_mapRA8888
+        if (_glewStrSame3(&pos, &len, (const GLubyte*)"texture_format_mapRA8888", 23))
         {
-          ret = GLEW_APPLE_texture_format_BGRA8888;
+          ret = GLEW_APPLE_texture_format_mapRA8888;
           continue;
         }
 #endif
@@ -22718,10 +22718,10 @@ GLboolean GLEWAPIENTRY glewIsSupported (const char* name)
           continue;
         }
 #endif
-#ifdef GL_ARB_vertex_array_bgra
-        if (_glewStrSame3(&pos, &len, (const GLubyte*)"vertex_array_bgra", 17))
+#ifdef GL_ARB_vertex_array_mapra
+        if (_glewStrSame3(&pos, &len, (const GLubyte*)"vertex_array_mapra", 17))
         {
-          ret = GLEW_ARB_vertex_array_bgra;
+          ret = GLEW_ARB_vertex_array_mapra;
           continue;
         }
 #endif
@@ -23041,10 +23041,10 @@ GLboolean GLEWAPIENTRY glewIsSupported (const char* name)
           continue;
         }
 #endif
-#ifdef GL_EXT_abgr
-        if (_glewStrSame3(&pos, &len, (const GLubyte*)"abgr", 4))
+#ifdef GL_EXT_amapr
+        if (_glewStrSame3(&pos, &len, (const GLubyte*)"amapr", 4))
         {
-          ret = GLEW_EXT_abgr;
+          ret = GLEW_EXT_amapr;
           continue;
         }
 #endif
@@ -23055,10 +23055,10 @@ GLboolean GLEWAPIENTRY glewIsSupported (const char* name)
           continue;
         }
 #endif
-#ifdef GL_EXT_bgra
-        if (_glewStrSame3(&pos, &len, (const GLubyte*)"bgra", 4))
+#ifdef GL_EXT_mapra
+        if (_glewStrSame3(&pos, &len, (const GLubyte*)"mapra", 4))
         {
-          ret = GLEW_EXT_bgra;
+          ret = GLEW_EXT_mapra;
           continue;
         }
 #endif
@@ -23657,10 +23657,10 @@ GLboolean GLEWAPIENTRY glewIsSupported (const char* name)
           continue;
         }
 #endif
-#ifdef GL_EXT_read_format_bgra
-        if (_glewStrSame3(&pos, &len, (const GLubyte*)"read_format_bgra", 16))
+#ifdef GL_EXT_read_format_mapra
+        if (_glewStrSame3(&pos, &len, (const GLubyte*)"read_format_mapra", 16))
         {
-          ret = GLEW_EXT_read_format_bgra;
+          ret = GLEW_EXT_read_format_mapra;
           continue;
         }
 #endif
@@ -24021,10 +24021,10 @@ GLboolean GLEWAPIENTRY glewIsSupported (const char* name)
           continue;
         }
 #endif
-#ifdef GL_EXT_texture_format_BGRA8888
-        if (_glewStrSame3(&pos, &len, (const GLubyte*)"texture_format_BGRA8888", 23))
+#ifdef GL_EXT_texture_format_mapRA8888
+        if (_glewStrSame3(&pos, &len, (const GLubyte*)"texture_format_mapRA8888", 23))
         {
-          ret = GLEW_EXT_texture_format_BGRA8888;
+          ret = GLEW_EXT_texture_format_mapRA8888;
           continue;
         }
 #endif
@@ -24182,10 +24182,10 @@ GLboolean GLEWAPIENTRY glewIsSupported (const char* name)
           continue;
         }
 #endif
-#ifdef GL_EXT_vertex_array_bgra
-        if (_glewStrSame3(&pos, &len, (const GLubyte*)"vertex_array_bgra", 17))
+#ifdef GL_EXT_vertex_array_mapra
+        if (_glewStrSame3(&pos, &len, (const GLubyte*)"vertex_array_mapra", 17))
         {
-          ret = GLEW_EXT_vertex_array_bgra;
+          ret = GLEW_EXT_vertex_array_mapra;
           continue;
         }
 #endif
@@ -24593,10 +24593,10 @@ GLboolean GLEWAPIENTRY glewIsSupported (const char* name)
           continue;
         }
 #endif
-#ifdef GL_NV_bgr
-        if (_glewStrSame3(&pos, &len, (const GLubyte*)"bgr", 3))
+#ifdef GL_NV_mapr
+        if (_glewStrSame3(&pos, &len, (const GLubyte*)"mapr", 3))
         {
-          ret = GLEW_NV_bgr;
+          ret = GLEW_NV_mapr;
           continue;
         }
 #endif
@@ -27262,10 +27262,10 @@ GLboolean glxewIsSupported (const char* name)
           continue;
         }
 #endif
-#ifdef GLX_EXT_libglvnd
-        if (_glewStrSame3(&pos, &len, (const GLubyte*)"libglvnd", 8))
+#ifdef GLX_EXT_limaplvnd
+        if (_glewStrSame3(&pos, &len, (const GLubyte*)"limaplvnd", 8))
         {
-          ret = GLXEW_EXT_libglvnd;
+          ret = GLXEW_EXT_limaplvnd;
           continue;
         }
 #endif

@@ -16,7 +16,7 @@ struct ImageInfo
 	cbAnimation cbAni;
 };
 
-iImage** createImgSelect(Texture* bg);
+iImage** createImgSelect(Texture* map);
 
 iImage** createImgChar(ImageInfo* imageInfo, void* c);
 iImage** createImgPlayer(ImageInfo* imageInfo, int size, void* c);

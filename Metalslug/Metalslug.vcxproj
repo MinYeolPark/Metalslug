@@ -143,6 +143,7 @@
     <ClInclude Include="3.Enemies\ArabMelee.h" />
     <ClInclude Include="3.Enemies\Mosque.h" />
     <ClInclude Include="0.Manager\AnimationMgr.h" />
+    <ClInclude Include="Abul.h" />
     <ClInclude Include="App.h" />
     <ClInclude Include="0.Manager\GameMgr.h" />
     <ClInclude Include="0.Manager\ImgMgr.h" />
@@ -154,6 +155,7 @@
     <ClInclude Include="3.Enemies\Kessie.h" />
     <ClInclude Include="1.GameSetup\ProcNpc.h" />
     <ClInclude Include="3.Enemies\ArabCamel.h" />
+    <ClInclude Include="EventMgr.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="1.GameSetup\Select.h" />
     <ClInclude Include="Sorting.h" />
@@ -174,6 +176,7 @@
     <ClInclude Include="std\iStrTex.h" />
     <ClInclude Include="std\iUtil.h" />
     <ClInclude Include="std\iWindow.h" />
+    <ClInclude Include="Truck.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="0.Manager\InputMgr.cpp" />
@@ -191,12 +194,14 @@
     <ClCompile Include="3.Enemies\ArabMelee.cpp" />
     <ClCompile Include="3.Enemies\Mosque.cpp" />
     <ClCompile Include="0.Manager\AnimationMgr.cpp" />
+    <ClCompile Include="Abul.cpp" />
     <ClCompile Include="App.cpp" />
     <ClCompile Include="0.Manager\GameMgr.cpp" />
     <ClCompile Include="0.Manager\BulletMgr.cpp" />
     <ClCompile Include="0.Manager\EnemyMgr.cpp" />
     <ClCompile Include="0.Manager\EffectMgr.cpp" />
     <ClCompile Include="3.Enemies\ArabCamel.cpp" />
+    <ClCompile Include="EventMgr.cpp" />
     <ClCompile Include="glew.c" />
     <ClCompile Include="0.Manager\ImgMgr.cpp" />
     <ClCompile Include="2.UI\StatusUI.cpp" />
@@ -221,6 +226,7 @@
     <ClCompile Include="std\iStrTex.cpp" />
     <ClCompile Include="std\iUtil.cpp" />
     <ClCompile Include="std\iWindow.cpp" />
+    <ClCompile Include="Truck.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Metalslug.rc" />

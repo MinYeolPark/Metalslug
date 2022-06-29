@@ -22,9 +22,11 @@ public:
 	iImage** imgs;
 	iImage* imgCurr;
 
+	virtual int getFrame() { return imgCurr->frame; }
+
 	virtual bool dead();
 public:
-	virtual void getDamage(float damage);
+	virtual void getDamage(float damage, Collider* c);
 	virtual void setState(int newState);
 public:
 	virtual void update(float dt);

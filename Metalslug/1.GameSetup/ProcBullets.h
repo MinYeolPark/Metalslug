@@ -7,8 +7,6 @@
 #include "ProcEnemy.h"
 #include "ProcPlayer.h"
 
-//test
-#include "ProcObject.h"
 class ProcBullets;
 typedef void(*BulletPattern)(ProcBullets* b, float dt);
 enum BulletIndex
@@ -18,6 +16,7 @@ enum BulletIndex
 	BulletBomb,
 
 	BulletMelee,
+	BulletMeleeEnd,
 	BulletMosque,
 	BulletMosqueTrace,
 
@@ -36,41 +35,34 @@ public:
 	iImage* imgCurr;
 
 	ProcObject* parent;
-	int bulletIdx;
+	int index;
 
 	float degree;
 	bool isActive;
 	iPoint p;
 	iPoint v;
 
+	float a;
+	float pow;
+	float up;
+	float down;
+
 	float speed;
-	float dmg;
+	float damage;
 
 	BulletPattern pattern;
 public:
-	virtual void initObj();
-	virtual void initObj(Mosque* parent, int idx, iPoint p, float degree);
-	virtual void initObj(ProcObject* parent, int idx, iPoint p, float degree);
-	virtual void initObj(ProcEnemy* parent, int idx, iPoint p, float degree);
-	virtual void initObj(ProcPlayer* parent, int idx, iPoint p, float degree);
-	virtual void updateObj(float dt);
+	virtual void init(ProcObject* parent, int index, float degree);
+	virtual void init(ProcPlayer* parent, int idx, float degree);
+	virtual void init(ProcEnemy* parent, int idx, float degree);
+	virtual void update(float dt);
 	virtual void fixedUpdate(float dt);
-	virtual bool drawObj(float dt, iPoint off);
-	virtual void freeObj();
+	virtual bool draw(float dt, iPoint off);
+	virtual void free();
 
 	//Components
 public:
-	//virtual iRect collider();
 	Collider* collider;
-
-public:
-	static void patternDefault(ProcBullets* b, float dt);
-	static void patBomb(ProcBullets* b, float dt);
-
-	static void patMosque(ProcBullets* b, float dt);
-	static void patMosqueTrace(ProcBullets* b, float dt);
-public:
-	static void cbAniBullet(void* parm);
 };
 
 

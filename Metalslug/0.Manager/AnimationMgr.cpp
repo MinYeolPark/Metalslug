@@ -3,6 +3,18 @@
 #include "ProcPlayer.h"
 #include "ProcEnemy.h"
 #include "ProcNpc.h"
+#include "ProcBullets.h"
+#include "Truck.h"
+#include "BulletMgr.h"
+void AnimationMgr::cbAniToIdle(void* parm)
+{
+	ProcPlayer* pp = (ProcPlayer*)parm;
+
+	pp->fireing = false;
+	pp->topImgs[pp->topState]->startAnimation(AnimationMgr::cbAniToIdle, pp);
+	pp->topState = PlayerIdle;
+	pp->botState = PlayerIdle;
+}
 
 void AnimationMgr::cbAniDead(void* parm)
 {
@@ -29,10 +41,15 @@ void AnimationMgr::cbAniEnemyMotion2Idle(void* parm)
 
 void AnimationMgr::cbAniMeleeFire(void* parm)
 {
-	printf("cb ani melee fire\n");
 	ProcEnemy* e = (ProcEnemy*)parm;
 
-	//e->setState((EnemyBehave))
+	e->setState( 6+ e->state % 2);//shuffle
+}
+
+void AnimationMgr::cbAniTruck(void* parm)
+{
+	Truck* t = (Truck*)parm;
+	t->_aiDt = 3.f;	
 }
 
 void AnimationMgr::cbAniNpcRelease(void* parm)
@@ -67,4 +84,16 @@ void AnimationMgr::cbAniNpcSalute(void* n)
 		else if (npc->v.x < 0)
 			npc->setState(EscapeNpcL);
 	}
+}
+
+void AnimationMgr::cbAniBulletDisappear(void* parm)
+{
+	ProcBullets* b = (ProcBullets*)parm;
+	b->isActive = false;
+}
+
+void AnimationMgr::cbAniBulletDisappearWithAlpha(void* parm)
+{
+	ProcBullets* b = (ProcBullets*)parm;
+	b->a = 0;
 }

@@ -11,7 +11,6 @@ enum ObjLayer
 
 	ObjLayerMax = 16
 };
-//Components
 struct Collider;
 class ProcObject
 {
@@ -29,9 +28,11 @@ public:
 	int index;
 	int hp, _hp;
 	int score;
-	Collider* collider;
+
+	int colNum;
+	Collider* colliders[3];
 public:
-	virtual void getDamage(float damage) = 0;
+	virtual void getDamage(float damage, Collider* c) = 0;
 	virtual int getScore();
 public:
 	virtual void init(iPoint p);
@@ -40,9 +41,7 @@ public:
 	virtual void update(float dt) = 0;				//With control physics
 	virtual bool draw(float dt, iPoint off) = 0;	
 };
-static void cb(void* data);
 extern iArray* objects;
-extern iArray* objectsRemove;
 #include "ProcField.h"
 struct Collider
 {
@@ -50,7 +49,9 @@ struct Collider
 	{
 		p = iPointZero;
 		s = iSizeZero;
+		parent = NULL;
 		isActive = false;
+		isTrigger = false;
 	}
 	~Collider()
 	{
@@ -61,13 +62,33 @@ struct Collider
 	iSize s;
 	ProcObject* parent;
 	bool isActive;
-
+	bool isTrigger;
 	void init(ProcObject* parent, iSize s)
 	{
-		this->parent = parent;
-		parent->collider->isActive = true;
 		this->p = { parent->p.x - s.width/2, parent->p.y - s.height };
 		this->s = s;
+		this->parent = parent;
+		if (parent->colNum > 3)
+		{
+			printf("colNum error\n");
+			return;
+		}		
+		for (int i = 0; i < parent->colNum; i++)
+			parent->colliders[i]->enable();
+		isTrigger = false;
+	}
+	void update(ProcObject* parent)
+	{
+		this->p = parent->p;
+
+		if (parent->colNum == 3)
+		{
+			for (int i = 0; i < 3; i++)
+			{
+				if (parent->colliders[i]->isActive == false)
+					delete parent->colliders[i];
+			}
+		}
 	}
 	void setPosition(iPoint p)
 	{
@@ -81,7 +102,8 @@ struct Collider
 	{
 		if (isActive)
 		{
-			return iRectMake(p.x+bg->off.x - s.width/2, p.y+bg->off.y-s.height,
+			return iRectMake(p.x + map->off.x - s.width / 2, 
+				p.y + map->off.y - s.height,
 				s.width, s.height);
 		}
 		return iRectMake(0,0,0,0);

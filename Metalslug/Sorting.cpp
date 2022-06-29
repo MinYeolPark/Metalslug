@@ -14,7 +14,6 @@ Sorting::~Sorting()
 void Sorting::init()
 {
 	num = 0;
-
 }
 
 void Sorting::insert(int value)

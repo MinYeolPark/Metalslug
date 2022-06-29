@@ -1,6 +1,13 @@
 #pragma once
 #include "ProcEnemy.h"
 
+enum KessieState
+{
+	KessieIdle,
+	KessieRage,
+
+	KessieStateMax,
+};
 enum KessieBehave
 {
 	KessieBase100 = 0,
@@ -10,22 +17,27 @@ enum KessieBehave
 	KessieBaseBoth60,
 	KessieBase40,
 	KessieBase20,
+	KessieBase0,
 
 	KessieCraterLeft100,
-	KessieCraterLeft70,
-	KessieCraterLeftDead,
 	KessieCraterRight100,
+
+	KessieCraterLeft70,
 	KessieCraterRight70,
+
+	KessieCraterLeftDead,
 	KessieCraterRightDead,
 
 	KessieFanLeft,
-	KessieFanLeftRange,
 	KessieFanRight,
-	KessieFanRightRange,
-	
-	KessieHead,
+
+	KessieFanLeftRage,
+	KessieFanRightRage,	
+
 	KessieBlast,
 	KessieBlastRage,
+
+	KessieHead,
 
 	KessieBehaveMax,
 };
@@ -47,6 +59,11 @@ public:
 	iImage* imgRightBlast[3];
 
 public:
+	int baseState;
+	int headState;
+	int craterState;
+	int fanState;
+	int blastState;
 	bool isAppear;					//appear state
 	bool isHeadOpen;
 
@@ -57,10 +74,12 @@ public:
 	Collider* leftCollider;
 	Collider* rightCollider;
 	Collider* attkCollider;
-public:
-	virtual void getDamage(float damage);
-	virtual void setState(int newState);
+
+	virtual int getFrame() { return NULL; }
 	virtual bool dead();
+public:
+	virtual void getDamage(float damage, Collider* c);
+	virtual void setState(int newState);
 
 public:
 	void update(float dt);

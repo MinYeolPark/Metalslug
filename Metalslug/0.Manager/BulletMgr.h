@@ -10,8 +10,18 @@
 extern int bulletNum;
 extern ProcBullets** bullets;
 #define bulletMax 50
-void addBullet(Mosque* m, int idx, iPoint p);
-void addBullet(ProcPlayer* player, int idx, float degree);
+void addBullet(ProcPlayer* player, int index, float degree);
+void addBullet(ProcEnemy* enemy, int index, float degree);
 void loadProcBullets();
 void freeProcBullets();
 void drawProcBullets(float dt, iPoint off);
+
+struct ProcBulletsPattern
+{
+	static void patternHandgun(ProcBullets* b, float dt);
+	static void patternHeavyMachinegun(ProcBullets* b, float dt);
+	static void patternBomb(ProcBullets* b, float dt);
+	static void patternMelee(ProcBullets* b, float dt);
+
+	static void patternMosque(ProcBullets* b, float dt);
+};

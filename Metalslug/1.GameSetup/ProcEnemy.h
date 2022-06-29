@@ -4,12 +4,15 @@
 enum EnemyIndex
 {
 	IdxArMelee = 0,
+	IdxArMeleeKessie,
 	IdxArBurserker,
-
 	IdxArCamel,
+	IdxTruck,
 	IdxKessie,
 	IdxMasknell,
 	IdxMosque,
+	IdxAbul,
+
 	EnemyIndexMax,
 };
 
@@ -25,7 +28,6 @@ public:
 	int state;
 	EnemyAI ai;
 	//stats
-	int hp;
 	int dmg;
 	float sight;
 	float moveSpeed;
@@ -36,12 +38,17 @@ public:
 	float up;
 	float down;
 	bool fall;
+
 	bool isDead;
+	bool isAppear;
+
+	iPoint fp;
 	iPoint tp;
 public:
+	virtual int getFrame() = 0;
 	virtual bool dead() = 0;
 
-	virtual void getDamage(float damage) = 0;
+	virtual void getDamage(float damage, Collider* c) = 0;
 	virtual void setState(int newState) = 0;
 public:
 	virtual void init(int index, iPoint p, iPoint v);
