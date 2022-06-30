@@ -31,12 +31,13 @@ void drawProcBullets(float dt, iPoint off)
 	{
 		ProcBullets* b = bullets[i];
 		b->update(dt);
+		b->collider->update((ProcObject*)b);
 		if (b->draw(dt, off))
 		{
 			bulletNum--;
 			bullets[i] = bullets[bulletNum];
 			i--;
-		}
+		}		
 	}
 }
 
@@ -71,16 +72,42 @@ void addBullet(ProcEnemy* enemy, int index, float degree)
 }
 
 void ProcBulletsPattern::patternHandgun(ProcBullets* b, float dt)
-{
+{	
 	b->p += b->v * b->speed * dt;
 }
 
 void ProcBulletsPattern::patternHeavyMachinegun(ProcBullets* b, float dt)
 {
+	b->p += b->v * b->speed * dt;
 }
 
 void ProcBulletsPattern::patternBomb(ProcBullets* b, float dt)
-{
+{	
+	b->up -= b->pow;
+
+	if (b->up)
+	{
+		b->p = iPointMake(b->p.x, b->p.y -= b->pow);
+		b->up += 9.81 * dt;
+	}
+
+	int maxY = *(map->maxY + (int)b->p.x);
+	if (b->p.y < maxY)
+	{
+		b->down += 9.81 * dt;		
+	}
+	else if (b->p.y > maxY)
+	{
+		b->up = 0.0f;
+		b->down = 0.0f;
+	}
+
+	if (b->p.y > maxY)
+	{
+		b->up = 0.0f;
+		b->isActive = false;
+		//b->index = BulletMeleeEnd;
+	}
 }
 
 void ProcBulletsPattern::patternMelee(ProcBullets* b, float dt)

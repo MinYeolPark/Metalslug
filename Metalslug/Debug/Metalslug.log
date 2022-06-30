@@ -1,1 +1,59 @@
-﻿
+﻿  ArabMelee.cpp
+C:\workspace\Metalslug\Metalslug\std\iOpenGL.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\workspace\Metalslug\Metalslug\3.Enemies\ArabMelee.cpp(78,8): warning C4244: '-=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\3.Enemies\ArabMelee.cpp(114,20): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\3.Enemies\ArabMelee.cpp(125,10): warning C4244: '초기화 중': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\3.Enemies\ArabMelee.cpp(153,8): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+     C:\workspace\Metalslug\Debug\Metalslug.lib 라이브러리 및 C:\workspace\Metalslug\Debug\Metalslug.exp 개체를 생성하고 있습니다.
+LINK : warning LNK4217: '_glewInit@0'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"void __cdecl loadOpenGL(void *)" (?loadOpenGL@@YAXPAX@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '_glewGetErrorString@4'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"void __cdecl loadOpenGL(void *)" (?loadOpenGL@@YAXPAX@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '_glewGetString@4'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"void __cdecl loadOpenGL(void *)" (?loadOpenGL@@YAXPAX@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '_wglewIsSupported@4'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"void __cdecl loadOpenGL(void *)" (?loadOpenGL@@YAXPAX@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewBlendFuncSeparate'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"void __cdecl loadOpenGL(void *)" (?loadOpenGL@@YAXPAX@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewBindBuffer'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"void __cdecl loadOpenGL(void *)" (?loadOpenGL@@YAXPAX@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4286: '___glewBindBuffer'에 정의된 'glew.obj' 기호를 'iStd.obj'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewBufferData'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"void __cdecl loadOpenGL(void *)" (?loadOpenGL@@YAXPAX@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewDeleteBuffers'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"void __cdecl freeOpenGL(void)" (?freeOpenGL@@YAXXZ)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewGenBuffers'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"void __cdecl loadOpenGL(void *)" (?loadOpenGL@@YAXPAX@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewAttachShader'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"unsigned int __cdecl createProgramID(char const *,char const *)" (?createProgramID@@YAIPBD0@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewCompileShader'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"unsigned int __cdecl createShaderID(char const *,unsigned int)" (?createShaderID@@YAIPBDI@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewCreateProgram'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"unsigned int __cdecl createProgramID(char const *,char const *)" (?createProgramID@@YAIPBD0@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewCreateShader'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"unsigned int __cdecl createShaderID(char const *,unsigned int)" (?createShaderID@@YAIPBDI@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewDeleteProgram'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"void __cdecl freeProgramID(unsigned int)" (?freeProgramID@@YAXI@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewDeleteShader'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"void __cdecl freeShaderID(unsigned int)" (?freeShaderID@@YAXI@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewDetachShader'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"unsigned int __cdecl createProgramID(char const *,char const *)" (?createProgramID@@YAIPBD0@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewDrawBuffers'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"public: __thiscall iFBO::iFBO(int,int)" (??0iFBO@@QAE@HH@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewGetProgramInfoLog'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"void __cdecl checkProgramID(unsigned int)" (?checkProgramID@@YAXI@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewGetProgramiv'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"void __cdecl checkProgramID(unsigned int)" (?checkProgramID@@YAXI@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewGetShaderInfoLog'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"void __cdecl checkShaderID(unsigned int)" (?checkShaderID@@YAXI@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewGetShaderiv'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"void __cdecl checkShaderID(unsigned int)" (?checkShaderID@@YAXI@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewLinkProgram'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"unsigned int __cdecl createProgramID(char const *,char const *)" (?createProgramID@@YAIPBD0@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewShaderSource'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"unsigned int __cdecl createShaderID(char const *,unsigned int)" (?createShaderID@@YAIPBDI@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewBindFramebuffer'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"public: __thiscall iFBO::iFBO(int,int)" (??0iFBO@@QAE@HH@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewBindRenderbuffer'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"public: __thiscall iFBO::iFBO(int,int)" (??0iFBO@@QAE@HH@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewDeleteFramebuffers'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"public: virtual __thiscall iFBO::~iFBO(void)" (??1iFBO@@UAE@XZ)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewDeleteRenderbuffers'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"public: virtual __thiscall iFBO::~iFBO(void)" (??1iFBO@@UAE@XZ)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewFramebufferRenderbuffer'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"public: __thiscall iFBO::iFBO(int,int)" (??0iFBO@@QAE@HH@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewFramebufferTexture2D'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"public: __thiscall iFBO::iFBO(int,int)" (??0iFBO@@QAE@HH@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewGenFramebuffers'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"public: __thiscall iFBO::iFBO(int,int)" (??0iFBO@@QAE@HH@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewGenRenderbuffers'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"public: __thiscall iFBO::iFBO(int,int)" (??0iFBO@@QAE@HH@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewRenderbufferStorage'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"public: __thiscall iFBO::iFBO(int,int)" (??0iFBO@@QAE@HH@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewBindVertexArray'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"void __cdecl loadOpenGL(void *)" (?loadOpenGL@@YAXPAX@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewDeleteVertexArrays'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"void __cdecl freeOpenGL(void)" (?freeOpenGL@@YAXXZ)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewGenVertexArrays'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"void __cdecl loadOpenGL(void *)" (?loadOpenGL@@YAXPAX@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '_glewExperimental'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"void __cdecl loadOpenGL(void *)" (?loadOpenGL@@YAXPAX@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___wglewCreateContextAttribsARB'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"void __cdecl loadOpenGL(void *)" (?loadOpenGL@@YAXPAX@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewActiveTexture'에 정의된 'glew.obj' 기호를 함수 'iStd.obj'에서 '"void __cdecl drawImage(struct Texture *,float,float,float,float,int,int,int,int,int,int,int,int)" (?drawImage@@YAXPAUTexture@@MMMMHHHHHHHH@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewBufferSubData'에 정의된 'glew.obj' 기호를 함수 'iStd.obj'에서 '"void __cdecl drawDot(struct iPoint)" (?drawDot@@YAXUiPoint@@@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewDisableVertexAttribArray'에 정의된 'glew.obj' 기호를 함수 'iStd.obj'에서 '"void __cdecl drawDot(struct iPoint)" (?drawDot@@YAXUiPoint@@@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewEnableVertexAttribArray'에 정의된 'glew.obj' 기호를 함수 'iStd.obj'에서 '"void __cdecl drawDot(struct iPoint)" (?drawDot@@YAXUiPoint@@@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewGetAttribLocation'에 정의된 'glew.obj' 기호를 함수 'iStd.obj'에서 '"void __cdecl drawDot(struct iPoint)" (?drawDot@@YAXUiPoint@@@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewGetUniformLocation'에 정의된 'glew.obj' 기호를 함수 'iStd.obj'에서 '"void __cdecl drawDot(struct iPoint)" (?drawDot@@YAXUiPoint@@@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewUniform1f'에 정의된 'glew.obj' 기호를 함수 'iStd.obj'에서 '"void __cdecl drawDot(struct iPoint)" (?drawDot@@YAXUiPoint@@@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewUniform1i'에 정의된 'glew.obj' 기호를 함수 'iStd.obj'에서 '"void __cdecl drawImage(struct Texture *,float,float,float,float,int,int,int,int,int,int,int,int)" (?drawImage@@YAXPAUTexture@@MMMMHHHHHHHH@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewUniform2f'에 정의된 'glew.obj' 기호를 함수 'iStd.obj'에서 '"void __cdecl drawDot(struct iPoint)" (?drawDot@@YAXUiPoint@@@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewUniform4f'에 정의된 'glew.obj' 기호를 함수 'iStd.obj'에서 '"void __cdecl drawDot(struct iPoint)" (?drawDot@@YAXUiPoint@@@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewUniformMatrix4fv'에 정의된 'glew.obj' 기호를 함수 'iStd.obj'에서 '"void __cdecl drawDot(struct iPoint)" (?drawDot@@YAXUiPoint@@@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewUseProgram'에 정의된 'glew.obj' 기호를 함수 'iStd.obj'에서 '"void __cdecl drawDot(struct iPoint)" (?drawDot@@YAXUiPoint@@@Z)'이(가) 가져왔습니다.
+LINK : warning LNK4217: '___glewVertexAttribPointer'에 정의된 'glew.obj' 기호를 함수 'iStd.obj'에서 '"void __cdecl drawDot(struct iPoint)" (?drawDot@@YAXUiPoint@@@Z)'이(가) 가져왔습니다.
+  Metalslug.vcxproj -> C:\workspace\Metalslug\Debug\Metalslug.exe

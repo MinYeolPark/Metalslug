@@ -36,7 +36,7 @@ ProcMap::ProcMap(int stage)
 	this->stage = stage;
 	maxW = 0;
 	maxY = 0;
-
+	viewChange = false;
 	if (_mapImage == NULL)
  		_mapImage = createSingleImage(mapImageInfo,	mapNum[stage], this);
 
@@ -85,14 +85,15 @@ void ProcMap::init(int stage)
 		Texture* t = imgs[i]->tex;
 		maxW += t->width;		
 	}
-	maxY = new int[maxW];
+	printf("maxW=%d\n", maxW);
+	maxY = new int[maxW];	
 	for (int j = 0; j < mapNum[stage]; j++)
 	{
 		md = &mapData[j];
 		for (int k = 0; k < md->pCount; k++)
 		{
-			iPoint sp = md->p[k];
-			iPoint ep = md->p[1 + k];
+			iPoint sp = md->point[k];
+			iPoint ep = md->point[1 + k];
 
 			for (int m = sp.x; m < ep.x; m++)
 			{
@@ -101,23 +102,32 @@ void ProcMap::init(int stage)
 			}
 		}
 	}
+	off = iPointZero;
+	offMax = iPointMake(0, 18);
 	offMin = iPointMake(devSize.width - maxW, 0);
-	off =
-	offMax = iPointZero;
 }
 void ProcMap::update(float dt)
 {
 	//Camera Move
 	float x = player->p.x + off.x;
-	float y = player->p.y + off.y;
+	
+	if (!viewChange)
+	{
+		if (player->p.x > 1050)
+		{
+			if (move(iPointMake(100 * dt, 50 * dt)))
+			{
+				viewChange = true;			
+				//bg collider -> true : block to backward
+			}
+		}
+	}
 	if (x < devSize.width / 3)
 		move(iPointMake(devSize.width / 3 - x, 0));
 	else if (x > devSize.width * 2 / 3)
 		move(iPointMake(devSize.width * 2 / 3 - x, 0));
-
-	if (player->p.x > 1200)
-		move(iPointMake(0, devSize.height - 50 - y));
 }
+#include "InputMgr.h"
 void ProcMap::paint(float dt)
 {
 	iPoint p;
@@ -137,23 +147,39 @@ void ProcMap::paint(float dt)
 		}
 	}
 	//Map
+	//float ay[] = { +20, 0, 0};
+	// 0 ~ -40
+	// max min(map y)
 	for (int i = 0; i < mapNum[stage]; i++)
 	{
-		float w;
-		if (i == 0)
-			w = 0;
-		else
-			w = imgs[i-1]->tex->width;
-		imgs[i]->paint(dt, iPointMake(off.x + w, off.y));
+		md = &mapData[i];
+		imgs[i]->paint(dt, md->p + off);
 	}
 	//Obj
-	for (int i = 0; i < 3; i++)
+	imgObj[1]->stopAnimation();	
+	if (getKeyStat(keyboard_space))
 	{
-		;
+		imgObj[1]->frame = 1;
 	}
-	//imgObj[2]->paint(dt, iPointMake(200, -22));	
+	imgObj[1]->paint(dt, iPointMake(2300 + off.x, 200 + off.y));
+	drawDot(1300 + off.x, 200 + off.y);
+	imgObj[2]->paint(dt, iPointMake(3805 + off.x, off.y - 32));
+#ifdef _DEBUG
+	setLineWidth(2);
+	for (int j = 0; j < mapNum[stage]; j++)
+	{
+		md = &mapData[j];
+		for (int i = 0; i < md->pCount - 1; i++)
+		{
+			drawLine(md->point[i].x + map->off.x, md->point[i].y + map->off.y,
+				md->point[i + 1].x + map->off.x, md->point[i + 1].y + map->off.y);
+		}
+	}
+#endif // _DEBUG
+
+
 }
-iPoint ProcMap::move(iPoint mp)
+bool ProcMap::move(iPoint mp)
 {
 	iPoint p = off;
 	off += mp;
@@ -167,24 +193,36 @@ iPoint ProcMap::move(iPoint mp)
 	else if (off.y > offMax.y)
 		off.y = offMax.y;
 
-	return off - p;
+	return off.x == offMax.x || off.y == offMax.y;
 }
 
-
+iPoint objPosition[3] =
+{
+	{200, 180},  {2600, 180}, {3400, 100},
+};
 MapData mapData[] = {
 	{
-		{{1176 * 0, 200}, {1176 * 0.3, 170}, {1176 * 0.6, 200}, {1176 * 1, 200}},
-		4,
+		{0, 0},
+		{{1176 * 0, 170}, {155,145}, {280,175}, {415, 160}, {560, 180}, {1176 * 1, 180}},
+		6,
 		{{200,100}},
 	},
 	{
-		{{331 * 1, 200}, {331 * 1.3, 200}, {331 * 1.6, 200}, {331 * 2, 200}},
-		1.2f,
+		{1176, -17},
+		{{1176 * 1, 180}, {1176 * 1.3, 180}, {1176 * 1.6, 180}, {1176 + 1472, 180}},
+		1,
 		{{200,100}},
 	},
 	{
-		{{331 * 2, 200}, {331 * 2.3, 200}, {331 * 2.6, 200}, {2024, 200}},
-		4,
+		{1176 + 786, -17},
+		{{(1176 + 786) * 1, 180}, {(1176 + 786) * 1.3, 180}, {(1176 + 786) * 1.6, 180}, {(1176 + 786) + 1472, 180}},
+		1,
+		{{200,100}},
+	},
+	{
+		{1176 + 786 + 687, -16},
+		{{(1176 + 1472) * 1, 180}, {(1176 + 1472) * 1.3, 180}, {(1176 + 1472) * 1.6, 180}, {3960, 180}},
+		1,
 		{{200,100}},
 	},
 };
@@ -208,6 +246,14 @@ ImageInfo mapImageInfo[] =
 	},
 	{
 		"assets/Map/Map_02.png",
+		1, 1.f, { 0 , -224},
+		0.1f,
+		0,
+		{248,0,248,255},
+		NULL,
+	},
+	{
+		"assets/Map/Map_4.png",
 		1, 1.f, { 0 , -224},
 		0.1f,
 		0,

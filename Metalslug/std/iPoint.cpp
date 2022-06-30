@@ -143,6 +143,28 @@ iPoint iPointRotate(iPoint p, iPoint t, float degree)
 	return r;
 }
 
+float setDegree(float& degree, iPoint att, iPoint def, float spin, float dt)
+{
+	float d = 360 - iPointAngle(iPointMake(1, 0), iPointZero, def - att);
+	float diff = d - degree;
+	if (diff < 0)	diff += 360;
+	if (diff > 180)	diff -= 360;
+
+	float tDegree = degree + diff;
+	if (degree < tDegree)
+	{
+		degree += 360 * dt;
+		if (degree > tDegree)
+			degree = tDegree;
+	}
+	else if (degree > tDegree)
+	{
+		degree -= 360 * dt;
+		if (degree < tDegree)
+			degree = tDegree;
+	}
+	return diff;
+}
 float iPointAngle(const iPoint& v1, const iPoint& v2, const iPoint& v3)
 {
 #if 1// 제 2 코사인법칙(a2 = b2 + c2 - 2bc cosA)
@@ -166,29 +188,6 @@ float iPointAngle(const iPoint& v1, const iPoint& v2, const iPoint& v3)
 #endif
 }
 
-float setDegree(float& degree, iPoint att, iPoint def, float spin, float dt)
-{
-	float d = 360 - iPointAngle(iPointMake(1, 0), iPointZero, def - att);
-	float diff = d - degree;
-	if (diff < 0) diff += 360;
-	if (diff > 180) diff -= 360;
-
-	float tDegree = degree + diff;
-	if (degree < tDegree)
-	{
-		degree += 360 * dt;
-		if (degree > tDegree)
-			degree = tDegree;
-	}
-	else if (degree > tDegree)
-	{
-		degree -= 360 * dt;
-		if (degree < tDegree)
-			degree = tDegree;
-	}
-
-	return diff;
-}
 
 float linear(float r, float s, float e)
 {

@@ -23,7 +23,7 @@ ProcBullets::ProcBullets(int idx)
 	up = 0.f;
 	down = 0.f;
 	collider = new Collider();
-	collider->isActive = true;
+	collider->isActive = true;	
 	pattern = NULL;
 	speed = 0;
 	damage = 0;
@@ -54,7 +54,7 @@ void ProcBullets::init(ProcPlayer* parent, int index, float degree)
 {
 	this->isActive = true;
 	this->parent = parent;
-	this->index = index;
+	this->index = index;	
 	this->p = parent->firePoint;
 	this->degree = degree;
 	BulletPattern bp[BulletIndexMax] = {
@@ -64,11 +64,19 @@ void ProcBullets::init(ProcPlayer* parent, int index, float degree)
 	ProcBulletsPattern::patternMelee,
 	ProcBulletsPattern::patternMosque,
 	};
+	this->collider->init(parent, iSizeMake(10, 5));
 	this->pattern = bp[index];
 	this->speed = player->curGun->speed;
 	this->damage = player->curGun->dmg;
 	this->v = iPointRotate(iPointMake(1, 0), iPointZero, degree);
 	imgs[this->index]->startAnimation();
+	if (index == BulletBomb)
+	{
+		pow = 5.f;
+		up = 0.f;
+		down = 0.0f;
+		imgs[BulletMeleeEnd]->startAnimation(AnimationMgr::cbAniBulletDisappearWithAlpha, this);
+	}
 }
 
 void ProcBullets::init(ProcEnemy* parent, int index, float degree)
@@ -98,7 +106,6 @@ void ProcBullets::init(ProcEnemy* parent, int index, float degree)
 		down = 0.0f;
 		imgs[BulletMeleeEnd]->startAnimation(AnimationMgr::cbAniBulletDisappearWithAlpha, this);
 	}
-
 }
 
 void ProcBullets::init(ProcObject* parent, int index, float degree)
@@ -121,7 +128,6 @@ void ProcBullets::init(ProcObject* parent, int index, float degree)
 	imgs[this->index]->startAnimation();
 }
 
-int blinkNum = 5;
 void ProcBullets::update(float dt)
 {	
 #if 1
@@ -215,11 +221,14 @@ bool ProcBullets::draw(float dt, iPoint off)
 {	
 	setRGBA(1, 1, 1, a);
 	imgCurr = imgs[index];
+	imgCurr->degree = degree;
+	//if (index == Handgun)
+	//else if (index = HeavyMachinegun)
+	//	imgCurr->degree = setDegree(degree, { 1000,0 }, { 0,1000 }, 360, dt);
 	imgCurr->paint(dt, p + off);
-
-
 #ifdef _DEBUG				
 	drawRect(collider->getCollider());
+	setDotSize(5);
 #endif // DEBUG
 	
 	setRGBA(1, 1, 1, 1);

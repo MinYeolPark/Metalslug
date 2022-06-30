@@ -3,7 +3,8 @@
 
 struct MapData
 {
-	iPoint p[20];
+	iPoint p;
+	iPoint point[20];
 	int pCount;
 	iPoint trigger[3];
 };
@@ -22,7 +23,7 @@ public:
 	int stage;
 	int maxW;			//map texture 넓이
 	int* maxY;			//map texture 높이
-
+	bool viewChange;
 	iImage** imgs;
 	iImage** imgsLayer;
 	iImage* imgObj[3];	//0: Step, 2: bossLayer
@@ -38,7 +39,7 @@ public:
 	void init(int stage);
 	void update(float dt);
 	void paint(float dt);
-	iPoint move(iPoint mp);
+	bool move(iPoint mp);
 };
 #define layerNum 3
 extern ProcMap* map;

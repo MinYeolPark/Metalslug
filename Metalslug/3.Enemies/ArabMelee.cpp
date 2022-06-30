@@ -21,7 +21,7 @@ ArabMelee::ArabMelee(int index) : ProcEnemy(index)
 	dmg = 100;
 	sight = 200;
 	moveSpeed = 150.f;
-	attkRange = 70;
+	attkRange = 100;
 	attkRate = 0.f;	_attkRate = 2.f;
 	aiDt = 0.f;	_aiDt = 2.f;
 #if 1
@@ -96,9 +96,12 @@ void ArabMelee::setState(int newState)
 int len;
 void ArabMelee::update(float dt)
 {
-	isActive = containPoint(p,
-		iRectMake(-map->off.x - 40, -map->off.y - 40,
-			devSize.width + 80, devSize.height + 80));
+	if (isAppear)
+	{
+		isActive = containPoint(p,
+			iRectMake(-map->off.x - 40, -map->off.y - 40,
+				devSize.width + 80, devSize.height + 80));
+	}
 	fp = { p.x, p.y - 20 };
 	if (v != iPointZero)
 	{
@@ -112,13 +115,14 @@ void ArabMelee::update(float dt)
 	if (!isAppear)
 	{
 		float mx = p.x + map->off.x;
-		float ip = devSize.width * 3 / 4;
+		float ip = devSize.width * 7 / 8 + map->off.x;		//appear point
 		if (p.x - ip > 0)
 			v.x = -1;
 		else if (p.x + ip < 0)
 			v.x = 1;
 		if (mx > ip)
-		{
+		{			
+			int r = (rand() % 1)- 0.5 * 2 * 50;			
 			if (movePoint(p, p, iPointMake(ip, p.y), moveSpeed * dt))
 			{
 				v = iPointZero;

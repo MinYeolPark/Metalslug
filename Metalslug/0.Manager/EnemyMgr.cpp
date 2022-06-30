@@ -58,7 +58,8 @@ void loadProcEnemy()
 
 	//spawn pattern
 	
-	//addProcEnemy(IdxArMelee, iPointMake(300, 100), iPointMake(0,0));	
+	addProcEnemy(IdxArMelee, iPointMake(500, 100), iPointMake(0,0));	
+	addProcEnemy(IdxArMelee, iPointMake(400, 100), iPointMake(0, 0));
 	//addProcEnemy(IdxArBurserker, iPointMake(200, 100), iPointMake(0, 0));
 	//addProcEnemy(IdxArCamel, iPointMake(300, 100), iPointMake(0, 0));
 	//addProcEnemy(IdxKessie, iPointMake(200, 70), iPointMake(0, 0));

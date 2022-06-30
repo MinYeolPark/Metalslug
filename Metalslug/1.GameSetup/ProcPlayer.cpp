@@ -38,7 +38,8 @@ ProcPlayer::ProcPlayer(int index) : ProcObject()
     botImgCurr = NULL;
 
     curGun = new Gun();//{ HandGun, 100, 100, 0 };
-    firePoint = iPointMake(p.x + 10, p.y - 15);
+    fireDeg = 0;
+    firePoint = iPointMake(p.x + 15, p.y - 25);
     bombPoint = p;
     up = 0;
     down = 0;
@@ -99,10 +100,15 @@ void ProcPlayer::init(iPoint p)
 {
     isActive = true;
     isDead = false;
+    dirRight = true;
+    dirUp = false;
+    fireDeg = 0;
+    firePoint = iPointMake(p.x + 15, p.y - 30);
     topState = PlayerSpawn;
     botState = PlayerIdle;
     this->p = p;
-    curGun->gunIndex = Handgun;
+    //curGun->gunIndex = Handgun;
+    curGun->gunIndex = HeavyMachinegun;
     alpha = 1.0f;
     bombs = 10;
     life--;
@@ -110,12 +116,13 @@ void ProcPlayer::init(iPoint p)
     if (topState == PlayerSpawn)
         topImgs[topState]->startAnimation(AnimationMgr::cbAniToIdle, this);
 
+    
     for(int i=0;i<colNum;i++)
         objects->addObject(colliders[i]);
 }
 
 void ProcPlayer::update(float dt)
-{
+{   
     v = iPointZero;
     if (getKeyStat(keyboard_left))
         v.x = -1;
@@ -133,13 +140,13 @@ void ProcPlayer::update(float dt)
         {
             dirRight = false;
             fireDeg = 180;
-            firePoint = iPointMake(p.x - 10, p.y - 10);
+            firePoint = iPointMake(p.x - 15, p.y - 25);
         }
         else if (v.x > 0)
         {
             dirRight = true;
             fireDeg = 0;
-            firePoint = iPointMake(p.x + 10, p.y - 10);
+            firePoint = iPointMake(p.x + 15, p.y - 25);
         }
 
         if (v.y < 0)
@@ -147,9 +154,9 @@ void ProcPlayer::update(float dt)
             dirUp = false;
             fireDeg = 270;
             if (dirRight)
-                firePoint = iPointMake(p.x + 5, p.y - 40);
+                firePoint = iPointMake(p.x, p.y - 40);
             else
-                firePoint = iPointMake(p.x - 5, p.y - 40);
+                firePoint = iPointMake(p.x, p.y - 40);
         }
         else if (v.y > 0)
         {
@@ -283,20 +290,12 @@ bool ProcPlayer::draw(float dt, iPoint off)
     
     botImgCurr = botImgs[botState];
     topImgCurr = topImgs[topState];
+    topImgCurr->reverse = dirRight ? REVERSE_NONE : REVERSE_WIDTH;
+    botImgCurr->reverse = dirRight ? REVERSE_NONE : REVERSE_WIDTH;
     if (topState < PlayerBrake)
         botImgCurr->paint(dt, p + off);
-    if (!dirRight)
-    {
-        if (v.x < 0)
-            topImgCurr->reverse = REVERSE_WIDTH;
-        topImgCurr->paint(dt, p + off);
-    }
-    else
-    {
-        if (v.x > 0)
-            topImgCurr->reverse = REVERSE_WIDTH;        
-        topImgCurr->paint(dt, p + off);
-    }    
+
+    topImgCurr->paint(dt, p + off);
 #if 0
     topImgCurr = topImgs[topState];
     botImgCurr = botImgs[botState];
@@ -360,6 +359,11 @@ void ProcPlayer::fire(iPoint v)
             printf("fire!!\n");
         }
         addBullet(this, curGun->gunIndex, fireDeg);
+        if (curGun->gunIndex == HeavyMachinegun)
+        {
+            for(int i=0;i<2;i++)
+                addBullet(this, curGun->gunIndex, fireDeg);
+        }
     }
 }
 
@@ -372,7 +376,7 @@ void ProcPlayer::bomb(iPoint v)
         bombPoint = iPointMake(p.x + bombRange, maxY);
     else if (v.x < 0)
         bombPoint = iPointMake(p.x - bombRange, maxY);
-    addBullet(this, Bomb, -45);
+    addBullet(this, BulletBomb, 0);
 }
 
 void ProcPlayer::dead()
@@ -621,14 +625,6 @@ ImageInfo infoEriTopHeavy[] =
    },
    //top
    {
-      "assets/Player/Heavy_Crouch_Melee_%02d.png",
-      9, 1.0f, { -42 / 2, 0 },
-      0.1f,
-      1,
-      {255,0,0,255},
-      NULL,
-   },
-   {
       "assets/Player/Heavy_AimUp_%02d.png",
       6, 1.0f, { -60 / 2, 16 },
       0.06f,
@@ -709,6 +705,14 @@ ImageInfo infoEriTopHeavy[] =
       {255,0,0,255},
       NULL,
    },
+   {
+       "assets/Player/Heavy_Crouch_Melee_%02d.png",
+       9, 1.0f, { -42 / 2, 0 },
+       0.1f,
+       1,
+       { 255,0,0,255 },
+       NULL,
+   },
    //Only
    {
       "assets/Player/Spawn_%02d.png",
@@ -716,7 +720,7 @@ ImageInfo infoEriTopHeavy[] =
       0.06f,
       0,
       {255,0,0,255},
-      NULL,
+      AnimationMgr::cbAniToIdle,
    },
    {
       "assets/Player/Dead_%02d.png",
@@ -727,4 +731,3 @@ ImageInfo infoEriTopHeavy[] =
       NULL,
    },
 };
-
