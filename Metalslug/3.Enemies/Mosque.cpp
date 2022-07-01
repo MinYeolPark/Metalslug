@@ -11,8 +11,12 @@ ImageInfo imgMosqueBaseInfo[];
 ImageInfo imgMosqueAddInfo[];
 static iImage** _imgMosqueBase = NULL;
 static iImage** _imgMosqueAdd = NULL;
-Mosque::Mosque()
+Mosque::Mosque(int index) : ProcEnemy(index)
 {	
+	layer = LayerMosque;
+	index = IdxMosque;
+
+	state = MosqueIdle;
 	memset(imgBase, 0x00, sizeof(imgBase));
 	memset(imgDoor, 0x00, sizeof(imgDoor));
 
@@ -41,40 +45,29 @@ Mosque::Mosque()
 	memset(soldierP, 0x00, sizeof(soldierP));
 	memset(towerP, 0x00, sizeof(towerP));
 	
-	p = iPointZero;
-	tp = { -1,-1 };
-	s = iSizeZero;
+#if 1
+	colNum = 3;
+	for (int i = 0; i < colNum; i++)
+	{
+		iSize s[3] = {
+			{60, 60},{60,60},{60,60}
+		};
+		colliders[i]->init(this, s[i]);
+	}
+#endif
 
 	isActive = false;
-		
+	isAppear = false;
+	memset(isShutterOpen, 0x00, sizeof(isShutterOpen));		
 	memset(hp, 0x00, sizeof(hp));
 	_hp = 0.f;
-	memset(rate, 0x00, sizeof(rate));
-	_rate = 0.f;
 
 	if (_imgMosqueBase == NULL)
 		_imgMosqueBase = createSingleImage(imgMosqueBaseInfo, 16, this);
 	if (_imgMosqueAdd == NULL)
 		_imgMosqueAdd = createSingleImage(imgMosqueAddInfo, 4, this);
-}
 
-Mosque::~Mosque()
-{
-	for (int i = 0; i < MosqueBehaveMax; i++)
-	{
-		delete _imgMosqueBase[i];
-		delete _imgMosqueAdd[i];
-	}
-	delete _imgMosqueBase;
-	delete _imgMosqueAdd;
 
-	_imgMosqueBase = NULL;
-	_imgMosqueAdd = NULL;
-}
-void Mosque::initObj()
-{
-	p = iPointMake(230, 200);
-	
 	doorP[0] = { p.x - 60, p.y - 3 };
 	doorP[1] = { p.x + 110, p.y - 3 };
 
@@ -85,7 +78,7 @@ void Mosque::initObj()
 	imgBase[MosqueIdle] = _imgMosqueBase[0]->clone();
 	imgBase[MosqueDead] = _imgMosqueBase[1]->clone();
 	imgDoor[MosqueIdle] = _imgMosqueBase[2]->clone();
-	imgDoor[MosqueDead] = _imgMosqueBase[3]->clone();	
+	imgDoor[MosqueDead] = _imgMosqueBase[3]->clone();
 	imgLeftTower[MosqueIdle] = _imgMosqueBase[4]->clone();
 	imgLeftTower[MosqueDead] = _imgMosqueBase[5]->clone();
 	imgMidTower[MosqueIdle] = _imgMosqueBase[6]->clone();
@@ -102,48 +95,60 @@ void Mosque::initObj()
 	for (int i = 0; i < 3; i++)
 	{
 		imgShutter[i][MosqueIdle] = _imgMosqueAdd[0]->clone();
-		imgShutter[i][MosqueDead] = _imgMosqueAdd[1]->clone();		
+		imgShutter[i][MosqueDead] = _imgMosqueAdd[1]->clone();
 		imgSoldier[i][MosqueIdle] = _imgMosqueAdd[2]->clone();
 		imgSoldier[i][MosqueDead] = _imgMosqueAdd[3]->clone();
 	}
 
-	isActive = true;
-	_rate = 5.f;
 	_hp = 1500.f;
 	for (int i = 0; i < 3; i++)
-	{		
+	{
 		hp[i] = 100.f;
 		float t = rand() % 100;
-		float r= (t / 100) * _rate;
-		rate[i] = r;
 	}
-};
+}
 
-void Mosque::updateObj(float dt)
-{	
+Mosque::~Mosque()
+{
+	for (int i = 0; i < MosqueBehaveMax; i++)
+	{
+		delete _imgMosqueBase[i];
+		delete _imgMosqueAdd[i];
+	}
+	delete _imgMosqueBase;
+	delete _imgMosqueAdd;
+
+	_imgMosqueBase = NULL;
+	_imgMosqueAdd = NULL;
+}
+
+void Mosque::init(int index, iPoint p, iPoint v)
+{
+	ProcEnemy::init(index, p, v);
+	doorP[0] = { p.x - 60, p.y - 3 };
+	doorP[1] = { p.x + 110, p.y - 3 };
+
+	towerP[0] = { p.x - 60, p.y - 50 };
+	towerP[1] = { p.x + 40, p.y - 50 };
+	towerP[2] = { p.x + 130, p.y - 50 };
+
+	for (int i = 0; i < 3; i++)
+		hp[i] = _hp;
+}
+
+void Mosque::update(float dt)
+{		
 	for(int i = 0; i < 3; i++)
 	{
-		if (movePoint(towerP[i], towerP[i], iPointMake(towerP[i].x,
-			p.y - 80), 1))
+		if (movePoint(towerP[i], towerP[i], 
+			iPointMake(towerP[i].x, p.y - 80), 1))
 			shutterState[i] = MosqueDead;
 
 		if (isShutterOpen[i])
 		{
-			rate[i] += dt;
-			if (rate[i] > _rate)
-			{
-				rate[i] = 0.f;
-				//addBullet(this ,BulletMosque, soldierP[i]);
-				addProcEffect(EffectMoskTrail, soldierP[i]);
-			}
+			
 		}
 	}
-
-
-	fixedUpdate(dt);
-}
-void Mosque::fixedUpdate(float dt)
-{
 	shutterP[0] = { towerP[0].x + 2, towerP[0].y - 70 };
 	shutterP[1] = { towerP[1].x + 2, towerP[1].y - 70 };
 	shutterP[2] = { towerP[2].x + 5, towerP[2].y - 70 };
@@ -155,39 +160,94 @@ void Mosque::fixedUpdate(float dt)
 	soldierP[0] = { shutterP[0].x - 5, shutterP[0].y - 5 };
 	soldierP[1] = { shutterP[1].x - 5, shutterP[1].y - 5 };
 	soldierP[2] = { shutterP[2].x - 5, shutterP[2].y - 5 };
+
+	if (isDead)
+	{
+		for(int i=0;i<3;i++)
+			addProcEffect(EffectExplosion, towerP[i]);
+	}
+	fixedUpdate(dt);
 }
-void Mosque::fire(float dt)
+void Mosque::fixedUpdate(float dt)
+{
+	for (int i = 0; i < 3; i++)
+		colliders[i]->update(
+			iPointMake(towerP[i].x, towerP[i].y - colliders[i]->getCollider().size.height));
+}
+bool Mosque::dead()
+{
+	setState(MosqueDead);
+	isDead = true;
+	for (int i = 0; i < colNum; i++)
+	{
+		if (colliders[i]->isActive == false)
+		{
+			towerState[i] = MosqueDead;
+		}
+	}
+	return isDead;
+}
+void Mosque::getDamage(float damage, Collider* c)
+{
+	for (int i = 0; i < colNum; i++)
+	{
+		if (containPoint(c->p, colliders[i]->getCollider()))
+		{
+			if(c == colliders[i])
+				hp[i] -= damage;		
+			printf("hp=%f\n", hp[i]);
+			if (hp[i] < 1)
+			{
+				colliders[i]->disable();
+				dead();
+			}
+		}
+	}
+}
+void Mosque::setState(int newState)
+{
+	state = newState;
+}
+
+void Mosque::free()
 {
 }
-void Mosque::dead()
-{
-	
-}
-bool Mosque::drawObj(float dt, iPoint off)
+
+bool Mosque::draw(float dt, iPoint off)
 {
 	imgLeftTower[towerState[0]]->paint(dt, towerP[0] + off);
 	imgMidTower[towerState[1]]->paint(dt, towerP[1] + off);
 	imgRightTower[towerState[2]]->paint(dt, towerP[2] + off);
 
 	imgBase[MosqueIdle]->paint(dt, p + off);
-
+		
 	for (int i = 0; i < 3; i++)
-		imgSoldier[i][soldierState[i]]->paint(dt, soldierP[i] + off);
-
-	imgLeftCurtain[curtainState[0]]->paint(dt, curtainP[0] + off);
-	imgMidCurtain[curtainState[1]]->paint(dt, curtainP[1] + off);
-	imgRightCurtain[curtainState[2]]->paint(dt, curtainP[2] + off);
-	for (int j = 0; j < 3; j++)
 	{
-		imgShutter[j][shutterState[j]]->paint(dt, shutterP[j] + off);
+		if (towerState[i] != MosqueDead)
+		{
+			imgSoldier[i][soldierState[i]]->paint(dt, soldierP[i] + off);
+			imgLeftCurtain[curtainState[i]]->paint(dt, curtainP[0] + off);
+			imgMidCurtain[curtainState[i]]->paint(dt, curtainP[1] + off);
+			imgRightCurtain[curtainState[i]]->paint(dt, curtainP[2] + off);
+			//imgShutter[i][shutterState[i]]->paint(dt, shutterP[i] + off);
+		}
 	}
+	
+
+#ifdef _DEBUG
+	drawDot(p);
+	
+	for (int i = 0; i < 3; i++)
+	{
+		iRect c = colliders[i]->getCollider();
+		c.origin.x += off.x;
+		c.origin.y += off.y;
+		drawRect(c);
+	}
+#endif // _DEBUG
+
 	return !isActive;
 }
-
-void Mosque::freeeObj()
-{
-}
-
 
 void Mosque::cbAniShutterOpen(void* parm)
 {

@@ -162,6 +162,9 @@
     <ClInclude Include="EventMgr.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="1.GameSetup\ProcStructure.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp">
@@ -308,6 +311,9 @@
     <ClCompile Include="EventMgr.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="1.GameSetup\ProcStructure.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Metalslug.rc">
@@ -319,6 +325,33 @@
       <Filter>리소스 파일</Filter>
     </Image>
     <Image Include="Metalslug.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="assets\Player\Crouch_Fire_00.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="assets\Player\Crouch_Fire_01.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="assets\Player\Crouch_Fire_02.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="assets\Player\Crouch_Fire_03.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="assets\Player\Crouch_Fire_04.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="assets\Player\Crouch_Fire_05.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="assets\Player\Crouch_Fire_06.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="assets\Player\Crouch_Fire_07.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="assets\Player\Crouch_Fire_08.png">
       <Filter>리소스 파일</Filter>
     </Image>
   </ItemGroup>

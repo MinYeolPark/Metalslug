@@ -37,6 +37,7 @@ public:
 	ProcObject* parent;
 	int index;
 
+	int layer;
 	float degree;
 	bool isActive;
 	iPoint p;

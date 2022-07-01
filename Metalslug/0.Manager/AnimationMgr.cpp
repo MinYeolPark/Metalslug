@@ -16,6 +16,15 @@ void AnimationMgr::cbAniToIdle(void* parm)
 	pp->botState = PlayerIdle;
 }
 
+void AnimationMgr::cbAniToCrouch(void* parm)
+{
+	ProcPlayer* pp = (ProcPlayer*)parm;
+
+	pp->fireing = false;
+	pp->topImgs[pp->topState]->startAnimation(AnimationMgr::cbAniToIdle, pp);
+	pp->topState = PlayerCrouch;
+}
+
 void AnimationMgr::cbAniDead(void* parm)
 {
 	ProcObject* e = (ProcObject*)parm;

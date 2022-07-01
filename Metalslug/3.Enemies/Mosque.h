@@ -2,6 +2,7 @@
 
 #include "iStd.h"
 
+#include "ProcEnemy.h"
 enum MosqueBaseBehave
 {
 	MosqueIdle = 0,
@@ -10,10 +11,11 @@ enum MosqueBaseBehave
 	MosqueBehaveMax,
 };
 
-class Mosque
+class Mosque:
+	public ProcEnemy
 {
 public:
-	Mosque();
+	Mosque(int index);
 	~Mosque();
 public:
 	iImage* imgBase[2];
@@ -30,12 +32,12 @@ public:
 	iImage* imgShutter[3][2];
 	iImage* imgSoldier[3][2];	
 
-	MosqueBaseBehave baseState;
-	MosqueBaseBehave doorState;
-	MosqueBaseBehave towerState[3];
-	MosqueBaseBehave shutterState[3];
-	MosqueBaseBehave curtainState[3];
-	MosqueBaseBehave soldierState[3];
+	int baseState;
+	int doorState;
+	int towerState[3];
+	int shutterState[3];
+	int curtainState[3];
+	int soldierState[3];
 
 	iPoint doorP[2];
 	iPoint towerP[3];
@@ -44,27 +46,22 @@ public:
 	bool isShutterOpen[3];
 	iPoint soldierP[3];
 
-	iPoint p;
-	iPoint tp;
-	iSize s;
-
-	bool isActive;
-
-	float hp[3], _hp;
-	float rate[3], _rate;
+	float aiDt, _aiDt;
+	float hp[3], _hp;		//0 : left, 1: mid, 2: right
+	
+	virtual int getFrame() { return NULL; }
+	virtual bool dead();
+public:
+	virtual void getDamage(float damage, Collider* c);
+	virtual void setState(int newState);
 
 public:
-	void initObj();
-	void updateObj(float dt);
-	void fixedUpdate(float dt) ;	
-	bool drawObj(float dt, iPoint off);
-	void freeeObj() ;
+	virtual void init(int index, iPoint p, iPoint v);
+	virtual void update(float dt);
+	virtual void fixedUpdate(float dt);
+	virtual bool draw(float dt, iPoint off);
+	virtual void free();
 
-	//Behave
-public:
-	void fire(float dt);
-	void dead();
-	//Ani callback
 public:
 	static void cbAniShutterOpen(void* parm);
 	static void cbAniCurOpen(void* parm);

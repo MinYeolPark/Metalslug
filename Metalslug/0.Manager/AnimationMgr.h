@@ -3,6 +3,7 @@ class AnimationMgr
 {
 public:
 	static void cbAniToIdle(void* parm);
+	static void cbAniToCrouch(void* parm);
 	static void cbAniDead(void* parm);
 	static void cbAniAttack(void* parm);
 

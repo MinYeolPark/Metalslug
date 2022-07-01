@@ -47,6 +47,10 @@ void ProcObject::init(iPoint p, iPoint v)
 	this->v = v;
 }
 
+void ProcObject::init(int index, iPoint p)
+{
+}
+
 void ProcObject::init(int index, iPoint p, iPoint v)
 {
 	this->index = index;

@@ -57,8 +57,7 @@ void ProcEnemy::init(int index, iPoint p, iPoint v)
 		//init
 		colliders[i]->enable();
 		objects->addObject(colliders[i]);
-	}
-	
+	}	
 }
 
 void ProcEnemy::fixedUpdate(float dt)
@@ -97,5 +96,5 @@ void ProcEnemy::fixedUpdate(float dt)
 	}
 
 	for (int i = 0; i < colNum; i++)
-		colliders[i]->update(this);
+		colliders[i]->update(p);
 }

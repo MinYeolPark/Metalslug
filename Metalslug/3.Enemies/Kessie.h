@@ -45,7 +45,7 @@ class Kessie
 	:public ProcEnemy
 {
 public:
-	Kessie(int idx);
+	Kessie(int index);
 	virtual ~Kessie();
 
 public:

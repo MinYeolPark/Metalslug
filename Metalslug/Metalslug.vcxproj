@@ -156,6 +156,7 @@
     <ClInclude Include="1.GameSetup\ProcNpc.h" />
     <ClInclude Include="3.Enemies\ArabCamel.h" />
     <ClInclude Include="EventMgr.h" />
+    <ClInclude Include="1.GameSetup\ProcStructure.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="1.GameSetup\Select.h" />
     <ClInclude Include="Sorting.h" />
@@ -210,6 +211,7 @@
     <ClCompile Include="1.GameSetup\Select.cpp" />
     <ClCompile Include="3.Enemies\Kessie.cpp" />
     <ClCompile Include="1.GameSetup\ProcNpc.cpp" />
+    <ClCompile Include="1.GameSetup\ProcStructure.cpp" />
     <ClCompile Include="Sorting.cpp" />
     <ClCompile Include="std\iArray.cpp" />
     <ClCompile Include="std\iColor.cpp" />
@@ -232,6 +234,15 @@
     <ResourceCompile Include="Metalslug.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="assets\Player\Crouch_Fire_00.png" />
+    <Image Include="assets\Player\Crouch_Fire_01.png" />
+    <Image Include="assets\Player\Crouch_Fire_02.png" />
+    <Image Include="assets\Player\Crouch_Fire_03.png" />
+    <Image Include="assets\Player\Crouch_Fire_04.png" />
+    <Image Include="assets\Player\Crouch_Fire_05.png" />
+    <Image Include="assets\Player\Crouch_Fire_06.png" />
+    <Image Include="assets\Player\Crouch_Fire_07.png" />
+    <Image Include="assets\Player\Crouch_Fire_08.png" />
     <Image Include="Metalslug.ico" />
     <Image Include="small.ico" />
   </ItemGroup>

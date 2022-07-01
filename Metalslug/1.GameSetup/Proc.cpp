@@ -13,10 +13,12 @@
 #include "ProcField.h"
 #include "ProcNpc.h"
 #include "ProcItem.h"
+#include "ProcStructure.h"
 
 void loadProc()
 {
 	loadProcField();
+	loadStructure();
 
 	loadProcPlayer();
 	loadProcItem();
@@ -30,6 +32,7 @@ void loadProc()
 void freeProc()
 {
 	freeProcField();
+	freeStructure();
 
 	freeProcPlayer();
 	freeProcItem();
@@ -44,6 +47,7 @@ void freeProc()
 void drawProc(float dt)
 {
 	iPoint off = drawProcField(dt);
+	drawStructure(dt, off);
 
 	drawProcNpcs(dt, off);
 	drawProcItem(dt, off);

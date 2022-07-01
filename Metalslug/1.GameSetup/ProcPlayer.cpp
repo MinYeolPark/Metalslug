@@ -39,7 +39,7 @@ ProcPlayer::ProcPlayer(int index) : ProcObject()
 
     curGun = new Gun();//{ HandGun, 100, 100, 0 };
     fireDeg = 0;
-    firePoint = iPointMake(p.x + 15, p.y - 25);
+    firePoint = iPointMake(p.x + 15, p.y - 20);
     bombPoint = p;
     up = 0;
     down = 0;
@@ -103,7 +103,7 @@ void ProcPlayer::init(iPoint p)
     dirRight = true;
     dirUp = false;
     fireDeg = 0;
-    firePoint = iPointMake(p.x + 15, p.y - 30);
+    firePoint = iPointMake(p.x + 15, p.y - 22);
     topState = PlayerSpawn;
     botState = PlayerIdle;
     this->p = p;
@@ -115,7 +115,6 @@ void ProcPlayer::init(iPoint p)
 
     if (topState == PlayerSpawn)
         topImgs[topState]->startAnimation(AnimationMgr::cbAniToIdle, this);
-
     
     for(int i=0;i<colNum;i++)
         objects->addObject(colliders[i]);
@@ -140,38 +139,61 @@ void ProcPlayer::update(float dt)
         {
             dirRight = false;
             fireDeg = 180;
-            firePoint = iPointMake(p.x - 15, p.y - 25);
+            firePoint = iPointMake(p.x - 15, p.y - 22);
         }
         else if (v.x > 0)
         {
-            dirRight = true;
+            dirRight = true;         
             fireDeg = 0;
-            firePoint = iPointMake(p.x + 15, p.y - 25);
+            firePoint = iPointMake(p.x + 15, p.y - 22);
         }
 
         if (v.y < 0)
         {
             dirUp = false;
             fireDeg = 270;
-            if (dirRight)
-                firePoint = iPointMake(p.x, p.y - 40);
-            else
-                firePoint = iPointMake(p.x, p.y - 40);
+            if (!up)
+            {
+                if (dirRight)
+                    firePoint = iPointMake(p.x + 1, p.y - 80);  //fireUp right
+                else
+                    firePoint = iPointMake(p.x - 1, p.y - 80);  //fireUp left
+            }
         }
         else if (v.y > 0)
         {
             dirUp = true;
-            fireDeg = 90;
-            if (dirRight)
-                firePoint = iPointMake(p.x + 5, p.y - 40);
-            else
-                firePoint = iPointMake(p.x - 5, p.y - 40);
+            if (!up)
+            {
+                fireDeg = dirRight ? 0 : 180;
+                firePoint = iPointMake(p.x + 15, p.y - 18);     //crouch Fire
+            }
+            else//if(up)
+            {
+                if (dirRight)
+                    firePoint = iPointMake(p.x + 1, p.y - 5);   //fireDown right
+                else
+                    firePoint = iPointMake(p.x - 1, p.y - 5);   //fireDown left
+                fireDeg = 90;
+            }
         }
         else
-        {
             dirUp = false;
-        }
     }
+    else
+    {
+        //fireDeg init
+        if (dirRight)
+        {
+            fireDeg = 0;
+            firePoint = iPointMake(p.x + 15, p.y - 25);
+        }
+        else// if(!dirRight)
+        {
+            fireDeg = 180;
+            firePoint = iPointMake(p.x - 15, p.y - 25);
+        }
+    }    
     if (getKeyDown(keyboard_z))
     {
         topState = PlayerJump;
@@ -202,7 +224,12 @@ void ProcPlayer::update(float dt)
             }
             if (v.y>0)
             {
-                topState = PlayerCrouch;
+                if (!fireing)
+                    topState = PlayerCrouch;
+                else
+                {
+                    topState = PlayerCrouchFire;                    
+                }
             }
             else if (v.y < 0)
             {
@@ -218,7 +245,7 @@ void ProcPlayer::update(float dt)
                 topState = PlayerBrake;
                 topImgs[topState]->startAnimation(AnimationMgr::cbAniToIdle, this);
             }
-			else if (topState == PlayerCrouch || topState == PlayerAimtoUp)
+			else if (topState == PlayerCrouch || topState==PlayerCrouchFire || topState == PlayerAimtoUp)
             {
                 topImgs[topState]->startAnimation();
                 topState = PlayerIdle;
@@ -228,27 +255,53 @@ void ProcPlayer::update(float dt)
     }
     else//if(up)
     {
-        if (v != iPointZero)
+        if (v.y > 0)
         {
-            topState = PlayerRunJump;
-            botState = PlayerRunJump;
+            if (!fireing)
+                topState = PlayerAimtoDown;
+            else
+                topState = PlayerFireDown;
+        }
+        else if (v.y < 0)
+        {
+            if (!fireing)
+                topState = PlayerAimtoUp;
+            else
+                topState = PlayerFireUp;
         }
         else
         {
-            topState = PlayerJump;
-            botState = PlayerJump;
-        }
+            if (v.x != 0)
+            {
+                if (fireing)
+                    topState = PlayerFire;
+                else
+                    topState = PlayerRunJump;
+                botState = PlayerRunJump;
+            }
+            else
+            {
+                if (fireing)
+                    topState = PlayerFire;
+                else
+                    topState = PlayerJump;
+                botState = PlayerJump;
+            }
+        }        
     }    
     
     p.x += v.x;
+    if(p.x<maxX)
+        p.x = maxX;
+    printf("max X= %d\n", maxX);
     fixedUpdate(dt);
 }
 void ProcPlayer::fixedUpdate(float dt)
 { 
-    int maxY = *(map->maxY + (int)p.x);
-    if (p.y > maxY)      //on air
+    int maxH = *(map->maxY + (int)p.x);
+    if (p.y > maxH)      //on air
     {
-        p.y = maxY;
+        p.y = maxH;
         up = 0;
         down = 0;
         fall = false;
@@ -268,15 +321,44 @@ void ProcPlayer::fixedUpdate(float dt)
 
     if (fall)
     {
-        if (p.y < maxY)
+        if (p.y < maxH)
         {
             down += jumpDecrease * dt;
             p = (iPointMake(p.x, p.y += down));
         }
     }
 
+    for (int i = 0; i < objects->count; i++)
+    {
+		int x = 0;
+		int y = 0;
+        Collider* c = (Collider*)objects->objectAtIndex(i);
+        if (v.x > 0)
+        {
+            x = c->p.x - c->s.width / 2;
+        }
+        else if (v.x < 0)
+        {
+            x = c->p.x + c->s.width / 2;
+        }
+
+        if (fall)
+        {
+            y = c->p.y - c->s.height;
+        }
+        else//(!fall)
+        {
+            y = c->p.y;
+        }
+        if (c->isTrigger == false)      //Obstruction objects
+        {
+            
+        }
+        maxX = x;
+        maxY = y;
+    }
     for (int i = 0; i < colNum; i++)
-        colliders[i]->update(this);
+        colliders[i]->update(p);
 }
 bool ProcPlayer::draw(float dt, iPoint off)
 {
@@ -304,7 +386,10 @@ bool ProcPlayer::draw(float dt, iPoint off)
 #ifdef _DEBUG
         setDotSize(10);
         drawDot(p + off);
-        drawRect(colliders[0]->getCollider());
+        iRect c = colliders[0]->getCollider();
+        c.origin.x += off.x;
+        c.origin.y += off.y;
+        drawRect(c);
         //drawRect(p.x - 100, p.y - 100, 200, 200);
 #endif
     }
@@ -349,7 +434,10 @@ void ProcPlayer::fire(iPoint v)
         }
         else if (v.y > 0)   //aim down
         {
-            topState = PlayerFireDown;
+            if(up)
+                topState = PlayerFireDown;
+            else
+                topState=PlayerCrouchFire;
             topImgs[topState]->startAnimation(AnimationMgr::cbAniToIdle, this);
         }
         else
@@ -563,14 +651,14 @@ ImageInfo topImageInfo[] =
       {255,0,0,255},
       NULL,
    },
-   {
-      "assets/Player/Crouch_Melee_%02d.png",
-      11, 1.0f, { -51 / 2, 0 },
-      0.06f,
-      1,
-      {255,0,0,255},
-      NULL,
-   },
+	  {
+	  "assets/Player/Crouch_Fire_%02d.png",
+	  11, 1.0f, { -51 / 2, 0 },
+	  0.06f,
+	  1,
+	  {255,0,0,255},
+      AnimationMgr::cbAniToCrouch,
+	  },
    {
       "assets/Player/Spawn_%02d.png",
       7, 1.0f, { -29 / 2, 0 },
@@ -642,7 +730,7 @@ ImageInfo infoEriTopHeavy[] =
    },
    {
       "assets/Player/Heavy_AimDown_%02d.png",
-      3, 1.0f, { -60 / 2, 4 },
+      3, 1.0f, { -60 / 2, 0 },
       0.06f,
       1,
       {255,0,0,255},
@@ -666,7 +754,7 @@ ImageInfo infoEriTopHeavy[] =
    },
    {
       "assets/Player/Heavy_FireDown_%02d.png",
-      4, 1.0f, { -68 / 2, -36 },
+      4, 1.0f, { -68 / 2, -28 },
       0.06f,
       1,
       {255,255,255,255},
@@ -706,19 +794,19 @@ ImageInfo infoEriTopHeavy[] =
       NULL,
    },
    {
-       "assets/Player/Heavy_Crouch_Melee_%02d.png",
-       9, 1.0f, { -42 / 2, 0 },
-       0.1f,
+       "assets/Player/Heavy_Crouch_Fire_%02d.png",
+       4, 1.0f, { -42 / 2, 0 },
+       0.06f,
        1,
-       { 255,0,0,255 },
-       NULL,
+       { 255,255,255,255 },
+       AnimationMgr::cbAniToCrouch,
    },
    //Only
    {
       "assets/Player/Spawn_%02d.png",
       7, 1.0f, { -29 / 2, 0 },
       0.06f,
-      0,
+      1,
       {255,0,0,255},
       AnimationMgr::cbAniToIdle,
    },

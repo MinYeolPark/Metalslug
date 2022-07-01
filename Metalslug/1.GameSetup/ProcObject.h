@@ -9,6 +9,9 @@ enum ObjLayer
 	LayerMosque,
 	LayerKessie,
 
+	LayerBullet,
+	LayerFieldObj,
+
 	ObjLayerMax = 16
 };
 struct Collider;
@@ -37,6 +40,7 @@ public:
 public:
 	virtual void init(iPoint p);
 	virtual void init(iPoint p, iPoint v);
+	virtual void init(int index, iPoint p);
 	virtual void init(int index, iPoint p, iPoint v);
 	virtual void update(float dt) = 0;				//With control physics
 	virtual bool draw(float dt, iPoint off) = 0;	
@@ -75,12 +79,8 @@ struct Collider
 		}		
 		for (int i = 0; i < parent->colNum; i++)
 			parent->colliders[i]->enable();
-		isTrigger = false;
-	}
-	void update(ProcObject* parent)
-	{
-		this->p = parent->p;
 
+		isTrigger = false;
 		if (parent->colNum == 3)
 		{
 			for (int i = 0; i < 3; i++)
@@ -89,6 +89,10 @@ struct Collider
 					delete parent->colliders[i];
 			}
 		}
+	}
+	void update(iPoint newPosition)
+	{
+		this->p = newPosition;	
 	}
 	void setPosition(iPoint p)
 	{
@@ -101,9 +105,9 @@ struct Collider
 	iRect getCollider()
 	{
 		if (isActive)
-		{
-			return iRectMake(p.x + map->off.x - s.width / 2, 
-				p.y + map->off.y - s.height,
+		{			
+			return iRectMake(p.x - s.width / 2,
+				p.y - s.height,
 				s.width, s.height);
 		}
 		return iRectMake(0,0,0,0);

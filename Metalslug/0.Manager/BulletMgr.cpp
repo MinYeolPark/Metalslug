@@ -31,7 +31,7 @@ void drawProcBullets(float dt, iPoint off)
 	{
 		ProcBullets* b = bullets[i];
 		b->update(dt);
-		b->collider->update((ProcObject*)b);
+		b->collider->update(b->p);
 		if (b->draw(dt, off))
 		{
 			bulletNum--;
@@ -101,13 +101,6 @@ void ProcBulletsPattern::patternBomb(ProcBullets* b, float dt)
 		b->up = 0.0f;
 		b->down = 0.0f;
 	}
-
-	if (b->p.y > maxY)
-	{
-		b->up = 0.0f;
-		b->isActive = false;
-		//b->index = BulletMeleeEnd;
-	}
 }
 
 void ProcBulletsPattern::patternMelee(ProcBullets* b, float dt)
@@ -126,16 +119,10 @@ void ProcBulletsPattern::patternMelee(ProcBullets* b, float dt)
 		b->down += 9.81 * dt;
 		b->p = iPointMake(b->p.x - 2.5, b->p.y += b->down);
 	}
-	else if (b->p.y > maxY)
+	else if (b->p.y >= maxY)
 	{
 		b->up = 0.0f;
 		b->down = 0.0f;
-	}
-
-	if (b->p.y > maxY)
-	{
-		b->up = 0.0f;
-		b->isActive = false;
 		//b->index = BulletMeleeEnd;
 	}
 }

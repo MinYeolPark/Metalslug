@@ -96,6 +96,9 @@ public:
 	bool fireing;
 	int jumpCombo;
 
+	int maxX;
+	int maxY;
+
 	PlayerBehave topState;
 	PlayerBehave botState;
 
@@ -153,7 +156,7 @@ enum PlayerBehave
 	//===========================================
 	PlayerAimtoUp,
 	PlayerAimtoNormal,
-	PlayerAimDown,
+	PlayerAimtoDown,
 	PlayerFire,
 	PlayerFireUp,
 	PlayerFireDown,
@@ -163,8 +166,8 @@ enum PlayerBehave
 	// Whole
 	//===========================================
 	PlayerBrake,
-	PlayerCrouch,
-	PlayerCrouchMelee,
+	PlayerCrouch,	
+	PlayerCrouchFire,
 	//===========================================
 	//Only
 	//===========================================

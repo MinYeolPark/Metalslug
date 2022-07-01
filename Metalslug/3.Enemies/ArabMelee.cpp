@@ -115,15 +115,14 @@ void ArabMelee::update(float dt)
 	if (!isAppear)
 	{
 		float mx = p.x + map->off.x;
-		float ip = devSize.width * 7 / 8 + map->off.x;		//appear point
-		if (p.x - ip > 0)
+		float ap = devSize.width * 7 / 8 + map->off.x;		//appear point
+		if (p.x - ap > 0)
 			v.x = -1;
-		else if (p.x + ip < 0)
+		else if (p.x + ap < 0)
 			v.x = 1;
-		if (mx > ip)
-		{			
-			int r = (rand() % 1)- 0.5 * 2 * 50;			
-			if (movePoint(p, p, iPointMake(ip, p.y), moveSpeed * dt))
+		if (mx > ap)
+		{		
+			if (movePoint(p, p, iPointMake(ap, p.y), moveSpeed * dt))
 			{
 				v = iPointZero;
 				isAppear = true;
@@ -173,8 +172,10 @@ bool ArabMelee::draw(float dt, iPoint off)
 	}	
 #ifdef _DEBUG
 	drawDot(p + off);
-	for (int i = 0; i < colNum; i++)
-		drawRect(colliders[i]->getCollider());
+	iRect c = colliders[0]->getCollider();	
+	c.origin.x += off.x;
+	c.origin.y += off.y;
+	drawRect(c);
 	setRGBA(1, 1, 1, 0.5);
 	setLineWidth(10);
 	drawLine(p, { p.x - len,p.y });

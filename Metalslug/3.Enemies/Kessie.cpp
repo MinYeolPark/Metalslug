@@ -7,7 +7,7 @@
 #include "BulletMgr.h"
 ImageInfo imgKessieInfo[];
 static iImage** _imgKessie = NULL;
-Kessie::Kessie(int idx) : ProcEnemy(idx)
+Kessie::Kessie(int index) : ProcEnemy(index)
 {	
 	layer = LayerKessie;	
 	index = IdxKessie;

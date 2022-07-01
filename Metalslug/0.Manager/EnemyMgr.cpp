@@ -47,6 +47,11 @@ void loadProcEnemy()
 			for (int j = 0; j < enemyMax; j++)
 				_enemies[i][j] = new Kessie(i);
 		}
+		else if (i == IdxMosque)
+		{
+			for (int j = 0; j < enemyMax; j++)
+				_enemies[i][j] = new Mosque(i);
+		}
 		else if (i == IdxAbul)
 		{
 			for (int j = 0; j < enemyMax; j++)
@@ -58,8 +63,9 @@ void loadProcEnemy()
 
 	//spawn pattern
 	
-	addProcEnemy(IdxArMelee, iPointMake(500, 100), iPointMake(0,0));	
-	addProcEnemy(IdxArMelee, iPointMake(400, 100), iPointMake(0, 0));
+	//addProcEnemy(IdxArMelee, iPointMake(500, 100), iPointMake(0,0));	
+	//addProcEnemy(IdxArMelee, iPointMake(400, 100), iPointMake(0, 0));
+	//addProcEnemy(IdxMosque, iPointMake(300, 220), iPointZero);
 	//addProcEnemy(IdxArBurserker, iPointMake(200, 100), iPointMake(0, 0));
 	//addProcEnemy(IdxArCamel, iPointMake(300, 100), iPointMake(0, 0));
 	//addProcEnemy(IdxKessie, iPointMake(200, 70), iPointMake(0, 0));
@@ -95,6 +101,8 @@ void drawProcEnemy(float dt, iPoint off)
 					e->update(dt);
 			}
 			else if (e->layer == LayerKessie)
+				e->update(dt);
+			else if (e->layer == LayerMosque)
 				e->update(dt);
 			e->draw(dt, off);
 		}

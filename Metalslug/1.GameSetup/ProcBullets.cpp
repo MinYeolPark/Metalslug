@@ -12,6 +12,7 @@ static iImage** _imgBullets = NULL;
 ImageInfo bulletImageInfo[];
 ProcBullets::ProcBullets(int idx)
 {
+	layer = LayerBullet;
 	imgs = NULL;
 	imgCurr = NULL;
 	parent = NULL;
@@ -64,7 +65,12 @@ void ProcBullets::init(ProcPlayer* parent, int index, float degree)
 	ProcBulletsPattern::patternMelee,
 	ProcBulletsPattern::patternMosque,
 	};
-	this->collider->init(parent, iSizeMake(10, 5));
+	iSize bs[BulletIndexMax] =
+	{
+		{10,5},
+		{25, 5},
+	};
+	this->collider->init(parent, bs[index]);
 	this->pattern = bp[index];
 	this->speed = player->curGun->speed;
 	this->damage = player->curGun->dmg;
@@ -122,7 +128,8 @@ void ProcBullets::init(ProcObject* parent, int index, float degree)
 			ProcBulletsPattern::patternMelee,
 			ProcBulletsPattern::patternMosque,
 	};
-	this->pattern = bp[index];	this->speed = player->curGun->speed;
+	this->pattern = bp[index];	
+	this->speed = player->curGun->speed;
 	this->damage = player->curGun->dmg;
 	this->v = iPointRotate(iPointMake(1, 0), iPointZero, degree);
 	imgs[this->index]->startAnimation();
@@ -135,26 +142,6 @@ void ProcBullets::update(float dt)
 	iRectMake(-map->off.x - 20, -map->off.y - 20,
 		devSize.width + 40, devSize.height + 40));
 #endif
-	if (a == 0)
-	{
-		for (int i = 0; i < 100; i++)
-		{
-			while (true)
-			{
-				a += dt;
-				if (a > 100)
-					a = 1;
-				break;
-			}
-			while (true)
-			{
-				a -= dt;
-				if (a < 0)
-					a = 0;
-				break;
-			}
-		}
-	}
 	pattern(this, dt);
 	
 	fixedUpdate(dt);
@@ -215,19 +202,26 @@ void ProcBullets::fixedUpdate(float dt)
 			}
 		}
 	}
+	
+	//update
+	//collider->update();
+	
+	collider->setPosition(p);
+	if (degree == 90 || degree == 270)
+		collider->setSize(
+			iSizeMake(collider->getCollider().size.height, collider->getCollider().size.width));
+	else
+		collider->setSize(
+			iSizeMake(collider->getCollider().size.width, collider->getCollider().size.height));
 }
 
 bool ProcBullets::draw(float dt, iPoint off)
 {	
 	setRGBA(1, 1, 1, a);
 	imgCurr = imgs[index];
-	imgCurr->degree = degree;
-	//if (index == Handgun)
-	//else if (index = HeavyMachinegun)
-	//	imgCurr->degree = setDegree(degree, { 1000,0 }, { 0,1000 }, 360, dt);
+	imgCurr->degree = degree;			
 	imgCurr->paint(dt, p + off);
 #ifdef _DEBUG				
-	drawRect(collider->getCollider());
 	setDotSize(5);
 #endif // DEBUG
 	
@@ -291,7 +285,7 @@ ImageInfo bulletImageInfo[] =
 		0.06f,
 		1,
 		{255, 0, 0, 255},
-		AnimationMgr::cbAniBulletDisappearWithAlpha,
+		NULL,
 	},
 	{
 		"assets/Bullets/MidBoss_Fire_%02d.png",
