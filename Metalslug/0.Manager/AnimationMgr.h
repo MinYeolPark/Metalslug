@@ -12,6 +12,10 @@ public:
 	static void cbAniEnemyMotion2Idle(void* parm);
 	static void cbAniMeleeFire(void* parm);
 	static void cbAniTruck(void* parm);
+
+public:
+	static void cbAniMosque(void* parm);
+
 public:
 	//Npcs
 	static void cbAniNpcRelease(void* parm);

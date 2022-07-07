@@ -15,23 +15,31 @@ ProcBullets::ProcBullets(int idx)
 	layer = LayerBullet;
 	imgs = NULL;
 	imgCurr = NULL;
+
 	parent = NULL;
 	index = idx;
+
 	p = iPointZero;
 	v = iPointZero;
-	a = 1.f;
+
+	degree = 0;
+	isActive = false;
+
+	alpha = 1.f;
+
 	pow = 0.f;
 	up = 0.f;
 	down = 0.f;
+
 	collider = new Collider();
-	collider->isActive = true;	
-	pattern = NULL;
+
 	speed = 0;
 	damage = 0;
 
-	if (_imgBullets == NULL)
-		_imgBullets = createImgBullets(bulletImageInfo, this);
+	pattern = NULL;
 
+	if (_imgBullets == NULL)
+		_imgBullets = createSingleImage(bulletImageInfo, BulletIndexMax, this);
 	imgs = new iImage * [BulletIndexMax];
 	memset(imgs, 0x00, sizeof(iImage*) * BulletIndexMax);
 	for (int i = 0; i < BulletIndexMax; i++)
@@ -51,30 +59,46 @@ ProcBullets::~ProcBullets()
 	_imgBullets = NULL;
 }
 
-void ProcBullets::init(ProcPlayer* parent, int index, float degree)
+void ProcBullets::init(ProcObject* parent, int index, float degree)
 {
 	this->isActive = true;
 	this->parent = parent;
-	this->index = index;	
-	this->p = parent->firePoint;
+	this->index = index;
+	this->p = parent->p;
 	this->degree = degree;
+	this->alpha = 1.0f;
 	BulletPattern bp[BulletIndexMax] = {
 	ProcBulletsPattern::patternHandgun,
 	ProcBulletsPattern::patternHeavyMachinegun,
 	ProcBulletsPattern::patternBomb,
+
 	ProcBulletsPattern::patternMelee,
 	ProcBulletsPattern::patternMosque,
+	ProcBulletsPattern::patternMosqueTrace,
+	ProcBulletsPattern::patternMeleeEnd,
 	};
 	iSize bs[BulletIndexMax] =
 	{
-		{10,5},
+		{10, 5},
+		{25, 5},
+		{10, 5},
+		{30, 30},
+		{10, 5},
+		{25, 5},
 		{25, 5},
 	};
 	this->collider->init(parent, bs[index]);
 	this->pattern = bp[index];
+	this->v = iPointRotate(iPointMake(1, 0), iPointZero, degree);	
+}
+
+void ProcBullets::init(ProcPlayer* parent, int index, float degree)
+{
+	ProcBullets::init((ProcObject*)parent, index, degree);	
+
+	this->p = parent->fp;
 	this->speed = player->curGun->speed;
 	this->damage = player->curGun->dmg;
-	this->v = iPointRotate(iPointMake(1, 0), iPointZero, degree);
 	imgs[this->index]->startAnimation();
 	if (index == BulletBomb)
 	{
@@ -87,52 +111,17 @@ void ProcBullets::init(ProcPlayer* parent, int index, float degree)
 
 void ProcBullets::init(ProcEnemy* parent, int index, float degree)
 {
-	this->isActive = true;
-	this->parent = parent;
-	this->index = index;
-	this->p = parent->fp;
-	this->degree = degree;
-	BulletPattern bp[BulletIndexMax] = {
-		ProcBulletsPattern::patternHandgun,
-		ProcBulletsPattern::patternHeavyMachinegun,
-		ProcBulletsPattern::patternBomb,
-		ProcBulletsPattern::patternMelee,
-		ProcBulletsPattern::patternMosque,
-	};
-	this->pattern = bp[index];
-	//adjust
+	ProcBullets::init((ProcObject*)parent, index, degree);
+	this->p = parent->fp;	
 	this->speed = 100;
 	this->damage = 100;
-	this->v = iPointRotate(iPointMake(1, 0), iPointZero, degree);
-	imgs[this->index]->startAnimation();
 	if (index == BulletMelee)
 	{
 		pow = 5.f;
-		up = 0.f;
-		down = 0.0f;
-		imgs[BulletMeleeEnd]->startAnimation(AnimationMgr::cbAniBulletDisappearWithAlpha, this);
+		up -= pow;
+		down = 0.0f;		
+		//imgs[BulletMeleeEnd]->startAnimation(AnimationMgr::cbAniBulletDisappearWithAlpha, this);
 	}
-}
-
-void ProcBullets::init(ProcObject* parent, int index, float degree)
-{
-	this->isActive = true;
-	this->parent = parent;
-	this->index = index;
-	this->p = parent->p;
-	this->degree = degree;
-	BulletPattern bp[BulletIndexMax] = {
-			ProcBulletsPattern::patternHandgun,
-			ProcBulletsPattern::patternHeavyMachinegun,
-			ProcBulletsPattern::patternBomb,
-			ProcBulletsPattern::patternMelee,
-			ProcBulletsPattern::patternMosque,
-	};
-	this->pattern = bp[index];	
-	this->speed = player->curGun->speed;
-	this->damage = player->curGun->dmg;
-	this->v = iPointRotate(iPointMake(1, 0), iPointZero, degree);
-	imgs[this->index]->startAnimation();
 }
 
 void ProcBullets::update(float dt)
@@ -142,7 +131,8 @@ void ProcBullets::update(float dt)
 	iRectMake(-map->off.x - 20, -map->off.y - 20,
 		devSize.width + 40, devSize.height + 40));
 #endif
-	pattern(this, dt);
+	if(pattern!=NULL)
+		pattern(this, dt);
 	
 	fixedUpdate(dt);
 }
@@ -204,25 +194,27 @@ void ProcBullets::fixedUpdate(float dt)
 	}
 	
 	//update
-	//collider->update();
-	
-	collider->setPosition(p);
-	if (degree == 90 || degree == 270)
-		collider->setSize(
-			iSizeMake(collider->getCollider().size.height, collider->getCollider().size.width));
-	else
-		collider->setSize(
-			iSizeMake(collider->getCollider().size.width, collider->getCollider().size.height));
+	collider->update(p, degree, dt);
+
+	//collider->setPosition(p);	
+	//if (degree == 90 || degree == 270)
+	//	collider->setSize(
+	//		iSizeMake(collider->getCollider().size.height, collider->getCollider().size.width));
+	//else
+	//	collider->setSize(
+	//		iSizeMake(collider->getCollider().size.width, collider->getCollider().size.height));
 }
 
 bool ProcBullets::draw(float dt, iPoint off)
 {	
-	setRGBA(1, 1, 1, a);
+	setRGBA(1, 1, 1, alpha);
 	imgCurr = imgs[index];
 	imgCurr->degree = degree;			
 	imgCurr->paint(dt, p + off);
 #ifdef _DEBUG				
 	setDotSize(5);
+	iRect c = collider->getCollider();
+	drawRect(c);
 #endif // DEBUG
 	
 	setRGBA(1, 1, 1, 1);
@@ -279,38 +271,32 @@ ImageInfo bulletImageInfo[] =
 		NULL,
 	},
 	{
-		"assets/Bullets/Melee_07.png",
-		1,
+		"assets/Bullets/MidBoss_Fire_%02d.png",
+		30,
 		1.0f, {-72 / 2,0},
-		0.06f,
+		0.1f,
 		1,
 		{255, 0, 0, 255},
 		NULL,
 	},
 	{
-		"assets/Bullets/MidBoss_Fire_%02d.png",
-		8,
-		1.0f, {-72 / 2,0},
-		0.1f,
-		1,
-		{255, 0, 0, 255},
-		AnimationMgr::cbAniBulletDisappear,
-	},
-	{
-		"assets/Bullets/MidBoss_Fire_%02d.png",
-		29,
-		1.0f, {-50 / 2,0},
-		0.1f,
-		1,
-		{255, 0, 0, 255},
-		AnimationMgr::cbAniBulletDisappear,
-	},
-	{
-		"assets/Bullets/MosqueMissile_%02d.png",
+		"assets/Bullets/MosqueTrace_%02d.png",
 		3,
 		1.0f, {-40 / 2,0},
 		0.1f,
 		0,
+		{255, 255, 255, 255},
+		NULL,
+	},
+
+
+	//No Effect
+	{
+		"assets/Bullets/Melee_07.png",
+		1,
+		1.0f, {-72 / 2,0},
+		0.06f,
+		1,
 		{255, 0, 0, 255},
 		NULL,
 	},

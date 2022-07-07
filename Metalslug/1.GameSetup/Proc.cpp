@@ -18,7 +18,7 @@
 void loadProc()
 {
 	loadProcField();
-	loadStructure();
+	//loadStructure();
 
 	loadProcPlayer();
 	loadProcItem();
@@ -32,7 +32,7 @@ void loadProc()
 void freeProc()
 {
 	freeProcField();
-	freeStructure();
+	//freeStructure();
 
 	freeProcPlayer();
 	freeProcItem();
@@ -47,7 +47,7 @@ void freeProc()
 void drawProc(float dt)
 {
 	iPoint off = drawProcField(dt);
-	drawStructure(dt, off);
+	//drawStructure(dt, off);
 
 	drawProcNpcs(dt, off);
 	drawProcItem(dt, off);
@@ -144,7 +144,7 @@ void drawProcPlayer(float dt, iPoint off)
 		spawnDt += dt;
 		if (spawnDt >= _spawnDt)
 		{
-			spawnDt -= _spawnDt;
+			spawnDt -= _spawnDt;			
 			if (player->life > 0)
 				player->init(player->p);
 			else//player->life==0

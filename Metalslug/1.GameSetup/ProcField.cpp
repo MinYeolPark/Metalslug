@@ -5,7 +5,7 @@
 
 int mapNum[] =
 {
-	3,
+	2,
 };
 LayerData layerData[layerNum] =
 {
@@ -26,10 +26,6 @@ ProcMap* map;
 MapData mapData[];
 ImageInfo mapImageInfo[];
 ImageInfo layerImageInfo[];
-ImageInfo mapObjectInfo[];
-static iImage** _mapImage = NULL;
-static iImage** _layerImage = NULL;
-static iImage** _mapObjectImage = NULL;
 ProcMap::ProcMap(int stage)
 {
 	//Map
@@ -37,45 +33,20 @@ ProcMap::ProcMap(int stage)
 	maxW = 0;
 	maxY = 0;
 	viewChange = false;
-	if (_mapImage == NULL)
- 		_mapImage = createSingleImage(mapImageInfo,	mapNum[stage], this);
 
 	imgs = new iImage * [mapNum[stage]];
-	memset(imgs, 0x00, sizeof(imgs));
-	for (int i = 0; i < mapNum[stage]; i++)
-		imgs[i] = _mapImage[i]->clone();
-	//
-	
-	//Layer
-	if (_layerImage == NULL)
-		_layerImage = createSingleImage(layerImageInfo, layerNum, this);
+	imgs = createSingleImage(mapImageInfo,	mapNum[stage], this);	
+	//	
+	//Layer	
 	imgsLayer = new iImage * [layerNum];
-	memset(imgsLayer, 0x00, sizeof(imgsLayer));
-	for (int i = 0; i < layerNum; i++)
-	{
-		imgsLayer[i] = _layerImage[i]->clone();
-	}
-	//
-	if (_mapObjectImage == NULL)
-		_mapObjectImage = createSingleImage(mapObjectInfo, layerNum, this);
-	memset(imgObj, 0x00, sizeof(imgObj));
-	for (int i = 0; i < 3; i++)
-	{
-		imgObj[i] = _mapObjectImage[i]->clone();
-	}
+	imgsLayer = createSingleImage(layerImageInfo, layerNum, this);	
 }
 
 ProcMap::~ProcMap()
 {
-	for (int i = 0; i < mapNum[stage]; i++)
-	{
-		delete _mapImage[i];
-		delete _layerImage[i];
-		delete _mapObjectImage[i];
-	}
-	delete _mapImage;
-	delete _layerImage;
-	delete _mapObjectImage;
+	/*for (int i = 0; i < mapNum[stage]; i++)
+		delete imgs;
+	delete imgs;*/
 }
 
 void ProcMap::init(int stage)
@@ -83,7 +54,7 @@ void ProcMap::init(int stage)
 	for (int i = 0; i < mapNum[stage]; i++)
 	{
 		Texture* t = imgs[i]->tex;
-		maxW += t->width;		
+		maxW += t->width;				
 	}
 	printf("maxW=%d\n", maxW);
 	maxY = new int[maxW];	
@@ -154,16 +125,7 @@ void ProcMap::paint(float dt)
 	{
 		md = &mapData[i];
 		imgs[i]->paint(dt, md->p + off);
-	}
-	//Obj
-	imgObj[1]->stopAnimation();	
-	if (getKeyStat(keyboard_space))
-	{
-		imgObj[1]->frame = 1;
-	}
-	imgObj[1]->paint(dt, iPointMake(2300 + off.x, 200 + off.y));
-	drawDot(1300 + off.x, 200 + off.y);
-	imgObj[2]->paint(dt, iPointMake(3805 + off.x, off.y - 32));
+	}	
 #ifdef _DEBUG
 	setLineWidth(2);
 	for (int j = 0; j < mapNum[stage]; j++)
@@ -205,26 +167,29 @@ MapData mapData[] = {
 		{0, 0},
 		{{1176 * 0, 170}, {155,145}, {280,175}, {415, 160}, {560, 180}, {1176 * 1, 180}},
 		6,
-		{{200,100}},
 	},
 	{
 		{1176, -17},
-		{{1176 * 1, 180}, {1176 * 1.3, 180}, {1176 * 1.6, 180}, {1176 + 1472, 180}},
-		1,
-		{{200,100}},
+		{{1176 * 1, 180}, {1176 * 1.3, 180}, {1176 * 1.6, 180}, {1176 + 786, 180}},
+		4,
 	},
 	{
 		{1176 + 786, -17},
-		{{(1176 + 786) * 1, 180}, {(1176 + 786) * 1.3, 180}, {(1176 + 786) * 1.6, 180}, {(1176 + 786) + 1472, 180}},
+		{{(1176 + 786) * 1, 180}, {(1176 + 786) * 1.3, 180}, {(1176 + 786) * 1.6, 180}, {(1176 + 786) + 687, 180}},
+		4,
+	},
+	/*{
+		{1176 + 786 + 687, -16},
+		{{(1176 + 786 + 687) * 1, 180}, {(1176 + 786 + 687) * 1.3, 180}, {(1176 + 786 + 687) * 1.6, 180}, {3960, 180}},
 		1,
 		{{200,100}},
 	},
 	{
-		{1176 + 786 + 687, -16},
-		{{(1176 + 1472) * 1, 180}, {(1176 + 1472) * 1.3, 180}, {(1176 + 1472) * 1.6, 180}, {3960, 180}},
+		{1176 + 786 + 687+ 1008, -16},
+		{{(1176 + 786 + 687 + 1008) * 1, 180}, {(1176 + 786 + 687 + 1008) * 1.3, 180}, {(1176 + 786 + 687 + 1008) * 1.6, 180}, {3960, 180}},
 		1,
 		{{200,100}},
-	},
+	},*/
 };
 ImageInfo mapImageInfo[] =
 {

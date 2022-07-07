@@ -157,6 +157,7 @@
     <ClInclude Include="3.Enemies\ArabCamel.h" />
     <ClInclude Include="EventMgr.h" />
     <ClInclude Include="1.GameSetup\ProcStructure.h" />
+    <ClInclude Include="iSort.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="1.GameSetup\Select.h" />
     <ClInclude Include="Sorting.h" />
@@ -212,6 +213,7 @@
     <ClCompile Include="3.Enemies\Kessie.cpp" />
     <ClCompile Include="1.GameSetup\ProcNpc.cpp" />
     <ClCompile Include="1.GameSetup\ProcStructure.cpp" />
+    <ClCompile Include="iSort.cpp" />
     <ClCompile Include="Sorting.cpp" />
     <ClCompile Include="std\iArray.cpp" />
     <ClCompile Include="std\iColor.cpp" />

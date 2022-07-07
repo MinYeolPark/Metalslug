@@ -1,5 +1,6 @@
 #include "BulletMgr.h"
 
+#include "EffectMgr.h"
 ProcBullets*** _bullets;
 ProcBullets** bullets;
 int bulletNum;
@@ -30,8 +31,7 @@ void drawProcBullets(float dt, iPoint off)
 	for (int i = 0; i < bulletNum; i++)
 	{
 		ProcBullets* b = bullets[i];
-		b->update(dt);
-		b->collider->update(b->p);
+		b->update(dt);		
 		if (b->draw(dt, off))
 		{
 			bulletNum--;
@@ -96,56 +96,114 @@ void ProcBulletsPattern::patternBomb(ProcBullets* b, float dt)
 	{
 		b->down += 9.81 * dt;		
 	}
-	else if (b->p.y > maxY)
-	{
-		b->up = 0.0f;
-		b->down = 0.0f;
-	}
 }
 
 void ProcBulletsPattern::patternMelee(ProcBullets* b, float dt)
 {
-	b->up -= b->pow;
-
 	if (b->up)
 	{
 		b->p = iPointMake(b->p.x, b->p.y -= b->pow);
 		b->up += 9.81 * dt;
+		if (b->up > 0.0f)
+			b->up = 0.0f;
 	}
 
 	int maxY = *(map->maxY + (int)b->p.x);
 	if (b->p.y < maxY)
 	{
 		b->down += 9.81 * dt;
-		b->p = iPointMake(b->p.x - 2.5, b->p.y += b->down);
+		if (b->parent->isRight)
+			b->p = iPointMake(b->p.x + 2, b->p.y += b->down);
+		else// if(!b->parent->isRight)
+			b->p = iPointMake(b->p.x - 2, b->p.y += b->down);
 	}
-	else if (b->p.y >= maxY)
+	else
 	{
+		b->index = BulletMeleeEnd;
+		b->collider->isActive = false;
 		b->up = 0.0f;
-		b->down = 0.0f;
-		//b->index = BulletMeleeEnd;
+		b->pattern = patternMeleeEnd;		
+		return;
+	}
+}
+
+void ProcBulletsPattern::patternMeleeEnd(ProcBullets* b, float dt)
+{	
+	b->alpha -= dt;
+	printf("alpha=%f\n", b->alpha);
+	if (b->alpha < 0.0f)
+	{
+		b->alpha = 0.0f;
+		b->isActive = false;
 	}
 }
 
 void ProcBulletsPattern::patternMosque(ProcBullets* b, float dt)
 {
+	if (b->index == BulletMosque)
+	{
+		if (b->imgs[b->index]->frame == 29)
+		{
+			b->index = BulletMosqueTrace;
+			b->pattern = patternMosqueTrace;
+		}
+	}
+}
+
+static float tDegree = 60.f;
+void ProcBulletsPattern::patternMosqueTrace(ProcBullets* b, float dt)
+{
+#if 1	
+	if (tDegree > 0)
+	{
+		b->degree += b->speed * dt;
+		if (b->degree > tDegree)
+			tDegree *= -1;
+	}
+	else if (tDegree < 0)
+	{
+		b->degree -= b->speed * dt;
+		if (b->degree < tDegree)
+			tDegree *= -1;
+	}
+	iPoint v = player->p - b->p;
+	v /= iPointLength(v) * b->speed * dt;
+	b->p.x += _cos(b->degree);
+	b->p.y += _sin(b->degree);
+	//b->p.x += v.x;
+	setRGBA(1, 1, 1, 1);
+	drawDot(b->p + map->off);
+	setRGBA(1, 1, 1, 1);
+#else
 	iPoint v = player->p - b->p;
 	v /= iPointLength(v);
-	v *= (b->speed * dt);
-	b->v = iPointRotate(v, player->p, 180);
+	v *= (b->speed * dt);	 
+	if (b->degree < 90)
+	{
+		b->degree += (90 / 0.5f * dt);
+		//if (degree > 90)
+		//	degree = 90;
+	}
+	else if (b->degree > 90)
+	{
+		b->degree -= (90 / 0.5f * dt);
+		//if (degree < 90)
+		//	degree = 90;
+	}
+	b->v = iPointRotate(v, b->parent->tp, b->degree);
 	b->p += v;
 	if (player)
 	{
-		for (int i = 0; i < 3; i++)
+		for (int i = 0; i < player->colNum; i++)
 		{
 			if (containPoint(b->p, player->colliders[i]->getCollider()))
 			{
+				addProcEffect(b->index, b->p);
+				player->getDamage(b->damage, player->colliders[i]);
 				b->isActive = false;
-				player->hp -= b->damage;
-
 				//dead
-				//addProcEffect(bulletIdx, bp);
 			}
 		}
 	}
+#endif
 }

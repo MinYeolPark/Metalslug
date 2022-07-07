@@ -16,6 +16,7 @@
 #include "iSize.h"
 #include "iRect.h"
 #include "iString.h"
+#include "iSort.h"
 
 #include "iMatrix.h"
 #include "iArray.h"

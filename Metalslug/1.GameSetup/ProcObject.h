@@ -24,10 +24,12 @@ public:
 	ObjLayer layer;
 
 	iPoint p;					//position
+	iPoint tp;					//targetPosition
 	iPoint v;					//direction
 	iSize s;					//size
 
 	bool isActive;
+	bool isRight;
 	int index;
 	int hp, _hp;
 	int score;
@@ -53,6 +55,7 @@ struct Collider
 	{
 		p = iPointZero;
 		s = iSizeZero;
+		degree = 0.f;
 		parent = NULL;
 		isActive = false;
 		isTrigger = false;
@@ -64,6 +67,7 @@ struct Collider
 
 	iPoint p;
 	iSize s;
+	float degree;
 	ProcObject* parent;
 	bool isActive;
 	bool isTrigger;
@@ -71,7 +75,7 @@ struct Collider
 	{
 		this->p = { parent->p.x - s.width/2, parent->p.y - s.height };
 		this->s = s;
-		this->parent = parent;
+		this->parent = parent;		
 		if (parent->colNum > 3)
 		{
 			printf("colNum error\n");
@@ -90,9 +94,11 @@ struct Collider
 			}
 		}
 	}
-	void update(iPoint newPosition)
+	void update(iPoint newPosition, float newDegree, float dt)
 	{
-		this->p = newPosition;	
+		this->p = newPosition;
+		this->degree = newDegree;
+		setDegree(newDegree, p, newPosition, dt);
 	}
 	void setPosition(iPoint p)
 	{

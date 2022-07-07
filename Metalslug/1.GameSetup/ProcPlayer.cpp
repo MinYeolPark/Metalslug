@@ -27,19 +27,16 @@ ProcPlayer::ProcPlayer(int index) : ProcObject()
     hp = 100, _hp = 100;
     score = 0;
 
-#if 1
-    colNum = 1;
-    for (int i = 0; i < colNum; i++)
-        colliders[i]->init(this, iSizeMake(40, 40));
-#endif
+
     topImgs = NULL;
     topImgCurr = NULL;
     botImgs = NULL;
     botImgCurr = NULL;
+    degree = 0.f;
 
     curGun = new Gun();//{ HandGun, 100, 100, 0 };
     fireDeg = 0;
-    firePoint = iPointMake(p.x + 15, p.y - 20);
+    fp = iPointMake(p.x + 15, p.y - 20);
     bombPoint = p;
     up = 0;
     down = 0;
@@ -50,11 +47,11 @@ ProcPlayer::ProcPlayer(int index) : ProcObject()
     dirUp = false;
 
     life = 3;
-    moveSpeed = 150.f;
+    moveSpeed = 120.f;
     bombSpeed = 10.f;
     attkRange = 40;
     bombRange = 100.0f;
-    bombs = 20;
+    bombs = 10;
 
 #if 1
     alpha = 1.0f;
@@ -69,15 +66,18 @@ ProcPlayer::ProcPlayer(int index) : ProcObject()
     switch (index)
     {
     case MARCO:   printf("No imgs");                            break;
-    case ERI:     topImgs = _imgEriTop; botImgs = _imgEriBot;   break;
+    case ERI:     topImgs = _imgEriTop; botImgs = _imgEriBot;         break;
     case TAMA:    printf("No imgs");                            break;
     case PIO:     printf("No imgs");                            break;
     }
+
+    topImgCurr = _imgEriTop[topState];
+    botImgCurr = _imgEriBot[botState];
 }
 
 ProcPlayer::~ProcPlayer()
 {
-    for (int i = 0; i < 16; i++)
+    for (int i = 0; i < PlayerBehaveMax; i++)
     {
         delete _imgEriTop[i];
         delete _imgEriHeavyTop[i];
@@ -103,21 +103,29 @@ void ProcPlayer::init(iPoint p)
     dirRight = true;
     dirUp = false;
     fireDeg = 0;
-    firePoint = iPointMake(p.x + 15, p.y - 22);
+    fp = iPointMake(p.x + 15, p.y - 22);
     topState = PlayerSpawn;
     botState = PlayerIdle;
     this->p = p;
-    //curGun->gunIndex = Handgun;
-    curGun->gunIndex = HeavyMachinegun;
+    curGun->gunIndex = Handgun;
+    //curGun->gunIndex = HeavyMachinegun;
+    topImgs = _imgEriTop;
+    botImgs = _imgEriBot;
     alpha = 1.0f;
     bombs = 10;
+    hp = 100;
     life--;
 
     if (topState == PlayerSpawn)
         topImgs[topState]->startAnimation(AnimationMgr::cbAniToIdle, this);
-    
-    for(int i=0;i<colNum;i++)
+#if 1
+    colNum = 1;
+    for (int i = 0; i < colNum; i++)
+    {
+        colliders[i]->init(this, iSizeMake(40, 40));
         objects->addObject(colliders[i]);
+    }
+#endif
 }
 
 void ProcPlayer::update(float dt)
@@ -126,7 +134,10 @@ void ProcPlayer::update(float dt)
     if (getKeyStat(keyboard_left))
         v.x = -1;
     else if (getKeyStat(keyboard_right))
+    {
         v.x = 1;
+        printf("player->p.x=%f\n", p.x);
+    }
     if (getKeyStat(keyboard_up))
         v.y = -1;
     else if (getKeyStat(keyboard_down))
@@ -134,18 +145,19 @@ void ProcPlayer::update(float dt)
 
     if (v != iPointZero)
     {
-        v.setLength(moveSpeed * dt);
+        v *= moveSpeed * dt;
+        //v.setLength(moveSpeed * dt);
         if (v.x < 0)
         {
             dirRight = false;
             fireDeg = 180;
-            firePoint = iPointMake(p.x - 15, p.y - 22);
+            fp = iPointMake(p.x - 15, p.y - 22);
         }
         else if (v.x > 0)
         {
             dirRight = true;         
             fireDeg = 0;
-            firePoint = iPointMake(p.x + 15, p.y - 22);
+            fp = iPointMake(p.x + 15, p.y - 22);
         }
 
         if (v.y < 0)
@@ -155,9 +167,9 @@ void ProcPlayer::update(float dt)
             if (!up)
             {
                 if (dirRight)
-                    firePoint = iPointMake(p.x + 1, p.y - 80);  //fireUp right
+                    fp = iPointMake(p.x + 1, p.y - 80);  //fireUp right
                 else
-                    firePoint = iPointMake(p.x - 1, p.y - 80);  //fireUp left
+                    fp = iPointMake(p.x - 1, p.y - 80);  //fireUp left
             }
         }
         else if (v.y > 0)
@@ -166,14 +178,14 @@ void ProcPlayer::update(float dt)
             if (!up)
             {
                 fireDeg = dirRight ? 0 : 180;
-                firePoint = iPointMake(p.x + 15, p.y - 18);     //crouch Fire
+                fp = iPointMake(p.x + 15, p.y - 18);     //crouch Fire
             }
             else//if(up)
             {
                 if (dirRight)
-                    firePoint = iPointMake(p.x + 1, p.y - 5);   //fireDown right
+                    fp = iPointMake(p.x + 1, p.y - 5);   //fireDown right
                 else
-                    firePoint = iPointMake(p.x - 1, p.y - 5);   //fireDown left
+                    fp = iPointMake(p.x - 1, p.y - 5);   //fireDown left
                 fireDeg = 90;
             }
         }
@@ -186,12 +198,12 @@ void ProcPlayer::update(float dt)
         if (dirRight)
         {
             fireDeg = 0;
-            firePoint = iPointMake(p.x + 15, p.y - 25);
+            fp = iPointMake(p.x + 15, p.y - 25);
         }
         else// if(!dirRight)
         {
             fireDeg = 180;
-            firePoint = iPointMake(p.x - 15, p.y - 25);
+            fp = iPointMake(p.x - 15, p.y - 25);
         }
     }    
     if (getKeyDown(keyboard_z))
@@ -204,13 +216,13 @@ void ProcPlayer::update(float dt)
             return;
         up -= jumpPow;
         jumpCombo++;
+
     }
     if (getKeyDown(keyboard_x))
         fire(v);
     if (getKeyDown(keyboard_space))
         bomb(v);
-
-
+    
     //Animation
     if (!up)
     {
@@ -218,10 +230,12 @@ void ProcPlayer::update(float dt)
         {
             if (v.x)
             {
-                if(!fireing)
+                if (!fireing)
                     topState = PlayerWalk;
                 botState = PlayerWalk;
             }
+            else
+                botState = PlayerIdle;
             if (v.y>0)
             {
                 if (!fireing)
@@ -289,13 +303,12 @@ void ProcPlayer::update(float dt)
             }
         }        
     }    
-    
     p.x += v.x;
-    if(p.x<maxX)
-        p.x = maxX;
-    printf("max X= %d\n", maxX);
+    
     fixedUpdate(dt);
 }
+
+Collider* cNear = NULL;
 void ProcPlayer::fixedUpdate(float dt)
 { 
     int maxH = *(map->maxY + (int)p.x);
@@ -309,15 +322,14 @@ void ProcPlayer::fixedUpdate(float dt)
     }
     else
         fall = true;
-
+    
     if (up)
     {
         p = (iPointMake(p.x, p.y -= jumpPow));
         up += jumpDecrease * dt;
-
         if (up > 0.0f)
             up = 0.0f;
-    }
+	}
 
     if (fall)
     {
@@ -328,37 +340,29 @@ void ProcPlayer::fixedUpdate(float dt)
         }
     }
 
-    for (int i = 0; i < objects->count; i++)
+#if 0
     {
-		int x = 0;
-		int y = 0;
-        Collider* c = (Collider*)objects->objectAtIndex(i);
-        if (v.x > 0)
+        for (int i = 0; i < objects->count; i++)
         {
-            x = c->p.x - c->s.width / 2;
+            Collider* c = (Collider*)objects->objectAtIndex(i);
+            if (c->parent != NULL && c->parent->layer != LayerPlayer)
+            {
+                printf("%f\n", (c->p.x - c->s.width / 2));
+                printf("%f\n", (c->p.x + c->s.width / 2));
+                if (p.x > c->p.x - c->s.width / 2 &&
+                    p.x < c->p.x + c->s.width / 2 &&
+                    p.y > c->p.y - c->s.height)
+                {
+                    fall = false;
+                    p.y = c->p.y - c->s.height;
+                }
+            }
         }
-        else if (v.x < 0)
-        {
-            x = c->p.x + c->s.width / 2;
-        }
-
-        if (fall)
-        {
-            y = c->p.y - c->s.height;
-        }
-        else//(!fall)
-        {
-            y = c->p.y;
-        }
-        if (c->isTrigger == false)      //Obstruction objects
-        {
-            
-        }
-        maxX = x;
-        maxY = y;
     }
+#endif
+
     for (int i = 0; i < colNum; i++)
-        colliders[i]->update(p);
+        colliders[i]->update(p, degree, dt);   
 }
 bool ProcPlayer::draw(float dt, iPoint off)
 {
@@ -370,14 +374,16 @@ bool ProcPlayer::draw(float dt, iPoint off)
         topImgs = _imgEriTop;
     
     
+    if (topState == 17)
+        topState = PlayerIdle;            
     botImgCurr = botImgs[botState];
     topImgCurr = topImgs[topState];
     topImgCurr->reverse = dirRight ? REVERSE_NONE : REVERSE_WIDTH;
     botImgCurr->reverse = dirRight ? REVERSE_NONE : REVERSE_WIDTH;
     if (topState < PlayerBrake)
         botImgCurr->paint(dt, p + off);
-
     topImgCurr->paint(dt, p + off);
+
 #if 0
     topImgCurr = topImgs[topState];
     botImgCurr = botImgs[botState];
@@ -467,21 +473,18 @@ void ProcPlayer::bomb(iPoint v)
     addBullet(this, BulletBomb, 0);
 }
 
-void ProcPlayer::dead()
-{
-    isDead = true;
-    if (topState != (PlayerBehave)(PlayerDead + topState % 2))
-    {
-        ;// setTopState((PlayerBehave)(PlayerDead + topState % 2));
-    }
-}
 
 void ProcPlayer::getDamage(float damage, Collider* c)
 {
     hp -= damage;
     if (hp <= 0)
+    {
         if (!isDead)
-            dead();
+        {
+            isDead = true;
+            topState = PlayerDead;
+        }
+	}
 }
 
 void ProcPlayer::addScore(int score)
@@ -573,10 +576,10 @@ ImageInfo topImageInfo[] =
    {
       "assets/Player/AimUp_%02d.png",
       6, 1.0f, { -32 / 2, 16 },
-      0.06f,
-      1,
-      {255,0,0,255},
-      NULL,
+0.06f,
+1,
+{ 255,0,0,255 },
+NULL,
    },
    {
       "assets/Player/AimtoNorm_%02d.png",
@@ -651,14 +654,14 @@ ImageInfo topImageInfo[] =
       {255,0,0,255},
       NULL,
    },
-	  {
-	  "assets/Player/Crouch_Fire_%02d.png",
-	  11, 1.0f, { -51 / 2, 0 },
-	  0.06f,
-	  1,
-	  {255,0,0,255},
+      {
+      "assets/Player/Crouch_Fire_%02d.png",
+      11, 1.0f, { -51 / 2, 0 },
+      0.06f,
+      1,
+      {255,0,0,255},
       AnimationMgr::cbAniToCrouch,
-	  },
+      },
    {
       "assets/Player/Spawn_%02d.png",
       7, 1.0f, { -29 / 2, 0 },
@@ -673,7 +676,7 @@ ImageInfo topImageInfo[] =
       0.1f,
       1,
       {255,0,0,255},
-      NULL,
+      AnimationMgr::cbAniDead,
    },
 };
 
@@ -816,6 +819,6 @@ ImageInfo infoEriTopHeavy[] =
       0.1f,
       1,
       {255,0,0,255},
-      NULL,
+      AnimationMgr::cbAniDead,
    },
 };

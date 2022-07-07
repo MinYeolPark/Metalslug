@@ -4,7 +4,6 @@
 #include "ProcEnemy.h"
 #include "ArabCamel.h"
 #include "Kessie.h"
-#define enemyMax 50
 #define truckMax 1
 #define kessieMax 1
 #define mosqueMax 1

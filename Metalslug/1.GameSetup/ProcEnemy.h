@@ -9,7 +9,6 @@ enum EnemyIndex
 	IdxArCamel,
 	IdxTruck,
 	IdxKessie,
-	IdxMasknell,
 	IdxMosque,
 	IdxAbul,
 
@@ -25,9 +24,18 @@ public:
 	ProcEnemy(int index);
 	virtual ~ProcEnemy();
 public:
+	float degree;
+
 	int state;
+
+	float up;
+	float down;
+	bool fall;
 	EnemyAI ai;
+
 	//stats
+	int fpNum;
+	iPoint fp;	
 	int dmg;
 	float sight;
 	float moveSpeed;
@@ -35,17 +43,11 @@ public:
 	float attkRate, _attkRate;
 	float aiDt, _aiDt;
 
-	float up;
-	float down;
-	bool fall;
-
 	bool isDead;
 	bool isAppear;
 
-	iPoint fp;
-	iPoint tp;
-public:
-	virtual int getFrame() = 0;
+public:	
+	virtual iPoint getFirePoint() { return fp; }
 	virtual bool dead() = 0;
 
 	virtual void getDamage(float damage, Collider* c) = 0;

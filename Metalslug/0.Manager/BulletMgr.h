@@ -22,6 +22,7 @@ struct ProcBulletsPattern
 	static void patternHeavyMachinegun(ProcBullets* b, float dt);
 	static void patternBomb(ProcBullets* b, float dt);
 	static void patternMelee(ProcBullets* b, float dt);
-
+	static void patternMeleeEnd(ProcBullets* b, float dt);
 	static void patternMosque(ProcBullets* b, float dt);
+	static void patternMosqueTrace(ProcBullets* b, float dt);
 };

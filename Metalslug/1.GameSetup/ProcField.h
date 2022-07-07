@@ -6,7 +6,6 @@ struct MapData
 	iPoint p;
 	iPoint point[20];
 	int pCount;
-	iPoint trigger[3];
 };
 struct LayerData
 {

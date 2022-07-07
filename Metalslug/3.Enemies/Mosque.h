@@ -21,13 +21,8 @@ public:
 	iImage* imgBase[2];
 	iImage* imgDoor[2];	
 	
-	iImage* imgLeftTower[2];
-	iImage* imgMidTower[2];
-	iImage* imgRightTower[2];
-
-	iImage* imgLeftCurtain[2];
-	iImage* imgMidCurtain[2];
-	iImage* imgRightCurtain[2];
+	iImage* imgTower[3][2];
+	iImage* imgCurtain[3][2];
 
 	iImage* imgShutter[3][2];
 	iImage* imgSoldier[3][2];	
@@ -43,12 +38,12 @@ public:
 	iPoint towerP[3];
 	iPoint curtainP[3];
 	iPoint shutterP[3];
-	bool isShutterOpen[3];
 	iPoint soldierP[3];
 
-	float aiDt, _aiDt;
+	float aiDt[3], _aiDt;
 	float hp[3], _hp;		//0 : left, 1: mid, 2: right
 	
+	virtual iPoint getFirePoint();
 	virtual int getFrame() { return NULL; }
 	virtual bool dead();
 public:

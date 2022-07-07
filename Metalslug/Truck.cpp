@@ -13,15 +13,18 @@ Truck::Truck(int index) : ProcEnemy(index)
 
     hp = 2000;
     dmg = 0;
-    sight = 300;
+    sight = 200;
     moveSpeed = 80;
     attkRange = 0;
     attkRate = 0.f; _attkRate = 0.f;
-    aiDt = 0.f; _aiDt = 0.f;
+    aiDt = 0.f; _aiDt = 2.f;
 
     colNum = 1;
     for (int i = 0; i < colNum; i++)
         colliders[i]->init(this, iSizeMake(100, 70));
+
+    imgs = NULL;
+    imgCurr = NULL;
 
     up = 0.f;
     down = 0.f;
@@ -42,6 +45,105 @@ Truck::~Truck()
     for (int i = 0; i < TruckBehaveMax; i++)
         delete imgs[i];
     delete imgs;
+}
+
+void Truck::init(int index, iPoint p, iPoint v)
+{
+    printf("Truck Init\n");
+    this->isActive = true;
+    this->index = index;
+    this->p = p;
+    this->tp = p;
+    this->v = v;
+    //this->tp = iPointMake(1650, 180);
+    this->tp = iPointMake(500, 180);
+    if (v.x > 0)
+        setState(0);
+    else if (v.x < 0)
+        setState(1);
+    else
+        setState(0);
+
+    for (int i = 0; i < colNum; i++)
+    {
+        //init
+        colliders[i]->enable();
+        objects->addObject(colliders[i]);
+    }
+
+    for(int i=0;i<3;i++)
+        addProcEnemy(IdxArBurserker, iPointMake(p.x + i * 20, p.y), iPointZero);
+}
+
+void Truck::update(float dt)
+{
+    if (isDead)
+    {
+        return;
+    }
+
+    if (!isAppear)
+    {
+        if (containPoint(p,
+            iRectMake(-map->off.x - 40, -map->off.y - 40,
+                devSize.width + 80, devSize.height + 80)))
+            isAppear = true;
+    }
+    else
+    {
+        isActive = containPoint(p,
+            iRectMake(-map->off.x - 40, -map->off.y - 40,
+                devSize.width + 80, devSize.height + 80));
+    }
+
+    if (v != iPointZero)
+    {
+        v /= iPointLength(v);
+        v *= (moveSpeed * dt);
+        //move reverse
+        if (v.x < 0)
+            setState(MoveTruckL);
+        if (v.x > 0)
+            setState(MoveTruckR);
+        if (movePoint(p, p, iPointMake(1600, p.y), moveSpeed * dt))
+        {
+            setState(DeployTruckL + state % 2);   
+            _aiDt = 3.0f;
+            isAppear = true;
+        }
+    }
+    if (isAppear)
+    {
+        aiDt += dt;
+        if (aiDt > _aiDt)
+        {
+            aiDt -= _aiDt;
+            addProcEnemy(IdxArBurserker, { p.x - 20 , p.y}, iPointZero);
+        }
+    }    
+
+    if (player->isDead)
+        aiDt = 0.0f;
+    fixedUpdate(dt);
+}
+
+bool Truck::draw(float dt, iPoint off)
+{
+    setRGBA(1, 1, 1, 1);
+    imgCurr = imgs[state];
+    imgCurr->paint(dt, p + off);
+
+#ifdef _DEBUG
+    drawDot(p + off);
+    for (int i = 0; i < colNum; i++)
+        drawRect(colliders[i]->getCollider());
+#endif // DEBUG
+    setRGBA(1, 1, 1, 1);
+    return !IsAccelerator;
+}
+
+void Truck::free()
+{
 }
 
 int Truck::getFrame()
@@ -83,59 +185,6 @@ void Truck::setState(int newState)
         v = iPointZero;
     }
 }
-
-void Truck::update(float dt)
-{
-    isActive = containPoint(p,
-        iRectMake(-map->off.x, -map->off.y - 20,
-            devSize.width + 400, devSize.height + 40));
-    if (v != iPointZero)
-    {
-        v /= iPointLength(v);
-        v *= (moveSpeed * dt);
-        //move reverse
-        if (v.x < 0)
-            setState(MoveTruckL);
-        if (v.x > 0)
-            setState(MoveTruckR);
-        if (movePoint(p, p, iPointMake(1600, p.y), moveSpeed * dt))
-        {
-            setState(DeployTruckL + state % 2);   
-            _aiDt = 3.0f;
-            isAppear = true;
-        }
-    }
-    if (isAppear)
-    {
-        aiDt += dt;
-        if (aiDt > _aiDt)
-        {
-            aiDt -= _aiDt;
-            addProcEnemy(IdxArBurserker, { p.x - 20, p.y }, iPointZero);
-        }
-    }    
-    fixedUpdate(dt);
-}
-
-bool Truck::draw(float dt, iPoint off)
-{
-    setRGBA(1, 1, 1, 1);
-    imgCurr = imgs[state];
-    imgCurr->paint(dt, p + off);
-
-#ifdef _DEBUG
-    drawDot(p + off);
-    for (int i = 0; i < colNum; i++)
-        drawRect(colliders[i]->getCollider());
-#endif // DEBUG
-    setRGBA(1, 1, 1, 1);
-    return !IsAccelerator;
-}
-
-void Truck::free()
-{
-}
-
 
 
 ImageInfo imgTruckInfo[] =

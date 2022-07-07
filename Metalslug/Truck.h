@@ -34,6 +34,7 @@ public:
 	virtual void getDamage(float damage, Collider* c);
 	virtual void setState(int newState);
 public:
+	virtual void init(int index, iPoint p, iPoint v);
 	virtual void update(float dt);
 	virtual bool draw(float dt, iPoint off);
 	virtual void free();

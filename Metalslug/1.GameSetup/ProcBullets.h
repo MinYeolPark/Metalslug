@@ -16,10 +16,11 @@ enum BulletIndex
 	BulletBomb,
 
 	BulletMelee,
-	BulletMeleeEnd,
 	BulletMosque,
 	BulletMosqueTrace,
 
+	//No Effect
+	BulletMeleeEnd,
 	BulletIndexMax,
 };
 
@@ -31,19 +32,21 @@ public:
 	virtual ~ProcBullets();
 
 public:
+	int layer;
 	iImage** imgs;
 	iImage* imgCurr;
 
 	ProcObject* parent;
 	int index;
 
-	int layer;
-	float degree;
-	bool isActive;
 	iPoint p;
 	iPoint v;
 
-	float a;
+	float degree;
+	bool isActive;
+
+	float alpha;
+
 	float pow;
 	float up;
 	float down;

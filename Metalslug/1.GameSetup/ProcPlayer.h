@@ -1,13 +1,10 @@
 #pragma once
-
 #include "iStd.h"
+
 #include "ProcObject.h"
 
-#define pBOT 0
-#define pTOP 1
-#define WHOLE 2
-#define jumpPow			3
-#define jumpDecrease	7
+#define jumpPow			4
+#define jumpDecrease	9
 
 enum GunIndex
 {
@@ -79,9 +76,10 @@ public:
 	iImage* topImgCurr;
 	iImage** botImgs;
 	iImage* botImgCurr;
+	float degree;
 
 	Gun* curGun;
-	iPoint firePoint;
+	iPoint fp;			//firePoint
 	iPoint bombPoint;
 
 	float up;
@@ -117,8 +115,7 @@ public:
 
 public:
 	void fire(iPoint v);
-	void bomb(iPoint v);
-	void dead();
+	void bomb(iPoint v);	
 
 	void getDamage(float damage, Collider* c);
 	void addScore(int score);

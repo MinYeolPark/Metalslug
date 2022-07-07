@@ -8,26 +8,31 @@ ProcEnemy::ProcEnemy(int index) : ProcObject()
 {
 	layer = LayerEnemy;
 	p = iPointZero;
+	tp = p;
 	v = iPointZero;
 	s = iSizeZero;
 
-	isActive = false;
-	this->index = index;
-	hp = 0, _hp = 0;
-	score = 0;
-	////////////////////////
+	degree = 0;
+
 	state = 0;
+
+	up = 0.0f;
+	down = 0.0f;
+	fall = false;
 	ai = NULL;
+
+	fpNum = 0;
+	fp = { p.x, p.y - 20 };
+	////////////////////////
 	dmg = 0;
 	sight = 0;
 	moveSpeed = 0.f;
 	attkRange = 0.f;
 	attkRate = 0.f, _attkRate = 0.f;
 	aiDt = 0.f, _aiDt = 0.f;
+
 	isDead = false;
 	isAppear = false;
-	fp = { p.x, p.y - 20 };
-	tp = { -1, -1 };
 }
 
 ProcEnemy::~ProcEnemy()
@@ -44,6 +49,7 @@ void ProcEnemy::init(int index, iPoint p, iPoint v)
 	this->isActive = true;
 	this->index = index;
 	this->p = p;
+	this->tp = p;
 	this->v = v;	
 	if (v.x > 0)
 		setState(0);
@@ -96,5 +102,5 @@ void ProcEnemy::fixedUpdate(float dt)
 	}
 
 	for (int i = 0; i < colNum; i++)
-		colliders[i]->update(p);
+		colliders[i]->update(p, degree, dt);
 }

@@ -6,6 +6,8 @@
 #include "ProcBullets.h"
 #include "Truck.h"
 #include "BulletMgr.h"
+
+#include "ArabMelee.h"
 void AnimationMgr::cbAniToIdle(void* parm)
 {
 	ProcPlayer* pp = (ProcPlayer*)parm;
@@ -29,6 +31,7 @@ void AnimationMgr::cbAniDead(void* parm)
 {
 	ProcObject* e = (ProcObject*)parm;
 	e->isActive = false;
+	
 	printf("cb Ani dead\n");
 }
 
@@ -50,7 +53,7 @@ void AnimationMgr::cbAniEnemyMotion2Idle(void* parm)
 
 void AnimationMgr::cbAniMeleeFire(void* parm)
 {
-	ProcEnemy* e = (ProcEnemy*)parm;
+	ArabMelee* e = (ArabMelee*)parm;
 
 	e->setState( 6+ e->state % 2);//shuffle
 }
@@ -59,6 +62,14 @@ void AnimationMgr::cbAniTruck(void* parm)
 {
 	Truck* t = (Truck*)parm;
 	t->_aiDt = 3.f;	
+}
+
+void AnimationMgr::cbAniMosque(void* parm)
+{
+	ProcBullets* b = (ProcBullets*)parm;
+
+	printf("cb Ani mosque\n");
+	b->index = BulletMosqueTrace;
 }
 
 void AnimationMgr::cbAniNpcRelease(void* parm)
@@ -104,5 +115,5 @@ void AnimationMgr::cbAniBulletDisappear(void* parm)
 void AnimationMgr::cbAniBulletDisappearWithAlpha(void* parm)
 {
 	ProcBullets* b = (ProcBullets*)parm;
-	b->a = 0;
+	b->alpha = 0;
 }

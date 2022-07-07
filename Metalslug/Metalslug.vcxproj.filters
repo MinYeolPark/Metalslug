@@ -165,6 +165,9 @@
     <ClInclude Include="1.GameSetup\ProcStructure.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="iSort.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp">
@@ -312,6 +315,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="1.GameSetup\ProcStructure.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="iSort.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

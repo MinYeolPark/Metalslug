@@ -38,6 +38,7 @@ void ProcStructure::init(int index, iPoint p)
         size[0] = { 80, 10 };
         size[1] = { 80, 10 };
         pos[0] = { p.x - 40, p.y - 30 };
+        printf("pos [0]=%f,%f\n", p.x - 40., p.y - 30);
         pos[1] = { p.x + 20, p.y - 70 };
     }
     else if (index == Wall)
@@ -45,19 +46,19 @@ void ProcStructure::init(int index, iPoint p)
         colNum = 1;         
         size[0] = { 50,130 };
         pos[0] = p;
+
+        imgs[Wall]->stopAnimation();
+        imgs[Wall]->frame = 0;
     }
+
     for (int i = 0; i < colNum; i++)
     {
         colliders[i]->enable();
-        colliders[i]->setSize(size[i]);
+        //colliders[i]->isTrigger = false;        
+        colliders[i]->init(this, size[i]);
         colliders[i]->setPosition(pos[i]);
-        objects->addObject(colliders[i]);
-    }
 
-    if (index == Wall)
-    {
-        imgs[Wall]->stopAnimation();
-        imgs[Wall]->frame = 0;
+        objects->addObject(colliders[i]);
     }
 }
 
@@ -74,11 +75,10 @@ bool ProcStructure::draw(float dt, iPoint off)
     imgCurr->paint(dt, p + off);
 
 #ifdef _DEBUG
-    drawDot(p);
-    
+    drawDot(p + off);    
     for (int i = 0; i < colNum; i++)
     {
-        iRect c = colliders[i]->getCollider();
+        iRect c = colliders[i]->getCollider();        
         c.origin.x += off.x;
         c.origin.y += off.y;
         drawRect(c);
@@ -86,8 +86,6 @@ bool ProcStructure::draw(float dt, iPoint off)
 #endif // _DEBUG
 
     setRGBA(1, 1, 1, 1);
-
-
     return !isActive;
 }
 
@@ -122,7 +120,7 @@ void loadStructure()
     structures = new ProcStructure * [StructureIndexMax * maxStruct];
     structNum = 0;
 
-    addStructure(AppleStair, iPointMake(200, 150));
+    addStructure(AppleStair, iPointMake(650, 180));
     //addStructure(Wall, iPointMake(200, 200));
 }
 

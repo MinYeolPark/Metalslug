@@ -143,7 +143,7 @@ iPoint iPointRotate(iPoint p, iPoint t, float degree)
 	return r;
 }
 
-float setDegree(float& degree, iPoint att, iPoint def, float spin, float dt)
+float setDegree(float& degree, iPoint att, iPoint def, float dt)
 {
 	float d = 360 - iPointAngle(iPointMake(1, 0), iPointZero, def - att);
 	float diff = d - degree;
