@@ -452,7 +452,7 @@ void ProcPlayer::fire(iPoint v)
             topImgs[topState]->startAnimation(AnimationMgr::cbAniToIdle, this);
             printf("fire!!\n");
         }
-        addBullet(this, curGun->gunIndex, fireDeg);
+        addBullet(this, curGun->gunIndex, fireDeg);        
         if (curGun->gunIndex == HeavyMachinegun)
         {
             for(int i=0;i<2;i++)

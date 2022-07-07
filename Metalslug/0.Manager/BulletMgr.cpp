@@ -71,6 +71,21 @@ void addBullet(ProcEnemy* enemy, int index, float degree)
 	}
 }
 
+void addBullet(Mosque* enemy, int which, int index, float degree)
+{
+	for (int i = 0; i < bulletMax; i++)
+	{
+		ProcBullets* b = _bullets[index][i];
+		if (b->isActive == false)
+		{
+			b->init(enemy, which, index, degree);
+			bullets[bulletNum] = b;
+			bulletNum++;
+			return;
+		}
+	}
+}
+
 void ProcBulletsPattern::patternHandgun(ProcBullets* b, float dt)
 {	
 	b->p += b->v * b->speed * dt;
@@ -139,43 +154,18 @@ void ProcBulletsPattern::patternMeleeEnd(ProcBullets* b, float dt)
 }
 
 void ProcBulletsPattern::patternMosque(ProcBullets* b, float dt)
-{
-	if (b->index == BulletMosque)
+{	
+	if (b->imgs[b->index]->frame == 29)
 	{
-		if (b->imgs[b->index]->frame == 29)
-		{
-			b->index = BulletMosqueTrace;
-			b->pattern = patternMosqueTrace;
-		}
+		b->index = BulletMosqueTrace;
+		b->pattern = patternMosqueTrace;
 	}
 }
 
-static float tDegree = 60.f;
+#define wave 15				//ÁøÆø
 static float _d = 100.f;
 void ProcBulletsPattern::patternMosqueTrace(ProcBullets* b, float dt)
 {
-#if 0	
-	if (tDegree > 0)
-	{
-		b->degree += b->speed * dt;
-		if (b->degree > tDegree)
-			tDegree *= -1;
-	}
-	else if (tDegree < 0)
-	{
-		b->degree -= b->speed * dt;
-		if (b->degree < tDegree)
-			tDegree *= -1;
-	}
-	iPoint v = player->p - b->p;
-	v /= iPointLength(v) * b->speed * dt;
-	b->p.x += _cos(b->degree);
-	b->p.y += _sin(b->degree);
-	//b->p.x += v.x;
-	setRGBA(1, 1, 1, 1);
-	drawDot(b->p + map->off);
-	setRGBA(1, 1, 1, 1);
-#elif 1
 	iPoint md = b->v * b->speed * dt;
 	b->p += md;
 
@@ -183,41 +173,8 @@ void ProcBulletsPattern::patternMosqueTrace(ProcBullets* b, float dt)
 	if (b->d > _d)
 		b->d -= _d;
 	float r = b->d / _d;		
-	float angle = iPointAngle(iPointMake(1, 0), iPointZero, b->v);	
-	printf("angle=%f\n", angle);
-	int wave = 30;			//ÁøÆø
-	iPoint w = iPointRotate(iPointMake((wave * _sin(360 * r)), 0), iPointZero, angle + 90);	
+	float angle = iPointAngle(iPointMake(1, 0), iPointZero, b->v);			
+	iPoint w = iPointRotate(iPointMake((wave * _sin(360 * r)), 0), iPointZero, angle + 90);		
+	//b->degree = 45 * _sin(360 * r);	
 	b->rp = b->p + w;	
-#else
-	iPoint v = player->p - b->p;
-	v /= iPointLength(v);
-	v *= (b->speed * dt);	 
-	if (b->degree < 90)
-	{
-		b->degree += (90 / 0.5f * dt);
-		//if (degree > 90)
-		//	degree = 90;
-	}
-	else if (b->degree > 90)
-	{
-		b->degree -= (90 / 0.5f * dt);
-		//if (degree < 90)
-		//	degree = 90;
-	}
-	b->v = iPointRotate(v, b->parent->tp, b->degree);
-	b->p += v;
-	if (player)
-	{
-		for (int i = 0; i < player->colNum; i++)
-		{
-			if (containPoint(b->p, player->colliders[i]->getCollider()))
-			{
-				addProcEffect(b->index, b->p);
-				player->getDamage(b->damage, player->colliders[i]);
-				b->isActive = false;
-				//dead
-			}
-		}
-	}
-#endif
 }

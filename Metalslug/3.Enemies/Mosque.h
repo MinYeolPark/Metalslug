@@ -34,6 +34,7 @@ public:
 	int curtainState[3];
 	int soldierState[3];
 
+	iPoint firePoint[3];
 	iPoint doorP[2];
 	iPoint towerP[3];
 	iPoint curtainP[3];

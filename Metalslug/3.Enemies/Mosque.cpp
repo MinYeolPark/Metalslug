@@ -94,8 +94,8 @@ Mosque::Mosque(int index) : ProcEnemy(index)
 	attkRange = 500.f;
 	for (int i = 0; i < 3; i++)
 	{
-		hp[i] = 100.f;
-		float t = rand() % 100;
+		hp[i] = 100.f;		
+		firePoint[i] = iPointZero;
 	}
 }
 
@@ -129,32 +129,39 @@ void Mosque::init(int index, iPoint p, iPoint v)
 	//fix
 	fpNum = 3;
 	memset(aiDt, 0x00, 3);
-	_aiDt = 10.f;		//fire prer 2 sec
+	aiDt[0] = 3.f;
+	aiDt[1] = 5.f;
+	aiDt[2] = 0.f;
+	_aiDt = 6.f;		//fire prer 2 sec
 }
 
 static float dramaDt = 0.f, _dramaDt = 5.f;
 static float intervalDt = 0.f, _intervalDt = 0.18f;
 void Mosque::update(float dt)
 {		
-	fp = shutterP[0];
-
 	//Appear
 	for(int i = 0; i < 3; i++)
 	{
-		if (movePoint(towerP[i], towerP[i], 
+		if (movePoint(towerP[i], towerP[i],
 			iPointMake(towerP[i].x, p.y - 80), 1))
 			shutterState[i] = 1;
 
-		if (shutterState[i]==1)
+		if (curtainState[i]==1 && towerState[i]!=MosqueDead)
 		{
 			aiDt[i] += dt;
 			if (aiDt[i] > _aiDt)
 			{
 				aiDt[i] -= _aiDt;
 				tp = player->p;
+				iPoint vp = tp - firePoint[i];
+				float ang = iPointAngle(iPointMake(1, 0), iPointZero, vp);
 				int len = iPointLength(tp - p);
 				if (len < attkRange)
-					addBullet(this, BulletMosque, 45);		//x축 기준, 시계방향 degree
+				{					
+					printf("ang=%f\n", ang);
+					addBullet(this, i, BulletMosque, 360-ang);		//x축 기준, 시계방향 degree
+					addProcEffect(EffectMoskTrail, firePoint[i]);
+				}
 			}
 		}
 	}
@@ -166,6 +173,7 @@ void Mosque::update(float dt)
 			shutterP[i].x += 6;
 		curtainP[i] = { shutterP[i].x - 5, shutterP[i].y + 5 };
 		soldierP[i] = { shutterP[i].x - 5, shutterP[i].y - 5 };
+		firePoint[i] = soldierP[i];
 	}
 
 	//Dead Event
@@ -198,11 +206,16 @@ void Mosque::update(float dt)
 }
 
 void Mosque::fixedUpdate(float dt)
-{
+{	
 	for (int i = 0; i < 3; i++)
-		colliders[i]->update(
-			iPointMake(towerP[i].x, towerP[i].y - colliders[i]->getCollider().size.height),
-			degree, dt);
+	{
+		if (colliders[i]->isActive)
+		{
+			colliders[i]->update(
+				iPointMake(towerP[i].x, towerP[i].y - colliders[i]->getCollider().size.height),
+				degree, dt);
+		}
+	}
 }
 
 bool Mosque::draw(float dt, iPoint off)
@@ -226,13 +239,15 @@ bool Mosque::draw(float dt, iPoint off)
 
 #ifdef _DEBUG
 	drawDot(p);
-
 	for (int i = 0; i < 3; i++)
 	{
-		iRect c = colliders[i]->getCollider();
-		c.origin.x += off.x;
-		c.origin.y += off.y;
-		drawRect(c);
+		if (colliders[i]->isActive)
+		{
+			iRect c = colliders[i]->getCollider();
+			c.origin.x += off.x;
+			c.origin.y += off.y;		
+			drawRect(c);
+		}
 	}
 #endif // _DEBUG
 
@@ -295,7 +310,8 @@ void Mosque::cbAniShutterOpen(void* parm)
 	Mosque* m = (Mosque*)parm;
 	for (int i = 0; i < 3; i++)
 	{
-		m->curtainState[i] = MosqueDead;
+		m->curtainState[i] = 1;
+		m->shutterState[i] = 1;
 	}
 }
 

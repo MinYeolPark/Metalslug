@@ -88,8 +88,7 @@ void ProcBullets::init(ProcObject* parent, int index, float degree)
 		colliders[i]->init(parent, bs[index]);
 #endif	
 	this->pattern = bp[index];
-	this->v = iPointRotate(iPointMake(1, 0), iPointZero, degree);	
-	printf("v=%f, %f\n", v.x, v.y);
+	this->v = iPointRotate(iPointMake(1, 0), iPointZero, degree);		
 }
 
 void ProcBullets::init(ProcPlayer* parent, int index, float degree)
@@ -112,11 +111,9 @@ void ProcBullets::init(ProcPlayer* parent, int index, float degree)
 void ProcBullets::init(ProcEnemy* parent, int index, float degree)
 {
 	ProcBullets::init((ProcObject*)parent, index, degree);
+
 	this->p = parent->fp;
-	if (index == BulletMosque)
-		speed = 30;
-	else
-		this->speed = 100;
+	this->speed = 100;
 	this->damage = 100;
 	if (index == BulletMelee)
 	{
@@ -127,10 +124,19 @@ void ProcBullets::init(ProcEnemy* parent, int index, float degree)
 	}
 }
 
+void ProcBullets::init(Mosque* parent, int which, int index, float degree)
+{
+	ProcBullets::init((Mosque*)parent, index, degree);
+
+	this->p = parent->firePoint[which];	
+	this->speed = 40;
+	this->damage = 100;
+
+	imgs[this->index]->startAnimation();
+}
+
 void ProcBullets::update(float dt)
 {	
-	printf("collider[0] p=%f, width =%f\n", colliders[0]->p.x, colliders[0]->s.width);
-
 #if 1
 	isActive = containPoint(p,
 	iRectMake(-map->off.x - 20, -map->off.y - 20,
@@ -213,8 +219,10 @@ bool ProcBullets::draw(float dt, iPoint off)
 {	
 	setRGBA(1, 1, 1, alpha);
 	imgCurr = imgs[index];
-	imgCurr->degree = degree;			
+	imgCurr->degree = degree;	
 	imgCurr->paint(dt, rp + off);
+
+	drawImage(imgCurr->tex, iPointMake(100, 100));
 #ifdef _DEBUG				
 	setDotSize(5);
 	drawDot(rp + off);
@@ -285,7 +293,7 @@ ImageInfo bulletImageInfo[] =
 	{
 		"assets/Bullets/MidBoss_Fire_%02d.png",
 		30,
-		1.0f, {-72 / 2,0},
+		1.0f, {-50/2,0},
 		0.1f,
 		1,
 		{255, 0, 0, 255},

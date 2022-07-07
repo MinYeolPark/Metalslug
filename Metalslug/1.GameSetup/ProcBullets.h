@@ -94,6 +94,7 @@ public:
 	virtual void init(ProcObject* parent, int index, float degree);
 	virtual void init(ProcPlayer* parent, int index, float degree);
 	virtual void init(ProcEnemy* parent, int index, float degree);
+	virtual void init(Mosque* parent, int which, int index, float degree);
 	virtual void update(float dt);
 	virtual void fixedUpdate(float dt);
 	virtual bool draw(float dt, iPoint off);
