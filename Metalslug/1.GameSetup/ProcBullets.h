@@ -7,6 +7,41 @@
 #include "ProcEnemy.h"
 #include "ProcPlayer.h"
 
+struct Ball
+{
+	iPoint p, v;
+	float speed;
+
+	float d, _d, wave;
+
+	Ball()
+	{
+		p = iPointZero;
+		v = iPointZero;
+
+		speed = 200;
+
+		_d = 50;
+		d = 0;
+		wave = 30;
+	}
+
+	void paint(float dt)
+	{
+		iPoint md = v * speed;
+		p += md;
+
+		d += iPointLength(md);
+		while (d > _d)
+			d -= _d;
+		float r = d / _d;
+		float w = wave * _sin(360 * r);
+
+		iPoint position = p;
+
+	}
+};
+
 class ProcBullets;
 typedef void(*BulletPattern)(ProcBullets* b, float dt);
 enum BulletIndex
@@ -16,8 +51,11 @@ enum BulletIndex
 	BulletBomb,
 
 	BulletMelee,
+
+	
+
 	BulletMosque,
-	BulletMosqueTrace,
+	BulletMosqueTrace,	
 
 	//No Effect
 	BulletMeleeEnd,
@@ -25,27 +63,22 @@ enum BulletIndex
 };
 
 typedef void (*BulletPattern)(ProcBullets* b, float dt);
-class ProcBullets
+class ProcBullets:
+	public ProcObject
 {
 public:
 	ProcBullets(int idx);
 	virtual ~ProcBullets();
 
 public:
-	int layer;
 	iImage** imgs;
 	iImage* imgCurr;
 
 	ProcObject* parent;
-	int index;
 
-	iPoint p;
-	iPoint v;
-
+	iPoint rp;					//real Position
+	float d, _d;				//curDistance , leftDistance
 	float degree;
-	bool isActive;
-
-	float alpha;
 
 	float pow;
 	float up;
@@ -54,19 +87,20 @@ public:
 	float speed;
 	float damage;
 
+	//Components
+public:
 	BulletPattern pattern;
 public:
 	virtual void init(ProcObject* parent, int index, float degree);
-	virtual void init(ProcPlayer* parent, int idx, float degree);
-	virtual void init(ProcEnemy* parent, int idx, float degree);
+	virtual void init(ProcPlayer* parent, int index, float degree);
+	virtual void init(ProcEnemy* parent, int index, float degree);
 	virtual void update(float dt);
 	virtual void fixedUpdate(float dt);
 	virtual bool draw(float dt, iPoint off);
 	virtual void free();
 
-	//Components
 public:
-	Collider* collider;
+	virtual void getDamage(float damage, Collider* c);
 };
 
 

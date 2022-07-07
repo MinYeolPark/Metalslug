@@ -190,6 +190,22 @@ ImageInfo imgEffectInfo[] =
 		ProcEffect::cbAniEffect,
 	},
 	{
+		"assets/Effect/Explode_%02d.png",
+		23, 1.0f, { -80 / 2, 0},
+		0.08f,
+		1,
+		{0, 248, 0, 255},
+		ProcEffect::cbAniEffect,
+	},
+	{
+		"assets/Effect/Explode2_%02d.png",
+		23, 1.0f, { -48 / 2, 0},
+		0.08f,
+		1,
+		{255, 0, 0, 255},
+		ProcEffect::cbAniEffect,
+	},
+	{
 		"assets/Effect/MidBoss_Trail_%02d.png",
 		33, 1.0f, { -63 / 2, 0},
 		0.08f,

@@ -14,12 +14,16 @@ ProcObject::ProcObject()
 	layer = ObjLayer::LayerDefault;
 
 	p = iPointZero;
+	tp = p;
 	v = iPointZero;
 	s = iSizeZero;
 
-	index = 0;
 	isActive = false;
 	isRight = false;
+
+	alpha = 1.0f;
+	index = 0;
+
 	hp=0, _hp = 0;
 	score = 0;
 

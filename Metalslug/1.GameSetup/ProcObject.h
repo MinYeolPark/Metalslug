@@ -30,22 +30,26 @@ public:
 
 	bool isActive;
 	bool isRight;
+
+	float alpha;
 	int index;
+
 	int hp, _hp;
 	int score;
 
 	int colNum;
 	Collider* colliders[3];
 public:
-	virtual void getDamage(float damage, Collider* c) = 0;
-	virtual int getScore();
-public:
 	virtual void init(iPoint p);
 	virtual void init(iPoint p, iPoint v);
 	virtual void init(int index, iPoint p);
 	virtual void init(int index, iPoint p, iPoint v);
 	virtual void update(float dt) = 0;				//With control physics
-	virtual bool draw(float dt, iPoint off) = 0;	
+	virtual bool draw(float dt, iPoint off) = 0;
+
+public:
+	virtual void getDamage(float damage, Collider* c) = 0;
+	virtual int getScore();
 };
 extern iArray* objects;
 #include "ProcField.h"

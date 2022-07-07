@@ -10,28 +10,23 @@
 
 static iImage** _imgBullets = NULL;
 ImageInfo bulletImageInfo[];
-ProcBullets::ProcBullets(int idx)
+ProcBullets::ProcBullets(int index) : ProcObject()
 {
 	layer = LayerBullet;
+
 	imgs = NULL;
 	imgCurr = NULL;
 
 	parent = NULL;
-	index = idx;
+	this->index = index;
 
-	p = iPointZero;
-	v = iPointZero;
-
+	rp = p;
+	d = 0, _d = 0;
 	degree = 0;
-	isActive = false;
-
-	alpha = 1.f;
 
 	pow = 0.f;
 	up = 0.f;
 	down = 0.f;
-
-	collider = new Collider();
 
 	speed = 0;
 	damage = 0;
@@ -87,9 +82,14 @@ void ProcBullets::init(ProcObject* parent, int index, float degree)
 		{25, 5},
 		{25, 5},
 	};
-	this->collider->init(parent, bs[index]);
+#if 1
+	colNum = 1;
+	for (int i = 0; i < colNum; i++)
+		colliders[i]->init(parent, bs[index]);
+#endif	
 	this->pattern = bp[index];
 	this->v = iPointRotate(iPointMake(1, 0), iPointZero, degree);	
+	printf("v=%f, %f\n", v.x, v.y);
 }
 
 void ProcBullets::init(ProcPlayer* parent, int index, float degree)
@@ -112,8 +112,11 @@ void ProcBullets::init(ProcPlayer* parent, int index, float degree)
 void ProcBullets::init(ProcEnemy* parent, int index, float degree)
 {
 	ProcBullets::init((ProcObject*)parent, index, degree);
-	this->p = parent->fp;	
-	this->speed = 100;
+	this->p = parent->fp;
+	if (index == BulletMosque)
+		speed = 30;
+	else
+		this->speed = 100;
 	this->damage = 100;
 	if (index == BulletMelee)
 	{
@@ -126,6 +129,8 @@ void ProcBullets::init(ProcEnemy* parent, int index, float degree)
 
 void ProcBullets::update(float dt)
 {	
+	printf("collider[0] p=%f, width =%f\n", colliders[0]->p.x, colliders[0]->s.width);
+
 #if 1
 	isActive = containPoint(p,
 	iRectMake(-map->off.x - 20, -map->off.y - 20,
@@ -193,9 +198,8 @@ void ProcBullets::fixedUpdate(float dt)
 		}
 	}
 	
-	//update
-	collider->update(p, degree, dt);
-
+	for (int i = 0; i < colNum; i++)
+		colliders[i]->update(p, degree, dt);
 	//collider->setPosition(p);	
 	//if (degree == 90 || degree == 270)
 	//	collider->setSize(
@@ -210,11 +214,15 @@ bool ProcBullets::draw(float dt, iPoint off)
 	setRGBA(1, 1, 1, alpha);
 	imgCurr = imgs[index];
 	imgCurr->degree = degree;			
-	imgCurr->paint(dt, p + off);
+	imgCurr->paint(dt, rp + off);
 #ifdef _DEBUG				
 	setDotSize(5);
-	iRect c = collider->getCollider();
-	drawRect(c);
+	drawDot(rp + off);
+	drawDot(p + off);
+	iRect c = colliders[0]->getCollider();
+	c.origin.x += off.x;
+	c.origin.y += off.y;
+	drawRect(c);	
 #endif // DEBUG
 	
 	setRGBA(1, 1, 1, 1);
@@ -222,6 +230,10 @@ bool ProcBullets::draw(float dt, iPoint off)
 }
 
 void ProcBullets::free()
+{
+}
+
+void ProcBullets::getDamage(float damage, Collider* c)
 {
 }
 

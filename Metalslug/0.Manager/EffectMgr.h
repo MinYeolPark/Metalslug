@@ -14,10 +14,14 @@ enum EffectIndex
 {
 	EffectHand,
 	EffectHeavy,
-	EffectExplosion,
+	EffectBomb,
 
 	EffectBlood,
 	
+
+	//
+	EffectExplosionL,
+	EffectExplosionM,
 	EffectMoskTrail,
 	EffectKessieBlast,
 	EffectKessieBlastRage,

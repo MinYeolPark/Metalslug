@@ -120,7 +120,8 @@ void ProcBulletsPattern::patternMelee(ProcBullets* b, float dt)
 	else
 	{
 		b->index = BulletMeleeEnd;
-		b->collider->isActive = false;
+		for (int i = 0; i < b->colNum; i++)
+			b->colliders[i]->isActive = false;
 		b->up = 0.0f;
 		b->pattern = patternMeleeEnd;		
 		return;
@@ -130,7 +131,6 @@ void ProcBulletsPattern::patternMelee(ProcBullets* b, float dt)
 void ProcBulletsPattern::patternMeleeEnd(ProcBullets* b, float dt)
 {	
 	b->alpha -= dt;
-	printf("alpha=%f\n", b->alpha);
 	if (b->alpha < 0.0f)
 	{
 		b->alpha = 0.0f;
@@ -151,9 +151,10 @@ void ProcBulletsPattern::patternMosque(ProcBullets* b, float dt)
 }
 
 static float tDegree = 60.f;
+static float _d = 100.f;
 void ProcBulletsPattern::patternMosqueTrace(ProcBullets* b, float dt)
 {
-#if 1	
+#if 0	
 	if (tDegree > 0)
 	{
 		b->degree += b->speed * dt;
@@ -174,6 +175,19 @@ void ProcBulletsPattern::patternMosqueTrace(ProcBullets* b, float dt)
 	setRGBA(1, 1, 1, 1);
 	drawDot(b->p + map->off);
 	setRGBA(1, 1, 1, 1);
+#elif 1
+	iPoint md = b->v * b->speed * dt;
+	b->p += md;
+
+	b->d += iPointLength(md);
+	if (b->d > _d)
+		b->d -= _d;
+	float r = b->d / _d;		
+	float angle = iPointAngle(iPointMake(1, 0), iPointZero, b->v);	
+	printf("angle=%f\n", angle);
+	int wave = 30;			//ÁøÆø
+	iPoint w = iPointRotate(iPointMake((wave * _sin(360 * r)), 0), iPointZero, angle + 90);	
+	b->rp = b->p + w;	
 #else
 	iPoint v = player->p - b->p;
 	v /= iPointLength(v);

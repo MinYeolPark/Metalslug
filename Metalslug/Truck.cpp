@@ -160,7 +160,7 @@ bool Truck::dead()
         //objects->removeObject(colliders[i]);
     }
     state = (DeadTruckL + state % 2);
-    addProcEffect(EffectExplosion, p);
+    addProcEffect(EffectBomb, p);
     imgs[state]->startAnimation(AnimationMgr::cbAniDead, this);
 
     return state == (DeadTruckL + state % 2);

@@ -128,7 +128,6 @@ void Mosque::init(int index, iPoint p, iPoint v)
 
 	//fix
 	fpNum = 3;
-	fp = towerP[0];
 	memset(aiDt, 0x00, 3);
 	_aiDt = 10.f;		//fire prer 2 sec
 }
@@ -137,6 +136,8 @@ static float dramaDt = 0.f, _dramaDt = 5.f;
 static float intervalDt = 0.f, _intervalDt = 0.18f;
 void Mosque::update(float dt)
 {		
+	fp = shutterP[0];
+
 	//Appear
 	for(int i = 0; i < 3; i++)
 	{
@@ -150,9 +151,10 @@ void Mosque::update(float dt)
 			if (aiDt[i] > _aiDt)
 			{
 				aiDt[i] -= _aiDt;
-				int len = iPointLength(player->p-p);
+				tp = player->p;
+				int len = iPointLength(tp - p);
 				if (len < attkRange)
-					addBullet(this, BulletMosque, 0);
+					addBullet(this, BulletMosque, 45);		//x축 기준, 시계방향 degree
 			}
 		}
 	}
@@ -176,7 +178,7 @@ void Mosque::update(float dt)
 			intervalDt -= _intervalDt;
 			int rx = p.x + (((rand() % 150) - 50) * 2);
 			int ry = p.y - (((rand() % 50)) * 2);
-			addProcEffect(EffectExplosion, iPointMake(rx,ry));
+			addProcEffect(EffectExplosionM, iPointMake(rx,ry));
 		}
 
 		if (dramaDt > _dramaDt)
@@ -188,7 +190,7 @@ void Mosque::update(float dt)
 			{
 				int rx = p.x + (rand() % 80 - 40 * 2) * i;
 				int ry = p.y - (rand() % 40) * i;
-				addProcEffect(EffectExplosion, iPointMake(rx, ry));
+				addProcEffect(EffectExplosionM, iPointMake(rx, ry));
 			}
 		}
 	}
@@ -246,7 +248,11 @@ bool Mosque::dead()
 	for (int i = 0; i < colNum; i++)
 	{
 		if (colliders[i]->isActive == false)
+		{
+			if(towerState[i]!=MosqueDead)
+				addProcEffect(EffectExplosionM, shutterP[i]);
 			towerState[i] = MosqueDead;
+		}
 	}
 	
 	if (towerState[0] == MosqueDead &&
@@ -266,7 +272,6 @@ void Mosque::getDamage(float damage, Collider* c)
 		{
 			if(c == colliders[i])
 				hp[i] -= damage;		
-			printf("hp=%f\n", hp[i]);
 			if (hp[i] < 1)
 			{
 				colliders[i]->disable();				
