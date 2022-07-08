@@ -234,6 +234,7 @@ void drawOpenGL(float dt, MethodDraw m)
     setGlBlendFunc(iBlendFuncAlpha);
     fbo->bind();
     fbo->clear(0, 0, 0, 0);
+    
     m(dt);// drawGame
     updateKeyboard();
     //drawCursor(dt);

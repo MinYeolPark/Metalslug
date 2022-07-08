@@ -11,7 +11,7 @@
 #define keyboard_shift	128
 #define keyboard_z		256
 #define keyboard_x		512
-
+#define keyboard_esc	1024
 void setKeyboard(bool down, int key);
 void updateKeyboard();
 

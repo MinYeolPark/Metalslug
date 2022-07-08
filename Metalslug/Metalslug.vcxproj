@@ -158,10 +158,11 @@
     <ClInclude Include="EventMgr.h" />
     <ClInclude Include="1.GameSetup\ProcStructure.h" />
     <ClInclude Include="iSort.h" />
+    <ClInclude Include="2.UI\PopupUI.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="1.GameSetup\Select.h" />
     <ClInclude Include="Sorting.h" />
-    <ClInclude Include="StatusUI.h" />
+    <ClInclude Include="2.UI\StatusUI.h" />
     <ClInclude Include="std\iArray.h" />
     <ClInclude Include="std\iColor.h" />
     <ClInclude Include="std\iCommon.h" />
@@ -214,6 +215,7 @@
     <ClCompile Include="1.GameSetup\ProcNpc.cpp" />
     <ClCompile Include="1.GameSetup\ProcStructure.cpp" />
     <ClCompile Include="iSort.cpp" />
+    <ClCompile Include="2.UI\PopupUI.cpp" />
     <ClCompile Include="Sorting.cpp" />
     <ClCompile Include="std\iArray.cpp" />
     <ClCompile Include="std\iColor.cpp" />

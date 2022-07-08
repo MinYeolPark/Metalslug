@@ -99,7 +99,7 @@
     <ClInclude Include="0.Manager\UIMgr.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="StatusUI.h">
+    <ClInclude Include="2.UI\StatusUI.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="1.GameSetup\ProcEnemy.h">
@@ -166,6 +166,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="iSort.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="2.UI\PopupUI.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -318,6 +321,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="iSort.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="2.UI\PopupUI.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

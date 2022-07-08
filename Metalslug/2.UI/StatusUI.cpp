@@ -156,9 +156,8 @@ StatusUI::StatusUI()
 	for (int i = 0; i < 10; i++)
 		numberGold[i] = g->createIgImage("assets/NumFont/NumFont_%02d.png", i + 20);
 
-
 	for (int i = 0; i < 3; i++)
-		statsFrame[i] = createImage(iColor4bMake(222, 0, 255, 255), "assets/NumFont/ScoreFrame_%02d.png", i);
+		statsFrame[i] = createImage(iColor4bMake(222, 0, 255, 255), "assets/NumFont/ScoreFrame_00.png");
 	for (int i = 0; i < 4; i++)
 		gaugeFrame[i] = createImage(iColor4bMake(222, 0, 255, 255), "assets/NumFont/GaugeFrame_%02d.png", i);
 	stScore = new iStrTex(methodStScore);

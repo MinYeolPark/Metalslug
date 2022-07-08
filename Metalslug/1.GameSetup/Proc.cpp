@@ -56,8 +56,6 @@ void drawProc(float dt)
 	drawProcPlayer(dt, off);
 	drawProcEffect(dt, off);
 	drawUI(dt, off);
-
-
 #if 0
 	//#issue
 	for (int i = 0; i < objects->count; i++)
@@ -73,10 +71,13 @@ void drawProc(float dt)
 
 bool keyProc(iKeyState stat, iPoint p)
 {
+	if (keyProcUI(stat, p))
+		return true;
+
 	switch (stat) {
 
 	case iKeyStateBegan:
-		printf("Clicked point = %f, %f\n", p.x + map->off.x, p.y + map->off.y);
+		printf("Clicked point = %f, %f\n", p.x, p.y );
 		break;
 
 	case iKeyStateMoved:

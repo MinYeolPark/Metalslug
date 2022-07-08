@@ -99,6 +99,15 @@ Mosque::Mosque(int index) : ProcEnemy(index)
 	}
 }
 
+// d/_d * 360 =>  0 / 90 / 270 / 360 
+//				  90 / 0 / 270 / 0
+// 
+// // 0~1~1~1
+// float r = angel; while( r > 90 ) r -= 90; r /= 90;
+// 
+// int array[4] = {90, 0, -90, 0};// 90 / 0 / 270 / 0
+// float degree = array[n] * (1-r)* + array[(1+n)%4] * r;
+
 Mosque::~Mosque()
 {
 	for (int i = 0; i < MosqueBehaveMax; i++)
@@ -159,6 +168,7 @@ void Mosque::update(float dt)
 				if (len < attkRange)
 				{					
 					printf("ang=%f\n", ang);
+					//addBullet(this, i, BulletMosque, 360-ang);		//x축 기준, 시계방향 degree
 					addBullet(this, i, BulletMosque, 360-ang);		//x축 기준, 시계방향 degree
 					addProcEffect(EffectMoskTrail, firePoint[i]);
 				}
