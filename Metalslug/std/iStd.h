@@ -39,7 +39,7 @@
 //640 : 480 = x : 264
 //#define DEV_WIDTH 352
 //#define DEV_HEIGHT 264
-#define DEV_WIDTH 300
+#define DEV_WIDTH 304
 #define DEV_HEIGHT 224
 extern iSize devSize;
 extern iRect viewport;

@@ -94,8 +94,8 @@ public:
 	bool fireing;
 	int jumpCombo;
 
-	int maxX;
-	int maxY;
+	float maxX;
+	float maxY;
 
 	PlayerBehave topState;
 	PlayerBehave botState;
@@ -111,7 +111,9 @@ public:
 	int score;
 
 	//test
-	float alpha, alphaDt;
+	float alpha;
+	int alphaNum, _alphaNum;
+	float inviDt, _inviDt;		//Immortality
 
 public:
 	void fire(iPoint v);

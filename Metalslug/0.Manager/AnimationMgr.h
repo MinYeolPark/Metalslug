@@ -26,5 +26,9 @@ public:
 	//Bullests
 	static void cbAniBulletDisappear(void* parm);
 	static void cbAniBulletDisappearWithAlpha(void* parm);
+
+public:
+	static void cbAniKessieBlast(void* parm);
+	static void cbAniKessieBlastEnd(void* parm);
 };
 

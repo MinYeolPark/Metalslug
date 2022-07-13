@@ -6,12 +6,14 @@
 PopupUI* popup;
 
 igImage* bg;
+int selectedOptionBtn;
+bool optionConfirm = false;
 PopupUI::PopupUI()
 {
 	setRGBA(1, 1, 1, 1);
 	iPopup* pop = new iPopup();	
     iGraphics* g = new iGraphics();	
-    iSize size = iSizeMake(120, 80);
+    iSize size = iSizeMake(120, 60);
     g->init(size);	
 
 	bg = g->createIgImage("assets/UI/Option.png");    
@@ -28,7 +30,13 @@ PopupUI::PopupUI()
 	// btn (80, 20) 
 	//
 	const char* str[3] = { "RESUME", "HOME", "QUIT" };
-	imgPauseBtn = new iImage * [3];
+	imgOptionBtn = new iImage * [3];
+	size = iSizeMake(90, 10);
+
+	setStringName("assets/BMJUA_ttf.ttf");
+	setStringRGBA(1, 1, 1, 1);
+	setStringSize(10);
+	setStringBorder(0);
 	for (int i = 0; i < 3; i++)
 	{
 		img = new iImage();
@@ -38,38 +46,42 @@ PopupUI::PopupUI()
 			g->init(size);			
 			if (j == 0)
 			{
-				setRGBA(1, 0, 0, 1);
+				setRGBA(1, 0, 1, 1);
 			}
 			else// if (j == 1)
 			{
-				setRGBA(1, 1, 1, 1);
+				setRGBA(0, 1, 0, 1);
 			}
 
-			for (int k = 0; k < strlen(str[i]); k++)
-			{
-				igImage* ig = normAlphabet[str[i][k] - 'A'];
-				pos.y = i * (ig->GetHeight() + 3);
-				g->drawIgImage(ig, pos.x, pos.y, TOP | LEFT);
-				printf("%.f, %.f\n", pos.x, pos.y);
-				pos.x += ig->GetWidth() + 1;
-			}
+			//for (int k = 0; k < strlen(str[i]); k++)
+			//{
+			//	igImage* ig = normAlphabet[str[i][k] - 'A'];
+			//	pos.y = i * (ig->GetHeight() + 3);
+			//	g->drawIgImage(ig, pos.x, pos.y, TOP | LEFT);				
+			//	pos.x += ig->GetWidth() + 1;
+			//	//g->fillRect(0, 0, size.width, size.height, 2);
+			//}
+			g->fillRect(0, 0, size.width, size.height, 5);
+			g->drawString(size.width / 2, size.height / 2, VCENTER | HCENTER, str[i]);
+
+			tex = g->getTexture();
+			img->addObject(tex);
+			freeImage(tex);
 		}		
-		tex = g->getTexture();
-		img->addObject(tex);
-		freeImage(tex);
 
-		img->position = iPointMake((devSize.width / 2 - bg->GetWidth() / 2) + 20, devSize.height / 3 + 18);
+		img->position = iPointMake((devSize.width / 2 - bg->GetWidth() / 2)+ 20, (devSize.height / 3 + 15) + 12 * i);
 		pop->addObject(img);		
-		imgPauseBtn[i] = img;
+		imgOptionBtn[i] = img;
 	}
 	pop->style = iPopupStyleZoom;
 	pop->openPoint = iPointMake(0, 0);
 	pop->closePoint = iPointMake(0, 0);
+
 	void drawPopOptionBefore(float dt, iPopup * pop);
 	pop->methodDrawBefore = drawPopOptionBefore;
 	popOption = pop;
 
-	popOption->show(true);
+	popOption->show(false);
 	setRGBA(1, 1, 1, 1);
 }
 
@@ -94,5 +106,6 @@ bool PopupUI::paint(float dt)
 void drawPopOptionBefore(float dt, iPopup* pop)
 {
 	for (int i = 0; i < 3; i++)
-		popup->imgPauseBtn[i]->frame = 0;// (i == popup->popOption->selected);
+		popup->imgOptionBtn[i]->frame = (i == popup->popOption->selected);
+	printf("i==%d\n", popup->popOption->selected);
 }

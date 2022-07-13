@@ -78,6 +78,7 @@ bool keyProc(iKeyState stat, iPoint p)
 
 	case iKeyStateBegan:
 		printf("Clicked point = %f, %f\n", p.x, p.y );
+		printf("off = %f, %f\n", map->off.x, map->off.y);
 		break;
 
 	case iKeyStateMoved:
@@ -125,7 +126,7 @@ void loadProcPlayer()
 	//#issue
 	player = new ProcPlayer(ERI);
 
-	player->init({100, 200 });
+	player->init({3500, 200 });
 }
 
 void freeProcPlayer()
@@ -141,15 +142,16 @@ void drawProcPlayer(float dt, iPoint off)
 		player->update(dt);
 	if (player->draw(dt, off))
 	{
-		//player->life--;
-		spawnDt += dt;
+		//spawnDt += dt;
 		if (spawnDt >= _spawnDt)
 		{
 			spawnDt -= _spawnDt;			
 			if (player->life > 0)
 				player->init(player->p);
 			else//player->life==0
-				;//gameover
+			{
+				printf("gameOver\n");
+			}
 		}
 	}
 }

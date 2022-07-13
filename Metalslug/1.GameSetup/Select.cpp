@@ -13,9 +13,18 @@ iImage** imgSelectPosBtn;
 iImage* imgShutter;
 int selectedBtn;
 bool confirm = false;
+iPoint sp[4] =
+{
+	{16 + 70 * 0, devSize.height + 70},
+	{16 + 70 * 1, devSize.height + 70},
+	{16 + 70 * 2, devSize.height + 70},
+	{16 + 70 * 3, devSize.height + 70},
+};
+iPoint shutterP[4];
+float shutterRate[4];
 void loadSelect()
 {
-	selectmap = createImage("assets/CharSelect/CharacterSelectmap.png");
+	selectmap = createImage("assets/CharSelect/CharacterSelectBg.png");
 		
 	imgSelectBtn = new iImage * [CharacterIndexMax];
 #if 1
@@ -45,7 +54,7 @@ void loadSelect()
 			t->height *= devSize.height / selectmap->height;
 			t->potHeight *= devSize.height / selectmap->height;
 		}
-		_imgSelectBtn->position = iPointMake(15 + (_imgSelectBtn->tex->width + 8) * j, 80);
+		_imgSelectBtn->position = iPointMake(15 + (_imgSelectBtn->tex->width + 8) * j, 70);
 
 		iPoint p[4] = {
 			{_imgSelectBtn->position.x + _imgSelectBtn->tex->width / 2 + 3, _imgSelectBtn->position.y - 14},
@@ -70,6 +79,12 @@ void loadSelect()
 	t->potHeight *= devSize.height / selectmap->height;
 
 	imgShutter = img;
+	for (int i = 0; i < 4; i++)
+	{
+		shutterP[i] = sp[i];
+		int r = rand() % 5 + 3;
+		shutterRate[i] = r;
+	}
 	selectedBtn = 0;
 #endif
 }
@@ -84,31 +99,10 @@ void freeSelect()
 	delete imgSelectPosBtn;
 	delete selectmap;
 }
+
+
 void drawSelect(float dt)
 {
-	if (getKeyDown(keyboard_right))
-	{
-		selectedBtn++;
-		if (selectedBtn > CharacterIndexMax - 1)
-			selectedBtn = 0;
-	}
-	if (getKeyDown(keyboard_left))
-	{
-		selectedBtn--;
-		if (selectedBtn < 0)
-			selectedBtn = CharacterIndexMax - 1;
-	}
-	if (getKeyDown(keyboard_enter))
-	{
-		printf("%d", selectedBtn);
-		confirm = true;
-		imgSelectBtn[selectedBtn]->frame = 2;
-
-		if (confirm = true)
-		{
-			setLoading(GameStateProc, 2, freeSelect, loadProc);
-		}
-	}	
 	setRGBA(1, 1, 1, 1);
 			
 	for (int i = 0; i < CharacterIndexMax; i++)
@@ -118,15 +112,22 @@ void drawSelect(float dt)
 		imgSelectBtn[i]->paint(dt, iPointZero, iImageTypePop);
 	}
 #if 1
-	iPoint p[4];
 	for (int i = 0; i < CharacterIndexMax; i++)
-	{
-		p[i]= iPointMake(20 + 78 * i, devSize.height - 180);
-		imgShutter->paint(dt, p[i], iImageTypePop);
-
-		iPoint tp = { imgShutter[i].position.x, imgShutter[i].position.y - 5.f };
+	{	
+		imgShutter->paint(dt, shutterP[i], iImageTypePop);
 		if (isLoaded)
-			movePoint(imgShutter[i].position, imgShutter[i].position, tp, 5.f);			
+		{
+			iPoint tp = { shutterP[i].x, -70 };			
+			movePoint(shutterP[i], shutterP[i], tp, shutterRate[i]);
+		}
+
+		if (confirm)
+		{			
+			iPoint tp = { shutterP[selectedBtn].x, 70 };
+			printf("tp=%f, %f\n", tp.x, tp.y);
+			if (movePoint(shutterP[selectedBtn], shutterP[selectedBtn], tp, shutterRate[i]))
+				setLoading(GameStateProc, 2, freeSelect, loadProc);
+		}
 	}
 	drawImage(selectmap, 0, 0,
 		devSize.width / selectmap->width,
@@ -138,6 +139,28 @@ void drawSelect(float dt)
 			imgSelectPosBtn[i]->paint(dt, iPointZero, iImageTypePop);
 	}
 #endif
+
+	if (!confirm)
+	{
+		if (getKeyDown(keyboard_right))
+		{
+			selectedBtn++;
+			if (selectedBtn > CharacterIndexMax - 1)
+				selectedBtn = 0;
+		}
+		if (getKeyDown(keyboard_left))
+		{
+			selectedBtn--;
+			if (selectedBtn < 0)
+				selectedBtn = CharacterIndexMax - 1;
+		}
+		if (getKeyDown(keyboard_enter))
+		{
+			printf("%d", selectedBtn);
+			confirm = true;
+			imgSelectBtn[selectedBtn]->frame = 2;
+		}
+	}	
 	setRGBA(1, 1, 1, 1);
 }
 bool keySelect(iKeyState stat, iPoint p)
@@ -173,10 +196,17 @@ bool keySelect(iKeyState stat, iPoint p)
 			printf("fio\n");
 		}
 
-		if (confirm = true)
-			setLoading(GameStateProc, 2, freeSelect, loadProc);
+		if (confirm == true)
+		{			
+			iPoint tp = { imgShutter[i].position.x, 200 };
+			printf("tp =%f, %f\n", tp.x, tp.y);
+			movePoint(imgShutter[i].position, imgShutter[i].position, tp, 5.f);
+			//setLoading(GameStateProc, 2, freeSelect, loadProc);
+		}
 		break;
 	case iKeyStateMoved:
+		if (confirm) break;
+
 		for (i = 0; i < CharacterIndexMax; i++)
 		{
 			if (containPoint(p, imgSelectBtn[i]->rect()))

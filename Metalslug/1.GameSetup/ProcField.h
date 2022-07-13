@@ -23,6 +23,7 @@ public:
 	int maxW;			//map texture 넓이
 	int* maxY;			//map texture 높이
 	bool viewChange;
+	bool isClipped;
 	iImage** imgs;
 	iImage** imgsLayer;
 	iImage* imgObj[3];	//0: Step, 2: bossLayer
@@ -39,6 +40,8 @@ public:
 	void update(float dt);
 	void paint(float dt);
 	bool move(iPoint mp);
+
+	bool clip(iPoint p);
 };
 #define layerNum 3
 extern ProcMap* map;

@@ -3,9 +3,10 @@
 #include "ProcPlayer.h"
 #include "ImgMgr.h"
 
+#include "InputMgr.h"
 int mapNum[] =
 {
-	2,
+	6,
 };
 LayerData layerData[layerNum] =
 {
@@ -33,6 +34,7 @@ ProcMap::ProcMap(int stage)
 	maxW = 0;
 	maxY = 0;
 	viewChange = false;
+	isClipped = false;
 
 	imgs = new iImage * [mapNum[stage]];
 	imgs = createSingleImage(mapImageInfo,	mapNum[stage], this);	
@@ -54,9 +56,11 @@ void ProcMap::init(int stage)
 	for (int i = 0; i < mapNum[stage]; i++)
 	{
 		Texture* t = imgs[i]->tex;
-		maxW += t->width;				
-	}
-	printf("maxW=%d\n", maxW);
+		maxW += t->width;
+	}	
+
+	maxW = 1176 + 786 + 550 + 1008 + 331;
+	printf("maxW = %d\n", maxW);
 	maxY = new int[maxW];	
 	for (int j = 0; j < mapNum[stage]; j++)
 	{
@@ -86,17 +90,43 @@ void ProcMap::update(float dt)
 	{
 		if (player->p.x > 1050)
 		{
-			if (move(iPointMake(100 * dt, 50 * dt)))
+			if (move(iPointMake(100 * dt, 100 * dt)))
 			{
 				viewChange = true;			
 				//bg collider -> true : block to backward
 			}
 		}
 	}
-	if (x < devSize.width / 3)
-		move(iPointMake(devSize.width / 3 - x, 0));
-	else if (x > devSize.width * 2 / 3)
-		move(iPointMake(devSize.width * 2 / 3 - x, 0));
+	if (player->p.x > 3600)
+	{		
+		if (!isClipped)
+		{
+			if (move(iPointMake(-100, 0)))
+			{
+				isClipped = true;
+				printf("clipped\n");
+			}
+			
+		}
+		//if (move(iPointMake(devSize.width / 3 - tx, 0)))
+		//{
+		//	isClipped = true;
+		//	printf("clipped\n");
+		//}
+	}
+
+	if (!isClipped)
+	{		
+		if (off.x > offMax.x || off.x < offMin.x)
+			return;
+
+		if (x < devSize.width / 3)
+			move(iPointMake(devSize.width / 3 - x, 0));
+		else if (x > devSize.width * 2 / 3)
+			move(iPointMake(devSize.width * 2 / 3 - x, 0));
+	}
+	else
+		return;
 }
 #include "InputMgr.h"
 void ProcMap::paint(float dt)
@@ -143,20 +173,55 @@ void ProcMap::paint(float dt)
 }
 bool ProcMap::move(iPoint mp)
 {
-	iPoint p = off;
+#if 1	
 	off += mp;
 	if (off.x < offMin.x)
 		off.x = offMin.x;
 	else if (off.x > offMax.x)
-		off.x = offMax.x;
+		off.x = offMax.x;	
 
 	if (off.y < offMin.y)
 		off.y = offMin.y;
 	else if (off.y > offMax.y)
 		off.y = offMax.y;
+#else
+	iPoint v = mp - off;
+	v /= iPointLength(v);
+	v *= 100;
+	
+	printf("v=%f, %f\n", v.x, v.y);
+	printf("mp=%f, %f\n", mp.x, mp.y);
+	if (off.x < mp.x)
+	{
+		off += v;
+		if (off.x > mp.x)
+			off.x = mp.x;
+	}
+	else if (off.x > mp.x)
+	{
+		//off += v;
+		//if (off.x < mp.x)
+		//	off.x = mp.x;
+	}
+
+	if (off.y < offMin.y)
+		off.y = offMin.y;
+	else if (off.y > offMax.y)
+		off.y = offMax.y;	
+
+#endif
 
 	return off.x == offMax.x || off.y == offMax.y;
 }
+
+bool ProcMap::clip(iPoint p)
+{
+
+	return isClipped;
+}
+
+
+
 
 iPoint objPosition[3] =
 {
@@ -175,21 +240,24 @@ MapData mapData[] = {
 	},
 	{
 		{1176 + 786, -17},
-		{{(1176 + 786) * 1, 180}, {(1176 + 786) * 1.3, 180}, {(1176 + 786) * 1.6, 180}, {(1176 + 786) + 687, 180}},
-		4,
-	},
-	/*{
-		{1176 + 786 + 687, -16},
-		{{(1176 + 786 + 687) * 1, 180}, {(1176 + 786 + 687) * 1.3, 180}, {(1176 + 786 + 687) * 1.6, 180}, {3960, 180}},
-		1,
-		{{200,100}},
+		{{(1176 + 786) * 1, 180}, {(1176 + 786 + 686) * 1, 180} },
+		2,
 	},
 	{
-		{1176 + 786 + 687+ 1008, -16},
-		{{(1176 + 786 + 687 + 1008) * 1, 180}, {(1176 + 786 + 687 + 1008) * 1.3, 180}, {(1176 + 786 + 687 + 1008) * 1.6, 180}, {3960, 180}},
-		1,
-		{{200,100}},
-	},*/
+		{1176 + 786 + 550, -17},
+		{{(1176 + 786 + 550) * 1, 180}, {(1176 + 786 + 550 + 1008), 180}},
+		2,
+	},
+	{
+		{1176 + 786 + 686 + 872, -17},
+		{{(1176 + 786 + 550 + 1008), 180}, {(1176 + 786 + 550 + 1008), 180}},
+		2,
+	},
+	{
+		{1176 + 786 + 686 + 872, -48},
+		{{(1176 + 786 + 686) * 1, 180}, {(1176 + 786 + 550 + 1008 + 331), 180}},
+		2,
+	},
 };
 ImageInfo mapImageInfo[] =
 {
@@ -218,8 +286,24 @@ ImageInfo mapImageInfo[] =
 		NULL,
 	},
 	{
-		"assets/Map/Map_4.png",
+		"assets/Map/Map_03.png",
 		1, 1.f, { 0 , -224},
+		0.1f,
+		0,
+		{248,0,248,255},
+		NULL,
+	},
+	{
+		"assets/Map/Map_04.png",
+		1, 1.f, { 0 , -224},
+		0.1f,
+		0,
+		{248,0,248,255},
+		NULL,
+	},
+	{
+		"assets/Map/Final_%02d.png",
+		4, 1.f, { 0 , -224},
 		0.1f,
 		0,
 		{248,0,248,255},

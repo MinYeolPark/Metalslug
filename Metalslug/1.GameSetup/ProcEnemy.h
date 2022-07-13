@@ -33,9 +33,8 @@ public:
 	bool fall;
 	EnemyAI ai;
 
+	iPoint firePoint;
 	//stats
-	int fpNum;
-	iPoint fp;	
 	int dmg;
 	float sight;
 	float moveSpeed;
@@ -47,7 +46,6 @@ public:
 	bool isAppear;
 
 public:	
-	virtual iPoint getFirePoint() { return fp; }
 	virtual bool dead() = 0;
 
 	virtual void getDamage(float damage, Collider* c) = 0;

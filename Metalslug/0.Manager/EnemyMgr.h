@@ -24,5 +24,4 @@ struct ProcEnemyAI
 	static void TruckAI0(ProcEnemy* e, float dt);
 	static void KessieAI(ProcEnemy* k, float dt);
 	static void KessieRageAI(ProcEnemy* k, float dt);
-	static void KessieDeadAI(ProcEnemy* k, float dt);
 };

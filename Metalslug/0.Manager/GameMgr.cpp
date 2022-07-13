@@ -7,11 +7,13 @@
 #include "Proc.h"
 #include "Map.h"
 float playtime;
+bool stageClear;
 void loadGame()
 {
 	setTexture(NEAREST, CLAMP);
 
 	playtime = 0.0f;
+	stageClear = false;
 #if 1
 	gs = GameState::GameStateProc;
 	loadProc();
@@ -40,7 +42,6 @@ void drawGame(float dt)
 	case GameStateProc:	drawProc(dt);	break;	
 	case GameStateMap:	drawMap(dt);	break;
 	}
-
 	drawLoading(dt);
 }
 

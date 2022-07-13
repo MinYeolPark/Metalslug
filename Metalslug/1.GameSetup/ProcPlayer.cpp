@@ -27,7 +27,6 @@ ProcPlayer::ProcPlayer(int index) : ProcObject()
     hp = 100, _hp = 100;
     score = 0;
 
-
     topImgs = NULL;
     topImgCurr = NULL;
     botImgs = NULL;
@@ -38,27 +37,38 @@ ProcPlayer::ProcPlayer(int index) : ProcObject()
     fireDeg = 0;
     fp = iPointMake(p.x + 15, p.y - 20);
     bombPoint = p;
+
     up = 0;
     down = 0;
     fall = true;
 
-    isDead = false;
     fireing = false;
     dirUp = false;
 
+    fireDeg = 0.f;    
+    isDead = false;
+    jumpCombo = 0;
+
+    maxX = 0.f;
+    maxY = 0.f;
+
+    topState = PlayerIdle;
+    botState = PlayerIdle;
+
+    hp = 0.f;
     life = 3;
     moveSpeed = 120.f;
     bombSpeed = 10.f;
     attkRange = 40;
     bombRange = 100.0f;
-    bombs = 10;
 
+    bombs = 10;
+    score = 0;
 #if 1
     alpha = 1.0f;
-    alphaDt = 0.0f;
+    alphaNum = 0; _alphaNum = 10;
+    inviDt = 0.0f, _inviDt = 3.0f;
 #endif
-    topState = PlayerIdle;
-    botState = PlayerIdle;
 
     _imgEriTop = createSingleImage(topImageInfo, PlayerBehaveMax, this);
     _imgEriHeavyTop = createSingleImage(infoEriTopHeavy, PlayerBehaveMax, this);
@@ -112,6 +122,7 @@ void ProcPlayer::init(iPoint p)
     topImgs = _imgEriTop;
     botImgs = _imgEriBot;
     alpha = 1.0f;
+    alphaNum = 0;
     bombs = 10;
     hp = 100;
     life--;
@@ -134,14 +145,48 @@ void ProcPlayer::update(float dt)
     if (getKeyStat(keyboard_left))
         v.x = -1;
     else if (getKeyStat(keyboard_right))
-    {
         v.x = 1;
-        printf("player->p.x=%f\n", p.x);
-    }
+
     if (getKeyStat(keyboard_up))
         v.y = -1;
     else if (getKeyStat(keyboard_down))
         v.y = 1;
+#if 0
+    {
+        for (int i = 0; i < objects->count; i++)
+        {
+            Collider* c = (Collider*)objects->objectAtIndex(i);
+            if (c->parent != NULL &&
+                c->parent->layer != LayerPlayer &&
+                c->p.x > p.x)
+            {
+                if (!c->isTrigger)
+                {
+                    if (p.x > c->p.x - c->s.width / 2 &&
+                        p.x < c->p.x + c->s.width / 2 &&
+                        p.y < c->p.y - c->s.height)
+                    {
+                        maxX = c->p.x - c->s.width;
+                        printf("%f\n", (c->p.x - c->s.width / 2));
+                        printf("%f\n", (c->p.x + c->s.width / 2));
+                    }
+                    else
+                        maxX = p.x + map->off.x;
+                }
+
+                /*if (p.x > c->p.x - c->s.width / 2 &&
+                    p.x < c->p.x + c->s.width / 2 &&
+                    p.y > c->p.y - c->s.height)
+                {
+                    fall = false;
+                    p.y = c->p.y - c->s.height;
+                }*/
+            }
+        }
+    }
+    if (maxX != 0 && p.x > maxX)
+        p.x = maxX;
+#endif
 
     if (v != iPointZero)
     {
@@ -339,31 +384,11 @@ void ProcPlayer::fixedUpdate(float dt)
             p = (iPointMake(p.x, p.y += down));
         }
     }
-
-#if 0
-    {
-        for (int i = 0; i < objects->count; i++)
-        {
-            Collider* c = (Collider*)objects->objectAtIndex(i);
-            if (c->parent != NULL && c->parent->layer != LayerPlayer)
-            {
-                printf("%f\n", (c->p.x - c->s.width / 2));
-                printf("%f\n", (c->p.x + c->s.width / 2));
-                if (p.x > c->p.x - c->s.width / 2 &&
-                    p.x < c->p.x + c->s.width / 2 &&
-                    p.y > c->p.y - c->s.height)
-                {
-                    fall = false;
-                    p.y = c->p.y - c->s.height;
-                }
-            }
-        }
-    }
-#endif
-
     for (int i = 0; i < colNum; i++)
         colliders[i]->update(p, degree, dt);   
 }
+
+static float alphaDelay = 0.0f; static float _alphaDelay = 0.5f;
 bool ProcPlayer::draw(float dt, iPoint off)
 {
     setRGBA(1, 1, 1, alpha);
@@ -384,9 +409,24 @@ bool ProcPlayer::draw(float dt, iPoint off)
         botImgCurr->paint(dt, p + off);
     topImgCurr->paint(dt, p + off);
 
-#if 0
-    topImgCurr = topImgs[topState];
-    botImgCurr = botImgs[botState];
+#if 1
+    if (inviDt)
+    {
+        inviDt += dt;
+        alphaDelay += dt;
+        if (inviDt > _inviDt)
+            inviDt = 0.0f;
+
+        if (alphaDelay > _alphaDelay)
+        {
+            alphaDelay -= _alphaDelay;
+            alpha *= _cos(180);        
+            alphaNum++;
+
+            if (alphaNum > _alphaNum)
+                printf("spawn\n");
+        }        
+    }
 #endif
     {
 #ifdef _DEBUG
@@ -399,6 +439,8 @@ bool ProcPlayer::draw(float dt, iPoint off)
         //drawRect(p.x - 100, p.y - 100, 200, 200);
 #endif
     }
+    setRGBA(1, 1, 1, alpha);
+
     return !isActive;
 }
 
@@ -435,7 +477,7 @@ void ProcPlayer::fire(iPoint v)
         if (v.y < 0)           //aim up
         {
             topState = PlayerFireUp;
-            topImgs[topState]->startAnimation(AnimationMgr::cbAniToIdle, this);
+            topImgs[topState]->startAnimation(AnimationMgr::cbAniToIdle, this);            
             printf("fireup\n");
         }
         else if (v.y > 0)   //aim down
@@ -449,7 +491,7 @@ void ProcPlayer::fire(iPoint v)
         else
         {
             topState = PlayerFire;
-            topImgs[topState]->startAnimation(AnimationMgr::cbAniToIdle, this);
+            topImgs[topState]->startAnimation(AnimationMgr::cbAniToIdle, this);            
             printf("fire!!\n");
         }
         addBullet(this, curGun->gunIndex, fireDeg);        
@@ -483,6 +525,7 @@ void ProcPlayer::getDamage(float damage, Collider* c)
         {
             isDead = true;
             topState = PlayerDead;
+            topImgs[topState]->startAnimation(AnimationMgr::cbAniDead, this);
         }
 	}
 }
@@ -574,12 +617,12 @@ ImageInfo topImageInfo[] =
    },
    //Top
    {
-      "assets/Player/AimUp_%02d.png",
-      6, 1.0f, { -32 / 2, 16 },
-0.06f,
-1,
-{ 255,0,0,255 },
-NULL,
+	  "assets/Player/AimUp_%02d.png",
+	  6, 1.0f, { -32 / 2, 16 },
+      0.06f,
+      1,
+      { 255,0,0,255 },
+      NULL,
    },
    {
       "assets/Player/AimtoNorm_%02d.png",
@@ -654,14 +697,14 @@ NULL,
       {255,0,0,255},
       NULL,
    },
-      {
+   {
       "assets/Player/Crouch_Fire_%02d.png",
       11, 1.0f, { -51 / 2, 0 },
       0.06f,
       1,
       {255,0,0,255},
       AnimationMgr::cbAniToCrouch,
-      },
+   },
    {
       "assets/Player/Spawn_%02d.png",
       7, 1.0f, { -29 / 2, 0 },

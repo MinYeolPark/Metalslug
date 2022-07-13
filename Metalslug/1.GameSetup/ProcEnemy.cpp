@@ -20,9 +20,7 @@ ProcEnemy::ProcEnemy(int index) : ProcObject()
 	down = 0.0f;
 	fall = false;
 	ai = NULL;
-
-	fpNum = 0;
-	fp = { p.x, p.y - 20 };
+	firePoint = p;
 	////////////////////////
 	dmg = 0;
 	sight = 0;

@@ -189,8 +189,6 @@ bool ArabBurserker::dead()
 	else//if(state==DeadEnemyR)
 		v.x = -1;
 
-
-
 	imgs[state]->startAnimation(AnimationMgr::cbAniDead, this);
 	return state == (DeadBurserkL + state % 2);
 }

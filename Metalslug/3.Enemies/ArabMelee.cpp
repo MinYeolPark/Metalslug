@@ -28,7 +28,7 @@ ArabMelee::ArabMelee(int index) : ProcEnemy(index)
 #if 1
 	colNum = 1;
 	for (int i = 0; i < colNum; i++)
-		colliders[i]->init(this, iSizeMake(40, 40));
+		colliders[i]->init(this, iSizeMake(40, 20));
 #endif
 	imgs = NULL;
 	imgCurr = NULL;	
@@ -75,7 +75,7 @@ void ArabMelee::update(float dt)
 				devSize.width + 80, devSize.height + 80));
 	}
 
-	fp = { p.x, p.y - 20 };
+	firePoint = { p.x, p.y - 20 };
 	aiDt += dt;
 	if (aiDt > _aiDt)
 	{

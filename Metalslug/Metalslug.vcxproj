@@ -76,7 +76,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_USE_MATH_DEFINES;_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_WINDOWS;GDIPVER=0x0110;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\workspace\Metalslug\Metalslug\std;C:\workspace\Metalslug\Metalslug;C:\workspace\Metalslug\Metalslug\0.Manager;C:\workspace\Metalslug\Metalslug\1.GameSetup;C:\workspace\Metalslug\Metalslug\2.UI;C:\workspace\Metalslug\Metalslug\3.Enemies;C:\workspace\Metalslug\Metalslug\4.Effect;C:\workspace\Metalslug\Metalslug\5.NPC;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\workspace\Metalslug\Metalslug\std;C:\workspace\Metalslug\Metalslug;C:\workspace\Metalslug\Metalslug\0.Manager;C:\workspace\Metalslug\Metalslug\1.GameSetup;C:\workspace\Metalslug\Metalslug\2.UI;C:\workspace\Metalslug\Metalslug\3.Enemies;C:\workspace\Metalslug\Metalslug\4.Effect;C:\workspace\Metalslug\Metalslug\5.NPC;C:\workspace\Metalslug\Metalslug\6.Bullets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -155,6 +155,9 @@
     <ClInclude Include="3.Enemies\Kessie.h" />
     <ClInclude Include="1.GameSetup\ProcNpc.h" />
     <ClInclude Include="3.Enemies\ArabCamel.h" />
+    <ClInclude Include="6.Bullets\BulletsPlayer.h" />
+    <ClInclude Include="6.Bullets\BulletsMosque.h" />
+    <ClInclude Include="BulletsEnemy.h" />
     <ClInclude Include="EventMgr.h" />
     <ClInclude Include="1.GameSetup\ProcStructure.h" />
     <ClInclude Include="iSort.h" />
@@ -204,6 +207,9 @@
     <ClCompile Include="0.Manager\EnemyMgr.cpp" />
     <ClCompile Include="0.Manager\EffectMgr.cpp" />
     <ClCompile Include="3.Enemies\ArabCamel.cpp" />
+    <ClCompile Include="6.Bullets\BulletsPlayer.cpp" />
+    <ClCompile Include="6.Bullets\BulletsMosque.cpp" />
+    <ClCompile Include="BulletsEnemy.cpp" />
     <ClCompile Include="EventMgr.cpp" />
     <ClCompile Include="glew.c" />
     <ClCompile Include="0.Manager\ImgMgr.cpp" />
@@ -233,6 +239,7 @@
     <ClCompile Include="std\iUtil.cpp" />
     <ClCompile Include="std\iWindow.cpp" />
     <ClCompile Include="Truck.cpp" />
+    <ClCompile Include="소스.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Metalslug.rc" />

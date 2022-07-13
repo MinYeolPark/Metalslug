@@ -14,10 +14,11 @@ public:
 
 public:
 	iPopup* popOption;
-	iImage** imgPauseBtn;
+	iImage** imgOptionBtn;
 public:	
 	bool paint(float dt);
 	
 };
-
+extern int selectedOptionBtn;
+extern bool optionConfirm;
 extern PopupUI* popup;

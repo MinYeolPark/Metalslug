@@ -8,12 +8,13 @@
 #include "BulletMgr.h"
 
 #include "ArabMelee.h"
+#include "Mosque.h"
+#include "Kessie.h"
 void AnimationMgr::cbAniToIdle(void* parm)
 {
 	ProcPlayer* pp = (ProcPlayer*)parm;
 
-	pp->fireing = false;
-	pp->topImgs[pp->topState]->startAnimation(AnimationMgr::cbAniToIdle, pp);
+	pp->fireing = false;	
 	pp->topState = PlayerIdle;
 	pp->botState = PlayerIdle;
 }
@@ -23,7 +24,6 @@ void AnimationMgr::cbAniToCrouch(void* parm)
 	ProcPlayer* pp = (ProcPlayer*)parm;
 
 	pp->fireing = false;
-	pp->topImgs[pp->topState]->startAnimation(AnimationMgr::cbAniToIdle, pp);
 	pp->topState = PlayerCrouch;
 }
 
@@ -31,7 +31,13 @@ void AnimationMgr::cbAniDead(void* parm)
 {
 	ProcObject* e = (ProcObject*)parm;
 	e->isActive = false;
-	
+
+	if (e->layer == LayerPlayer)
+	{
+		ProcPlayer* p = (ProcPlayer*)parm;
+		p->inviDt = 0.0000001f;
+	}
+
 	printf("cb Ani dead\n");
 }
 
@@ -116,4 +122,33 @@ void AnimationMgr::cbAniBulletDisappearWithAlpha(void* parm)
 {
 	ProcBullets* b = (ProcBullets*)parm;
 	b->alpha = 0;
+}
+
+void AnimationMgr::cbAniKessieBlast(void* parm)
+{
+	Kessie* k = (Kessie*)parm;
+	printf("cb Ani kessieBlast\n");
+	for (int i = 0; i < 2; i++)
+	{
+		if (k->blastState[i] == 1)		//blast Start
+			k->blastState[i] = 2;		//blasting
+		k->imgLeftBlast[1]->startAnimation(cbAniKessieBlast, k);
+		k->imgRightBlast[1]->startAnimation(cbAniKessieBlast, k);
+	}
+}
+
+void AnimationMgr::cbAniKessieBlastEnd(void* parm)
+{
+	Kessie* k = (Kessie*)parm;
+	printf("cb Ani kessieBlastEnd\n");
+	for (int i = 0; i < 2; i++)
+	{
+		if (k->blastState[i] == 3)		//blast Start
+		{
+			k->blastState[i] = 1;		//blasting
+			k->attkCollider[i]->enable();
+			k->imgLeftBlast[3]->startAnimation(cbAniKessieBlastEnd, k);
+			k->imgRightBlast[3]->startAnimation(cbAniKessieBlastEnd, k);			
+		}
+	}
 }

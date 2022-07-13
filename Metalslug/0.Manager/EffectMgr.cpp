@@ -199,7 +199,7 @@ ImageInfo imgEffectInfo[] =
 	},
 	{
 		"assets/Effect/Explode2_%02d.png",
-		23, 1.0f, { -48 / 2, 0},
+		20, 1.0f, { -48 / 2, 0},
 		0.08f,
 		1,
 		{255, 0, 0, 255},

@@ -1,17 +1,35 @@
 #include "BulletMgr.h"
 
 #include "EffectMgr.h"
+
+#include "BulletsPlayer.h"
+#include "BulletsEnemy.h"
+#include "BulletsMosque.h"
 ProcBullets*** _bullets;
 ProcBullets** bullets;
 int bulletNum;
+
 void loadProcBullets()
 {
 	_bullets = new ProcBullets * *[BulletIndexMax];
 	for (int i = 0; i < BulletIndexMax; i++)
 	{
 		_bullets[i] = new ProcBullets * [bulletMax];
-		for (int j = 0; j < bulletMax; j++)
-			_bullets[i][j] = new ProcBullets(i);
+		if (i == BulletHandGun || i == BulletHeavyMachinegun)
+		{
+			for (int j = 0; j < bulletMax; j++)
+				_bullets[i][j] = new BulletsPlayer(i);
+		}
+		else if (i == BulletMelee)
+		{
+			for (int j = 0; j < bulletMax; j++)
+				_bullets[i][j] = new BulletsEnemy(i);
+		}
+		else if (i == BulletMosque || i == BulletMosqueTrace)
+		{
+			for (int j = 0; j < bulletMax; j++)
+				_bullets[i][j] = new BulletsMosque(i);
+		}
 	}
 	bullets = new ProcBullets * [BulletIndexMax * bulletMax];
 	bulletNum = 0;
@@ -41,44 +59,14 @@ void drawProcBullets(float dt, iPoint off)
 	}
 }
 
-void addBullet(ProcPlayer* parent, int index, float degree)
+void addBullet(ProcObject* parent, int index, float degree, int fpNum)
 {
 	for (int i = 0; i < bulletMax; i++)
 	{
 		ProcBullets* b = _bullets[index][i];
 		if (b->isActive == false)
 		{
-			b->init(parent, index, degree);
-			bullets[bulletNum] = b;
-			bulletNum++;
-			return;
-		}
-	}
-}
-
-void addBullet(ProcEnemy* enemy, int index, float degree)
-{
-	for (int i = 0; i < bulletMax; i++)
-	{
-		ProcBullets* b = _bullets[index][i];
-		if (b->isActive == false)
-		{
-			b->init(enemy, index, degree);
-			bullets[bulletNum] = b;
-			bulletNum++;
-			return;
-		}
-	}
-}
-
-void addBullet(Mosque* enemy, int which, int index, float degree)
-{
-	for (int i = 0; i < bulletMax; i++)
-	{
-		ProcBullets* b = _bullets[index][i];
-		if (b->isActive == false)
-		{
-			b->init(enemy, which, index, degree);
+			b->init(parent, index, degree, fpNum);
 			bullets[bulletNum] = b;
 			bulletNum++;
 			return;
@@ -169,12 +157,12 @@ void ProcBulletsPattern::patternMosqueTrace(ProcBullets* b, float dt)
 	iPoint md = b->v * b->speed * dt;
 	b->p += md;
 
-	b->d += iPointLength(md);
+	/*b->d += iPointLength(md);
 	if (b->d > _d)
 		b->d -= _d;
-	float r = b->d / _d;		
-	float angle = iPointAngle(iPointMake(1, 0), iPointZero, b->v);			
-	iPoint w = iPointRotate(iPointMake((wave * _sin(360 * r)), 0), iPointZero, angle + 90);		
+	float r = b->d / _d;		*/
+	//float angle = iPointAngle(iPointMake(1, 0), iPointZero, b->v);			
+	//iPoint w = iPointRotate(iPointMake((wave * _sin(360 * r)), 0), iPointZero, angle + 90);		
 	//b->degree = 45 * _sin(360 * r);	
-	b->rp = b->p + w;	
+	//b->rp = b->p + w;	
 }

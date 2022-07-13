@@ -257,7 +257,6 @@ bool movePoint(iPoint& p, iPoint sp, iPoint ep, float speedDt)
 
 	if (p.y < ep.y)
 	{
-		printf("ep = %f\n", ep.y);
 		p.y += v.y;
 		if (p.y > ep.y)
 			p.y = ep.y;

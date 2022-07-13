@@ -75,9 +75,6 @@ public:
 	iImage* imgCurr;
 
 	ProcObject* parent;
-
-	iPoint rp;					//real Position
-	float d, _d;				//curDistance , leftDistance
 	float degree;
 
 	float pow;
@@ -91,11 +88,8 @@ public:
 public:
 	BulletPattern pattern;
 public:
-	virtual void init(ProcObject* parent, int index, float degree);
-	virtual void init(ProcPlayer* parent, int index, float degree);
-	virtual void init(ProcEnemy* parent, int index, float degree);
-	virtual void init(Mosque* parent, int which, int index, float degree);
-	virtual void update(float dt);
+	virtual void init(ProcObject* parent, int index, float degree, int fpNum) = 0;	
+	virtual void update(float dt) = 0;
 	virtual void fixedUpdate(float dt);
 	virtual bool draw(float dt, iPoint off);
 	virtual void free();

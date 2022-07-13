@@ -25,8 +25,8 @@ Abul* abul;
 int maxNum[EnemyIndexMax] =
 {
 	50,		//melee
-	50,		//kessie melee
-	1,		//burser
+	20,		//kessie melee
+	50,		//burser
 	1,		//camel
 	1,		//truck
 	1,		//kessie
@@ -81,21 +81,19 @@ void loadProcEnemy()
 	//boss monster
 	//arabCamel = new ArabCamel(IdxArCamel);
 	//truck = new Truck(IdxTruck);
-	mosque = new Mosque(IdxMosque);	
 	//abul = new Abul(IdxAbul);
 	//kessie = new Kessie(IdxKessie);
 	//spawn pattern
 	
-	addProcEnemy(IdxMosque, iPointMake(200, 200), iPointZero);
-	//addProcEnemy(IdxArMelee, iPointMake(500, 100), iPointMake(0,0));	
+	addProcEnemy(IdxMosque, iPointMake(2030, 175), iPointZero);
+	addProcEnemy(IdxTruck, iPointMake(1680, 100), iPointMake(0, 0));	
+	addProcEnemy(IdxArMelee, iPointMake(500, 100), iPointMake(0,0));	
 	//addProcEnemy(IdxArBurserker, iPointMake(300, 100), iPointMake(0, 0));
 
-	//addProcEnemy(IdxTruck, iPointMake(1650, 100), iPointMake(0, 0));
-	//addProcEnemy(IdxTruck, iPointMake(500, 100), iPointMake(0, 0));
 
 	//addProcEnemy(IdxArMelee, iPointMake(400, 100), iPointMake(0, 0));
 	//addProcEnemy(IdxArCamel, iPointMake(300, 100), iPointMake(0, 0));
-	//addProcEnemy(IdxKessie, iPointMake(200, 70), iPointMake(0, 0));
+	addProcEnemy(IdxKessie, iPointMake(3680, -50), iPointMake(0, 0));
 
 	//addProcEnemy(IdxAbul, iPointMake(300, 100), iPointMake(0, 0));
 }
@@ -165,8 +163,7 @@ void ProcEnemyAI::ArabMeleeAI0(ProcEnemy* e, float dt)		//Check Player
 		
 		tp = player->p;
 		e->tp = tp;
-	}
-	printf("[%f,%f]. [%f, %f\n", e->tp.x, e->tp.y, e->p.x, e->tp.y);
+	}	
 }
 
 void ProcEnemyAI::ArabMeleeAI1(ProcEnemy* e, float dt)
@@ -233,56 +230,43 @@ void ProcEnemyAI::KessieAI(ProcEnemy* k, float dt)
 {
 }
 
-void ProcEnemyAI::KessieRageAI(ProcEnemy* k, float dt)
+void ProcEnemyAI::KessieRageAI(ProcEnemy* e, float dt)
 {
-	if (k->v != iPointZero)
+	Kessie* k = (Kessie*)e;
+	if (!k->isDead)
 	{
-		if (initPos == iPointZero)
-			initPos = k->p;
+		if (k->v != iPointZero)
+		{
+			if (initPos == iPointZero)
+				initPos = k->p;
+			int maxX;
+			int maxY;
+			if (k->v.x > 0)
+			{
+				maxX = initPos.x + 70;
+				if (k->p.x > maxX)
+					k->v.x = -1;
+			}
+			else if (k->v.x < 0)
+			{
+				maxX = initPos.x - 70;
+				if (k->p.x < maxX)
+					k->v.x = 1;
+			}
 
-		int maxX;
-		if (k->v.x > 0)
-		{
-			maxX = initPos.x + 70;
-			if (k->p.x > maxX)
-				k->v.x = -1;
+			if (k->v.y > 0)
+			{
+				maxY = initPos.y + 5;
+				if (k->p.y > maxY)
+					k->v.y = -1;
+			}
+			else if (k->v.y < 0)
+			{
+				maxY = initPos.y - 5;
+				if (k->p.y < maxY)
+					k->v.y = 1;
+			}
 		}
-		else if (k->v.x < 0)
-		{
-			maxX = initPos.x - 70;
-			if (k->p.x < maxX)
-				k->v.x = 1;
-		}
+		k->p += k->v * k->moveSpeed * dt;
 	}
-	k->p += k->v * k->moveSpeed * dt;
-}
-
-void ProcEnemyAI::KessieDeadAI(ProcEnemy* k, float dt)
-{
-	k->v = { 1,0 };
-	int maxY = *(map->maxY + (int)k->p.x);
-	movePoint(k->p, k->p, iPointMake(k->p.x, maxY), k->moveSpeed * 0.6 * dt);
-
-	if (k->v != iPointZero)
-	{
-		if (initPos == iPointZero)
-			initPos = k->p;
-
-		int maxX;
-		if (k->v.x > 0)
-		{
-			maxX = initPos.x + 10;
-			printf("%d\n", maxX);
-			if (k->p.x > maxX)
-				k->v.x = -1;
-		}
-		else if (k->v.x < 0)
-		{
-			maxX = initPos.x - 10;
-			printf("%d\n", maxX);
-			if (k->p.x < maxX)
-				k->v.x = 1;
-		}
-	}
-	k->p += k->v * k->moveSpeed * dt;	
 }

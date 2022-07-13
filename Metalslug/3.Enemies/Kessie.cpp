@@ -1,10 +1,16 @@
 #include "Kessie.h"
 
+//test 
+#include "GameMgr.h"
+#include "Menu.h"
+#include "Loading.h"
+//////
 #include "EnemyMgr.h"
 #include "ImgMgr.h"
 #include "EnemyMgr.h"
 #include "EffectMgr.h"
 #include "BulletMgr.h"
+#include "AnimationMgr.h"
 ImageInfo imgKessieInfo[];
 static iImage** _imgKessie = NULL;
 Kessie::Kessie(int index) : ProcEnemy(index)
@@ -14,13 +20,10 @@ Kessie::Kessie(int index) : ProcEnemy(index)
 
 	state = KessieIdle;
 	baseState = KessieBase100;
-	headState = KessieHead;	
-	for (int i = 0; i < 2; i++)
-	{
-		//craterState[i] = KessieCraterLeft100 + i;
-		fanState = KessieBlast;
-		//blastState[i] = KessieBlastLeft + i;
-	}
+	headState = KessieHead;
+
+	memset(craterState, 0x00, sizeof(craterState));
+	fanState = 0;
 	ai = ProcEnemyAI::KessieAI;
 	memset(imgBase, 0x00, sizeof(imgBase));
 	memset(imgLeftCrater, 0x00, sizeof(imgLeftCrater));
@@ -30,7 +33,6 @@ Kessie::Kessie(int index) : ProcEnemy(index)
 	imgHead = 0;
 	memset(imgLeftBlast, 0x00, sizeof(imgLeftBlast));
 	memset(imgRightBlast, 0x00, sizeof(imgRightBlast));
-
 #if 1
 	colNum = 3;
 	for (int i = 0; i < colNum; i++)
@@ -41,20 +43,27 @@ Kessie::Kessie(int index) : ProcEnemy(index)
 		colliders[i]->init(this, s[i]);		
 	}
 	colliders[0]->isTrigger = true;
+	for (int j = 0; j < 2; j++)
+	{
+		attkCollider[j] = new Collider();
+		attkCollider[j]->enable();
+		attkCollider[j]->isTrigger = true;		
+	}
+	
 #endif
 
 	isActive = false;
 	isAppear = false;
 	isHeadOpen = false;
 	moveSpeed = 50.f;
-	effDt = 0.f;
-	_effDt = 3.0f;
+	rageDt = 0.f;
+	_rageDt = 5.0f;
 	aiDt = 0.f;
 	_aiDt = 2.f;
-	_hp = 1000.f;
+	_hp = 3000.f;
 	hp = _hp;
-	hpLeft = 800.f;
-	hpRight = 800.f;
+	hpLeft = 2000.f;
+	hpRight = 2000.f;
 
 	if (_imgKessie == NULL)
 		_imgKessie = createSingleImage(imgKessieInfo, KessieBehaveMax, this);
@@ -77,7 +86,13 @@ Kessie::Kessie(int index) : ProcEnemy(index)
 	imgLeftBlast[1] = _imgKessie[19]->clone();
 	imgRightBlast[1] = _imgKessie[19]->clone();
 	imgRightBlast[1]->reverse = REVERSE_WIDTH;
-	imgHead = _imgKessie[20]->clone();
+	imgLeftBlast[2] = _imgKessie[20]->clone();
+	imgRightBlast[2] = _imgKessie[20]->clone();
+	imgRightBlast[2]->reverse = REVERSE_WIDTH;
+	imgLeftBlast[3] = _imgKessie[21]->clone();
+	imgRightBlast[3] = _imgKessie[21]->clone();
+	imgRightBlast[3]->reverse = REVERSE_WIDTH;
+	imgHead = _imgKessie[22]->clone();
 	imgHead->stopAnimation();
 }
 
@@ -90,122 +105,71 @@ Kessie::~Kessie()
 	_imgKessie = NULL;
 }
 
-void Kessie::getDamage(float damage, Collider* c)
-{
-	for (int i = 0; i < colNum; i++)
-	{
-		if (containPoint(c->p, colliders[i]->getCollider()))
-		{
-			if (i == 0)			
-				hp -= damage;
-			else if (i == 1)
-			{
-				hp -= damage;
-				hpLeft -= damage;
-			}
-			else if (i == 2)
-			{
-				hp -= damage;
-				hpRight -= damage;			
-			}
-			printf("hp=%d, leftHp=%d, rightHp=%d\n", hp, hpLeft, hpRight);
-		}
-	}
-	if (hp <= _hp * 0.4)
-	{
-		if(baseState==KessieBaseBoth60
-			||baseState==KessieBaseLeft60
-			||baseState==KessieBaseRight60)
-			setState(KessieBase40);
-	}
-	else if (hp <= _hp * 0.6)
-	{
-		if(baseState==KessieBase80)
-			setState(KessieBaseBoth60);
-	}
-	else if (hp <= _hp * 0.8)
-	{
-		if(baseState==KessieBase100)
-			setState(KessieBase80);
-	}
-
-	if (hp <= 0)
-		dead();
-}
-
-float delay = 0.f, _delay = 1.f;
-void Kessie::setState(int newState)
-{
-	baseState = newState;
-	printf("%d\n", newState);
-
-	if (delay >= _delay)
-	{
-		delay -= _delay;
-	}
-	
-}
-
-bool Kessie::dead()
-{
-	isDead = true;
-	ai = ProcEnemyAI::KessieDeadAI;	
-	setState(KessieBase0);
-
-	int rx = p.x - 60 + rand() % 120;
-	int ry = p.y - 50 + rand() % 100;
-	addProcEffect(EffectKessieExplosion, iPointMake(rx, ry));
-	
-	return isDead;
-}
-
+static iPoint initPos = iPointZero;
 void Kessie::update(float dt)
 {	
 	if (!isAppear)
 	{
-		if (movePoint(p, p, iPointMake(p.x, p.y + 50), moveSpeed))
+		if (movePoint(p, p, iPointMake(p.x, 90), moveSpeed * 0.01))
 			isAppear = true;
 	}
-	else
+	else//isAppear
 	{
+		aiDt += dt;
+		if (aiDt > _aiDt)
+		{
+			aiDt -= _aiDt;
+			addProcEnemy(IdxArMelee, iPointMake(p.x, p.y - 100), iPointZero);			
+		}
+
 		if (!isHeadOpen)
 		{
 			imgHead->startAnimation();
 			isHeadOpen = true;
 		}
 
-		aiDt += dt;
-		if (aiDt > _aiDt)
+		if (rageDt)
 		{
-			aiDt -= _aiDt;
-			addProcEnemy(IdxArMelee, iPointMake(100, 0), iPointZero);
-			if (hp < _hp * 0.6 + 1)
+			rageDt += dt;
+			if (rageDt > _rageDt)
 			{
-				state = KessieRage;
+				rageDt -= _rageDt;
 				for (int i = 0; i < 2; i++)
 				{
-					craterState;
-					fanState = KessieBlastRage;
-					//blastState[i] = KessieBlastRageLeft + i;
+					blastState[i] = 3;
+					attkCollider[i]->disable();
 				}
-				ai = ProcEnemyAI::KessieRageAI;
-				//movedirection init
-				if (v == iPointZero)
-				{
-					int r = (rand() % 2 - 0.5) * 2;
-					v.x = r;
-				}			
-			}
+			}			
 		}
-
 	}
 
 	if (isDead)
-	{
-		delay += dt;
+	{		
 		int maxY = *(map->maxY + (int)p.x);
-		if (movePoint(p, p, iPointMake(p.x, maxY), moveSpeed * 0.8 * dt))
+		if (initPos == iPointZero)
 		{
+			initPos = p;
+			int r = (rand() % 2) - 0.5 * 2;
+			v.x = r;
+		}
+		int maxX;		
+		if (v.x > 0)
+		{
+			p.x += v.x * 100 * dt;
+			maxX = initPos.x + 5;
+			if (p.x > maxX)
+				v.x = -1;
+		}
+		else if (v.x < 0)
+		{
+			p.x += v.x * 100 * dt;
+			maxX = initPos.x - 5;
+			if (p.x < maxX)
+				v.x = 1;
+		}
+
+		if (movePoint(p, p, iPointMake(p.x, maxY), moveSpeed * 0.5 * dt))
+		{			
 			//Game Clear
 			for (int i = 0; i < 5; i++)
 			{
@@ -213,14 +177,17 @@ void Kessie::update(float dt)
 				int ry = p.y - 50 + (rand() % 100);
 				addProcEffect(EffectKessieExplosion, iPointMake(rx, ry));
 			}
-			for (int i = 0; i < 3; i++)
-			{
-				colliders[i]->isActive = false;
-				colliders[i]->isTrigger = false;
-				//remove from list
-			}
+			for (int j = 0; j < 3; j++)
+				colliders[j]->isActive = false;
+			for (int k = 0; k < 2; k++)
+				attkCollider[k]->isActive = false;
 			isActive = false;
-		}
+
+			//Game End			
+			stageClear = true;
+			if (stageClear)
+				setLoading(GameStateMenu, 2, freeProc, loadMenu);
+		}		
 	}
 	ai(this, dt);
 
@@ -234,41 +201,76 @@ void Kessie::fixedUpdate(float dt)
 		iPoint pos[3] = {
 			{p.x,p.y - 10},{p.x - 80,p.y - 40},{p.x + 80, p.y - 40}
 		};
-		colliders[i]->setPosition(pos[i]);
+		colliders[i]->update(pos[i], 0, dt);		
 	}	
+
+	for (int j = 0; j < 2; j++)
+	{	
+		if (containPoint(player->p + map->off, attkCollider[j]->getCollider()))
+		{
+			if (!player->isDead)
+			{
+				player->getDamage(100, player->colliders[0]);
+				iPoint bp = iPointMake(rand() % 10 + p.x, rand() % 10 + p.y);
+				addProcEffect(index, bp);		//bulletIndex=effectIndex
+			}
+		}
+
+		iPoint atkPos[2] = {
+			{p.x + map->off.x - 88, p.y + map->off.y + 100},
+			{p.x + map->off.x + 88, p.y + map->off.y + 100}
+		};
+		attkCollider[j]->update(atkPos[j], 0, dt);
+	}
+
+	//blastState[0] : left, blastState[1] : right
+	if (blastState[0] > 1)		//not idle
+	{
+		attkCollider[0]->setSize(iSizeMake(
+			imgLeftBlast[2]->tex->width,
+			imgLeftBlast[2]->tex->height));
+	}
+	if (blastState[1] > 1)
+	{
+		attkCollider[1]->setSize(iSizeMake(
+			imgRightBlast[2]->tex->width,
+			imgRightBlast[2]->tex->height));
+	}
 }
 
 bool Kessie::draw(float dt, iPoint off)
 {
 	setRGBA(1, 1, 1, 1);
 	imgHead->paint(dt, { p.x + off.x, p.y + off.y - 95 });
-
 	imgBase[baseState]->paint(dt, p + off);
 
 	if (!isDead)
 	{
 		if (hpLeft > 0)
 		{
-			imgLeftFan[fanState%2]->paint(dt, { p.x + off.x - 96, p.y + off.y - 48 });
-			//imgLeftCrater[0]->paint(dt, { p.x + off.x - 88, p.y + off.y - 25 });
-			//imgLeftBlast[0]->paint(dt, { p.x + off.x - 88, p.y + off.y + imgLeftBlast[0]->tex->height - 40 });
+			imgLeftFan[fanState]->paint(dt, { p.x + off.x - 96, p.y + off.y - 48 });			
+			imgLeftCrater[craterState[0]]->paint(dt, { p.x + off.x - 88, p.y + off.y - 25 });
+			imgLeftBlast[blastState[0]]->paint(dt, { p.x + off.x - 88, p.y + off.y - 42 });
 		}
 		if (hpRight > 0)
 		{
-			imgRightFan[fanState%2]->paint(dt, { p.x + off.x + 96, p.y + off.y - 48 });
-			//imgRightCrater[0]->paint(dt, { p.x + off.x + 88, p.y + off.y - 25 });
-			//imgRightBlast[0]->paint(dt, { p.x + off.x + 88, p.y + off.y + imgRightBlast[0]->tex->height - 40} );
+			imgRightFan[fanState]->paint(dt, { p.x + off.x + 96, p.y + off.y - 48 });
+			imgRightCrater[craterState[1]]->paint(dt, { p.x + off.x + 88, p.y + off.y - 25 });
+			imgRightBlast[blastState[1]]->paint(dt, { p.x + off.x + 88, p.y + off.y -42});
 		}
 	}
+
+
+
 #ifdef _DEBUG	
 	drawDot(p + off);	
 	for (int i = 0; i < 3; i++)
 	{		
 		drawRect(colliders[i]->getCollider());
 	}
+	for (int j = 0; j < 2; j++)
+		drawRect(attkCollider[j]->getCollider());
 	
-	//drawRect(leftCollider->getCollider());
-	//drawRect(rightCollider->getCollider());
 #endif // DEBUG
 	setRGBA(1, 1, 1, 1);
 	
@@ -277,6 +279,92 @@ bool Kessie::draw(float dt, iPoint off)
 
 void Kessie::free()
 {
+}
+
+void Kessie::getDamage(float damage, Collider* c)
+{
+	for (int i = 0; i < colNum; i++)
+	{
+		if (containPoint(c->p, colliders[i]->getCollider()))
+		{
+			if (i == 0)
+				hp -= damage;
+			else if (i == 1)
+			{
+				hp -= damage;
+				hpLeft -= damage;
+			}
+			else if (i == 2)
+			{
+				hp -= damage;
+				hpRight -= damage;
+			}
+			printf("hp=%d, leftHp=%d, rightHp=%d\n", hp, hpLeft, hpRight);
+		}
+	}
+
+	if (hp <= _hp * 0.7)
+	{
+		state = KessieRage;
+		ai = ProcEnemyAI::KessieRageAI;
+		rageDt = 0.000001f;
+		for (int i = 0; i < 2; i++)
+		{
+			fanState = 1;
+			if (blastState[i] == 0)		//if Blast_Idle
+				blastState[i] = 1;
+		}
+
+		//movedirection init
+		if (v == iPointZero)
+		{
+			int r = (rand() % 2 - 0.5) * 2;
+			v.x = r;
+			v.y = r;
+		}
+	}
+
+	if (hp <= _hp * 0.4)
+	{
+		if (baseState == KessieBaseBoth60
+			|| baseState == KessieBaseLeft60
+			|| baseState == KessieBaseRight60)
+		{			
+			state = KessieBase40;
+		}
+	}
+	else if (hp <= _hp * 0.6)
+	{
+		if (baseState == KessieBase80)
+			state = KessieBase40;
+
+	}
+	else if (hp <= _hp * 0.8)
+	{
+		if (baseState == KessieBase100)
+			state = KessieBase80;
+
+	}
+
+	if (hp <= 0 && !isDead)
+		dead();
+}
+
+void Kessie::setState(int newState)
+{
+}
+
+bool Kessie::dead()
+{
+	isDead = true;
+	state = KessieBase0;	
+	for (int i = 0; i < 2; i++)
+		attkCollider[i]->disable();
+	int rx = p.x - 60 + rand() % 120;
+	int ry = p.y - 50 + rand() % 100;
+	addProcEffect(EffectKessieExplosion, iPointMake(rx, ry));
+
+	return isDead;
 }
 
 
@@ -428,7 +516,7 @@ ImageInfo imgKessieInfo[] =
 	},
 	{
 		"assets/Kessie/Blast_Idle_%02d.png",
-		4, 1.f, { -48 / 2 , 0},
+		4, 1.f, { -48 / 2 , -48},
 		0.06f,
 		0,
 		{0,248,0,255},
@@ -436,11 +524,27 @@ ImageInfo imgKessieInfo[] =
 	},
 	{
 		"assets/Kessie/Blast_%02d.png",
-		47, 1.f, { -48 / 2 , 0},
+		25, 1.f, { -50 / 2 , -160},
+		0.06f,
+		1,
+		{0,248,0,255},
+		AnimationMgr::cbAniKessieBlast,
+	},
+	{
+		"assets/Kessie/Blasting_%02d.png",
+		6, 1.f, { -54 / 2 , -160},
 		0.06f,
 		0,
 		{0,248,0,255},
 		NULL,
+	},
+	{
+		"assets/Kessie/Blast_End_%02d.png",
+		16, 1.f, { -54 / 2 , -160},
+		0.06f,
+		1,
+		{0,248,0,255},
+		AnimationMgr::cbAniKessieBlastEnd,
 	},
 	{
 		"assets/Kessie/Head_%02d.png",

@@ -73,13 +73,6 @@ void drawUI(float dt, iPoint off)
 {	
 	status->paint(dt);	
 	popup->paint(dt);
-	if (popup->popOption->bShow)
-		isPopup = true;
-}
-
-void addUI(iPoint p, int num)
-{
-
 }
 
 bool keyProcUI(iKeyState stat, iPoint p)
@@ -92,22 +85,40 @@ bool keyProcUI(iKeyState stat, iPoint p)
 	int i, j = -1;
 	switch (stat) {
 	case iKeyStateBegan:
-		printf("Key ui\n");
 		i = popup->popOption->selected;
+		printf("isSelectedindex=?%d\n", selectedOptionBtn);
 		if (i == -1)break;
+		if (i == 0)
+		{			
+			optionConfirm = true;	
+		}
+		else if (i == 1)
+		{
+			optionConfirm = true;
+		}
+		else if (i == 2)
+		{
+			optionConfirm = true;
+		}
+
+		if (optionConfirm == true)
+		{
+			printf("optionConfirmed, index=%d\n", i);
+		}
 		break;
 
 	case iKeyStateMoved:
 		for (int i = 0; i < 3; i++)
 		{
-			if (containPoint(p, popup->imgPauseBtn[i]->rect(popup->popOption->closePoint)))
+			if (containPoint(p, popup->imgOptionBtn[i]->rect()))
 			{
-				j == i;
+				j = i;
 				break;
 			}
 		}
-		if (j != popup->popOption->selected)
+		if (selectedOptionBtn!=j)
 		{
+			selectedOptionBtn = j;
 			popup->popOption->selected = j;
 		}
 		break;
