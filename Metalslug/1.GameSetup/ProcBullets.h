@@ -2,6 +2,8 @@
 
 #include "iStd.h"
 
+#include "Collider.h"
+
 #include "Mosque.h"
 #include "ProcObject.h"
 #include "ProcEnemy.h"
@@ -50,9 +52,7 @@ enum BulletIndex
 	BulletHeavyMachinegun,
 	BulletBomb,
 
-	BulletMelee,
-
-	
+	BulletMelee,	
 
 	BulletMosque,
 	BulletMosqueTrace,	

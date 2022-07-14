@@ -42,6 +42,7 @@ public:
 
 	int reload;
 public:
+	virtual void init(iPoint p);
 	virtual void update(float dt);
 	virtual bool draw(float dt, iPoint off);
 	virtual void free();

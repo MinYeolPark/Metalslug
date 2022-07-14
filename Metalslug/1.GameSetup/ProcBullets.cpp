@@ -63,18 +63,6 @@ bool ProcBullets::draw(float dt, iPoint off)
 	imgCurr->paint(dt, p + off);
 	setRGBA(1, 1, 1, 1);
 
-#ifdef _DEBUG	
-	for (int i = 0; i < 3; i++)
-	{
-		if (colliders[i]->isActive)
-		{
-			iRect c = colliders[i]->getCollider();
-			c.origin.x += off.x;
-			c.origin.y += off.y;
-			drawRect(c);
-		}
-	}
-#endif // _DEBUG
 	return !isActive;
 }
 
@@ -88,11 +76,7 @@ void ProcBullets::getDamage(float damage, Collider* c)
 	hp -= damage;
 	if (hp <= 0)
 	{
-		for (int i = 0; i < colNum; i++)
-		{
-			colliders[i]->disable();
-			//objects->removeObject(colliders[i]);			
-		}
+		
 		isActive = false;
 	}
 }

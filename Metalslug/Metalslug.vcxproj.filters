@@ -105,13 +105,7 @@
     <ClInclude Include="1.GameSetup\ProcEnemy.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="3.Enemies\ArabMelee.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="0.Manager\EnemyMgr.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="3.Enemies\Mosque.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="1.GameSetup\ProcItem.h">
@@ -129,31 +123,16 @@
     <ClInclude Include="1.GameSetup\Select.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="3.Enemies\Kessie.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Sorting.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="1.GameSetup\ProcNpc.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="5.NPC\Ichimondi.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="0.Manager\AnimationMgr.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="3.Enemies\ArabBurserker.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="1.GameSetup\ProcPlayer.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="3.Enemies\ArabCamel.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Truck.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Abul.h">
@@ -171,13 +150,16 @@
     <ClInclude Include="2.UI\PopupUI.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="6.Bullets\BulletsMosque.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="6.Bullets\BulletsPlayer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="BulletsEnemy.h">
+    <ClInclude Include="7.Components\Collider.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Gun.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="3.Enemies\ArabMelee.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -272,13 +254,7 @@
     <ClCompile Include="1.GameSetup\ProcEnemy.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="3.Enemies\ArabMelee.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="0.Manager\EnemyMgr.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="3.Enemies\Mosque.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="1.GameSetup\ProcItem.cpp">
@@ -296,28 +272,13 @@
     <ClCompile Include="1.GameSetup\Select.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="3.Enemies\Kessie.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Sorting.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="1.GameSetup\ProcNpc.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="5.NPC\Ichimondi.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="0.Manager\AnimationMgr.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="3.Enemies\ArabBurserker.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="3.Enemies\ArabCamel.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Truck.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Abul.cpp">
@@ -338,13 +299,16 @@
     <ClCompile Include="소스.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="6.Bullets\BulletsMosque.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="6.Bullets\BulletsPlayer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="BulletsEnemy.cpp">
+    <ClCompile Include="7.Components\Collider.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Gun.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="3.Enemies\ArabMelee.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

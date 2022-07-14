@@ -17,7 +17,7 @@ Abul::Abul(int index) : ProcEnemy(index)
 	attkRate = 0.f;	_attkRate = 0.f;
 	aiDt = 0.f;	_aiDt = 0.f;
 
-	colNum = 0;
+	//colNum = 0;
 
     imgs = NULL;
     imgCurr = NULL;
@@ -86,12 +86,7 @@ bool Abul::draw(float dt, iPoint off)
 	setRGBA(1, 1, 1, 1);
 	imgCurr = imgs[state];
 	imgCurr->paint(dt, p + off);
-#ifdef _DEBUG
-	drawDot(p + off);
-	for (int i = 0; i < colNum; i++)
-		drawRect(colliders[i]->getCollider());
-	setRGBA(1, 1, 1, 0.5);
-#endif // DEBUG
+
 	setRGBA(1, 1, 1, 1);
 
     return !isActive;

@@ -2,6 +2,7 @@
 
 #include "EffectMgr.h"
 
+#include "ProcField.h"
 #include "BulletsPlayer.h"
 #include "BulletsEnemy.h"
 #include "BulletsMosque.h"
@@ -15,21 +16,21 @@ void loadProcBullets()
 	for (int i = 0; i < BulletIndexMax; i++)
 	{
 		_bullets[i] = new ProcBullets * [bulletMax];
-		if (i == BulletHandGun || i == BulletHeavyMachinegun)
-		{
-			for (int j = 0; j < bulletMax; j++)
-				_bullets[i][j] = new BulletsPlayer(i);
-		}
-		else if (i == BulletMelee)
-		{
-			for (int j = 0; j < bulletMax; j++)
-				_bullets[i][j] = new BulletsEnemy(i);
-		}
-		else if (i == BulletMosque || i == BulletMosqueTrace)
-		{
-			for (int j = 0; j < bulletMax; j++)
-				_bullets[i][j] = new BulletsMosque(i);
-		}
+		//if (i == BulletHandGun || i == BulletHeavyMachinegun)
+		//{
+		//	for (int j = 0; j < bulletMax; j++)
+		//		_bullets[i][j] = new BulletsPlayer(i);
+		//}
+		//else if (i == BulletMelee)
+		//{
+		//	for (int j = 0; j < bulletMax; j++)
+		//		_bullets[i][j] = new BulletsEnemy(i);
+		//}
+		//else if (i == BulletMosque || i == BulletMosqueTrace)
+		//{
+		//	for (int j = 0; j < bulletMax; j++)
+		//		_bullets[i][j] = new BulletsMosque(i);
+		//}
 	}
 	bullets = new ProcBullets * [BulletIndexMax * bulletMax];
 	bulletNum = 0;
@@ -123,8 +124,8 @@ void ProcBulletsPattern::patternMelee(ProcBullets* b, float dt)
 	else
 	{
 		b->index = BulletMeleeEnd;
-		for (int i = 0; i < b->colNum; i++)
-			b->colliders[i]->isActive = false;
+		//for (int i = 0; i < b->colNum; i++)
+		//	b->colliders[i]->isActive = false;
 		b->up = 0.0f;
 		b->pattern = patternMeleeEnd;		
 		return;

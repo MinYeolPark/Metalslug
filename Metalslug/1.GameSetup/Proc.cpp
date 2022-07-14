@@ -17,30 +17,34 @@
 
 void loadProc()
 {
+	loadProcColliders();
+
 	loadProcField();
 	//loadStructure();
 
 	loadProcPlayer();
-	loadProcItem();
-	loadProcNpcs();
+	//loadProcItem();
+	//loadProcNpcs();
 	loadProcEnemy();
-	loadProcBullets();
-	loadProcEffect();
-
+	//loadProcBullets();
+	//loadProcEffect();
+	//
 	loadUI();
 }
 void freeProc()
 {
+	freeProcColliders();
+
 	freeProcField();
 	//freeStructure();
 
 	freeProcPlayer();
-	freeProcItem();
-	freeProcNpcs();
+	//freeProcItem();
+	//freeProcNpcs();
 	freeProcEnemy();
-	freeProcBullets();
-	freeProcEffect();
-
+	//freeProcBullets();
+	//freeProcEffect();
+	//
 	freeUI();
 }
 
@@ -49,12 +53,15 @@ void drawProc(float dt)
 	iPoint off = drawProcField(dt);
 	//drawStructure(dt, off);
 
-	drawProcNpcs(dt, off);
-	drawProcItem(dt, off);
+	//drawProcNpcs(dt, off);
+	//drawProcItem(dt, off);
 	drawProcEnemy(dt, off);
-	drawProcBullets(dt, off);
+	//drawProcBullets(dt, off);
 	drawProcPlayer(dt, off);
-	drawProcEffect(dt, off);
+	//drawProcEffect(dt, off);
+
+	drawProcColliders(dt, off);
+
 	drawUI(dt, off);
 #if 0
 	//#issue
@@ -126,7 +133,11 @@ void loadProcPlayer()
 	//#issue
 	player = new ProcPlayer(ERI);
 
-	player->init({3500, 200 });
+#if 0
+	player->init({ 3500, 200 });
+#elif 1
+	player->init({ 100, 200 });
+#endif
 }
 
 void freeProcPlayer()
@@ -142,7 +153,7 @@ void drawProcPlayer(float dt, iPoint off)
 		player->update(dt);
 	if (player->draw(dt, off))
 	{
-		//spawnDt += dt;
+		spawnDt += dt;
 		if (spawnDt >= _spawnDt)
 		{
 			spawnDt -= _spawnDt;			

@@ -1,27 +1,40 @@
 #include "ProcEnemy.h"
 
-#include "ProcPlayer.h"
+#include "Collider.h"
+
 #include "EnemyMgr.h"
+#include "ProcPlayer.h"
 #include "ProcField.h"
 
 ProcEnemy::ProcEnemy(int index) : ProcObject()
 {
 	layer = LayerEnemy;
+
 	p = iPointZero;
 	tp = p;
 	v = iPointZero;
 	s = iSizeZero;
 
 	degree = 0;
+	alpha = 1.0f;
 
+	index = 0;
+	isDead = false;
+	isActive = false;
+	isRight = false;
+
+	hp = 0; _hp = 0;
+	score = 0;
+	//////////////////////// ProcObject
 	state = 0;
 
 	up = 0.0f;
 	down = 0.0f;
 	fall = false;
+
 	ai = NULL;
+
 	firePoint = p;
-	////////////////////////
 	dmg = 0;
 	sight = 0;
 	moveSpeed = 0.f;
@@ -29,7 +42,6 @@ ProcEnemy::ProcEnemy(int index) : ProcObject()
 	attkRate = 0.f, _attkRate = 0.f;
 	aiDt = 0.f, _aiDt = 0.f;
 
-	isDead = false;
 	isAppear = false;
 }
 
@@ -42,43 +54,9 @@ void ProcEnemy::setState(int newState)
 	state = newState;
 }
 
-void ProcEnemy::init(int index, iPoint p, iPoint v)
-{
-	this->isActive = true;
-	this->index = index;
-	this->p = p;
-	this->tp = p;
-	this->v = v;	
-	if (v.x > 0)
-		setState(0);
-	else if (v.x < 0)
-		setState(1);
-	else
-		setState(0);
-		
-	for (int i = 0; i < colNum; i++)
-	{
-		//init
-		colliders[i]->enable();
-		objects->addObject(colliders[i]);
-	}	
-}
-
 void ProcEnemy::fixedUpdate(float dt)
 {
 	int maxY = *(map->maxY + (int)p.x);
-	for (int i = 0; i < objects->count; i++)
-	{
-		Collider* c = (Collider*)objects->objectAtIndex(i);
-		//if (c->isTrigger)
-		//{
-		//	if (p.y > c->p.y)
-		//		return;
-		//}
-		if (c->isTrigger == true
-			&& c->parent != this)
-			maxY = c->p.y - c->s.height;		
-	}	
 	if (p.y >= maxY)
 	{
 		up = 0;
@@ -98,7 +76,4 @@ void ProcEnemy::fixedUpdate(float dt)
 			p = (iPointMake(p.x, p.y += down));
 		}
 	}
-
-	for (int i = 0; i < colNum; i++)
-		colliders[i]->update(p, degree, dt);
 }

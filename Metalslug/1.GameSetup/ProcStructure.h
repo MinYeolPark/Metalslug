@@ -19,6 +19,8 @@ public:
 public:
 	iImage** imgs;
 	iImage* imgCurr;
+
+	bool isAppear;
 public:
 	virtual void init(int index, iPoint p);
 	virtual void update(float dt);
@@ -26,8 +28,6 @@ public:
 	virtual void free();
 public:
 	virtual void getDamage(float damage, Collider* c);
-	virtual void setState(int newState);
-	virtual bool dead();
 };
 
 void loadStructure();

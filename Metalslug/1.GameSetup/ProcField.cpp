@@ -79,7 +79,7 @@ void ProcMap::init(int stage)
 	}
 	off = iPointZero;
 	offMax = iPointMake(0, 18);
-	offMin = iPointMake(devSize.width - maxW, 0);
+	offMin = iPointMake(devSize.width - maxW, 0);	
 }
 void ProcMap::update(float dt)
 {

@@ -42,7 +42,7 @@ void BulletsMosque::init(ProcObject* parent, int index, float degree, int fpNum)
 		this->damage = 100.0f;
 		colSize = { 40,40 };
 	}
-#if 1
+#if 0
 	colNum = 1;
 	for (int i = 0; i < colNum; i++)
 	{

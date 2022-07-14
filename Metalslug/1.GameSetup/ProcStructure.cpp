@@ -2,7 +2,7 @@
 
 #include "ImgMgr.h"
 
-
+#include "ProcObject.h"
 static iImage** _imgStructure = NULL;
 ImageInfo imgStructureInfo[];
 ProcStructure::ProcStructure() : ProcObject()
@@ -11,6 +11,8 @@ ProcStructure::ProcStructure() : ProcObject()
     
     imgs = NULL;
     imgCurr = NULL;
+
+    isAppear = false;
 
     if (_imgStructure == NULL)
         _imgStructure = createSingleImage(imgStructureInfo, StructureIndexMax, this);
@@ -34,7 +36,11 @@ void ProcStructure::init(int index, iPoint p)
     iPoint pos[3];
     if (index == AppleStair)
     {
+#if 0
         colNum = 2;
+        for (int i = 0; i < colNum; i++)
+            colliders[i]->damageable = false;
+#endif
         size[0] = { 80, 10 };
         size[1] = { 80, 10 };
         pos[0] = { p.x - 40, p.y - 30 };
@@ -43,14 +49,16 @@ void ProcStructure::init(int index, iPoint p)
     }
     else if (index == Wall)
     {
-        colNum = 1;         
+        //colNum = 1;         
         size[0] = { 50,130 };
         pos[0] = p;
-
+        _hp = 1000;
+        hp = _hp;
         imgs[Wall]->stopAnimation();
         imgs[Wall]->frame = 0;
     }
 
+#if 0
     for (int i = 0; i < colNum; i++)
     {
         colliders[i]->enable();
@@ -60,11 +68,12 @@ void ProcStructure::init(int index, iPoint p)
 
         objects->addObject(colliders[i]);
     }
+#endif
 }
 
 void ProcStructure::update(float dt)
 {
-    
+
 }
 
 bool ProcStructure::draw(float dt, iPoint off)
@@ -74,17 +83,6 @@ bool ProcStructure::draw(float dt, iPoint off)
     imgCurr = imgs[index];
     imgCurr->paint(dt, p + off);
 
-#ifdef _DEBUG
-    drawDot(p + off);    
-    for (int i = 0; i < colNum; i++)
-    {
-        iRect c = colliders[i]->getCollider();        
-        c.origin.x += off.x;
-        c.origin.y += off.y;
-        drawRect(c);
-    }
-#endif // _DEBUG
-
     setRGBA(1, 1, 1, 1);
     return !isActive;
 }
@@ -93,19 +91,23 @@ void ProcStructure::free()
 {
 }
 
-
-
-bool ProcStructure::dead()
-{
-    return false;
-}
-
 void ProcStructure::getDamage(float damage, Collider* c)
 {
-}
+    if (hp <= 0)
+        return;
 
-void ProcStructure::setState(int newState)
-{
+    hp -= damage;
+    if (hp <= _hp * 0.5)
+    {
+        if (index == Wall)
+            imgs[Wall]->frame = 1;
+        if (hp <= 0)
+        {
+            isActive = false;
+            addProcEffect(EffectExplosionL, p);
+        }
+    }
+
 }
 
 #define maxStruct 2
@@ -121,7 +123,7 @@ void loadStructure()
     structNum = 0;
 
     addStructure(AppleStair, iPointMake(650, 180));
-    //addStructure(Wall, iPointMake(200, 200));
+    addStructure(Wall, iPointMake(200, 200));
 }
 
 void freeStructure()

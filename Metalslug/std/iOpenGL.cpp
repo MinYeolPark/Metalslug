@@ -226,6 +226,7 @@ void setZoom(iPoint c, float scale, float zoomDt, float delayDt)
     zoom.set(c, scale, zoomDt, delayDt);
 }
 
+#include "ProcObject.h"
 void drawOpenGL(float dt, MethodDraw m)
 {
     //matrixProject->loadIdentity();
@@ -234,7 +235,7 @@ void drawOpenGL(float dt, MethodDraw m)
     setGlBlendFunc(iBlendFuncAlpha);
     fbo->bind();
     fbo->clear(0, 0, 0, 0);
-    
+
     m(dt);// drawGame
     updateKeyboard();
     //drawCursor(dt);

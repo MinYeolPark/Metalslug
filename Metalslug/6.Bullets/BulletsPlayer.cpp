@@ -32,7 +32,7 @@ void BulletsPlayer::init(ProcObject* parent, int index, float degree, int fpNum)
 		120,
 	};
 	this->damage = damageInfo[index];
-#if 1
+#if 0
 	colNum = 1;
 	iSize bs[] = {
 		{20,10},		//Handgun,
@@ -51,6 +51,7 @@ void BulletsPlayer::update(float dt)
 
 	Collider* cNear = NULL;
 	float dNear = 0xffffff;
+#if 0
 	for (int i = 0; i < objects->count; i++)
 	{
 		Collider* c = (Collider*)objects->objectAtIndex(i);
@@ -61,7 +62,8 @@ void BulletsPlayer::update(float dt)
 				float d = iPointLength(p - c->p);
 				if (dNear > d)
 				{
-					if (c->isActive)
+					if (c->isActive &&
+						c->damageable)
 					{
 						dNear = d;
 						cNear = c;
@@ -81,6 +83,7 @@ void BulletsPlayer::update(float dt)
 		}
 		cNear = NULL;
 	}
+#endif
 
 	p += v * speed * dt;
 }

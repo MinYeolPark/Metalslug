@@ -26,12 +26,12 @@ int maxNum[EnemyIndexMax] =
 {
 	50,		//melee
 	20,		//kessie melee
-	50,		//burser
-	1,		//camel
-	1,		//truck
-	1,		//kessie
-	1,		//mosque
-	1,		//abul
+	//50,		//burser
+	//1,		//camel
+	//1,		//truck
+	//1,		//kessie
+	//1,		//mosque
+	//1,		//abul
 };
 void loadProcEnemy()
 {
@@ -44,6 +44,7 @@ void loadProcEnemy()
 			for (int j = 0; j < maxNum[i]; j++)
 				_enemies[i][j] = new ArabMelee(i);
 		}
+#if 0
 		else if (i == IdxArBurserker)
 		{
 			for (int j = 0; j < maxNum[i]; j++)
@@ -74,6 +75,7 @@ void loadProcEnemy()
 			for (int j = 0; j < maxNum[i]; j++)
 				_enemies[i][j] = new Abul(i);
 		}
+#endif
 		enemies = new ProcEnemy * [EnemyIndexMax *  maxNum[i]];
 	}
 	enemyCount = 0;
@@ -85,15 +87,15 @@ void loadProcEnemy()
 	//kessie = new Kessie(IdxKessie);
 	//spawn pattern
 	
-	addProcEnemy(IdxMosque, iPointMake(2030, 175), iPointZero);
-	addProcEnemy(IdxTruck, iPointMake(1680, 100), iPointMake(0, 0));	
-	addProcEnemy(IdxArMelee, iPointMake(500, 100), iPointMake(0,0));	
+	//addProcEnemy(IdxMosque, iPointMake(2030, 175), iPointZero);
+	//addProcEnemy(IdxTruck, iPointMake(1680, 100), iPointZero);
+	addProcEnemy(IdxArMelee, iPointMake(500, 50), iPointZero);
 	//addProcEnemy(IdxArBurserker, iPointMake(300, 100), iPointMake(0, 0));
 
 
 	//addProcEnemy(IdxArMelee, iPointMake(400, 100), iPointMake(0, 0));
 	//addProcEnemy(IdxArCamel, iPointMake(300, 100), iPointMake(0, 0));
-	addProcEnemy(IdxKessie, iPointMake(3680, -50), iPointMake(0, 0));
+	//addProcEnemy(IdxKessie, iPointMake(3680, -50), iPointMake(0, 0));
 
 	//addProcEnemy(IdxAbul, iPointMake(300, 100), iPointMake(0, 0));
 }
@@ -142,7 +144,7 @@ void addProcEnemy(int index, iPoint p, iPoint v)
 			if (e->isActive == false)
 			{
 				e->isActive = true;
-				e->init(index, p, v);			//default direction = Left
+				e->init(p);			//default direction = Left
 				enemies[enemyCount] = e;
 				enemyCount++;
 				return;

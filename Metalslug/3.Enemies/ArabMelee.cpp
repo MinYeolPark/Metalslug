@@ -25,10 +25,10 @@ ArabMelee::ArabMelee(int index) : ProcEnemy(index)
 	attkRate = 0.f;	_attkRate = 1.f;
 	aiDt = 0.f;	_aiDt = 5.f;
 	reload = 1;
-#if 1
+#if 0
 	colNum = 1;
 	for (int i = 0; i < colNum; i++)
-		colliders[i]->init(this, iSizeMake(40, 20));
+		colliders[i]->init(this, iSizeMake(40, 40));
 #endif
 	imgs = NULL;
 	imgCurr = NULL;	
@@ -54,13 +54,18 @@ ArabMelee::~ArabMelee()
 	delete imgs;
 }
 
+void ArabMelee::init(iPoint p)
+{	
+	this->isActive = true;
+	this->index = index;
+	this->p = p;
+	this->tp = p;
+
+	addColliders(this, iSize(40, 40));
+}
+
 void ArabMelee::update(float dt)
 {
-	if (isDead)
-	{		
-		return;
-	}	
-
 	if (!isAppear)
 	{
 		if (containPoint(p,
@@ -165,8 +170,6 @@ void ArabMelee::update(float dt)
 				setState((ArabMeleeBehave)IdleMeleeL + state % 2);
 		}
 	}
-	p.y = *(map->maxY + (int)p.x);
-
 	fixedUpdate(dt);
 }
 bool ArabMelee::draw(float dt, iPoint off)
@@ -182,30 +185,10 @@ bool ArabMelee::draw(float dt, iPoint off)
 			if (reload)
 			{				
 				reload -= 1;
-				addBullet(this, BulletMelee, 0);
+				//addBullet(this, BulletMelee, 0);
 			}
 		}
 	}
-#ifdef _DEBUG
-	drawDot(p + off);
-	iRect c = colliders[0]->getCollider();	
-	c.origin.x += off.x;
-	c.origin.y += off.y;
-	drawRect(c);
-	setRGBA(1, 0, 1, 0.5);
-
-	setStringRGBA(1, 1, 1, 1);
-	setStringBorder(2);
-	setStringBorderRGBA(0, 0, 0, 1);
-	setStringName("assets/BMJUA_ttf.ttf");
-	setStringSize(20);
-	int len = iPointLength(tp - p);
-	drawString(p.x, p.y, TOP | LEFT, "%d", len);
-	
-	setLineWidth(10);	
-	drawLine(p + off, tp + off);
-	setLineWidth(1);
-#endif // DEBUG
 	setRGBA(1, 1, 1, 1);
 
 	return !isActive;
@@ -231,11 +214,13 @@ int ArabMelee::getFrame()
 bool ArabMelee::dead()
 {
 	isDead = true;
+#if 0
 	for (int i = 0; i < colNum; i++)
 	{
 		colliders[i]->disable();
 		//objects->removeObject(colliders[i]);
 	}
+#endif
 	state = (DeadMeleeL + state % 2);
 	imgs[state]->startAnimation(AnimationMgr::cbAniDead, this);
 
@@ -265,6 +250,10 @@ void ArabMelee::setState(int newState)
 		imgs[state]->startAnimation(AnimationMgr::cbAniEnemyMotion2Idle, this);
 	}
 }
+
+
+
+
 ImageInfo imgMeleeInfo[] =
 {
 	{

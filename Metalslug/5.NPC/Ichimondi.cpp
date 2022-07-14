@@ -109,11 +109,6 @@ bool Ichimondi::draw(float dt, iPoint off)
 	imgCurr->paint(dt, p + off);	
 	setRGBA(1, 1, 1, 1);
 
-#ifdef _DEBUG
-	drawDot(p + off);
-	drawRect(colliders[0]->getCollider());
-#endif // _DEBUG
-
 	return !isActive;
 }
 

@@ -66,7 +66,6 @@ ProcPlayer::ProcPlayer(int index) : ProcObject()
     score = 0;
 #if 1
     alpha = 1.0f;
-    alphaNum = 0; _alphaNum = 10;
     inviDt = 0.0f, _inviDt = 3.0f;
 #endif
 
@@ -122,21 +121,14 @@ void ProcPlayer::init(iPoint p)
     topImgs = _imgEriTop;
     botImgs = _imgEriBot;
     alpha = 1.0f;
-    alphaNum = 0;
     bombs = 10;
     hp = 100;
     life--;
 
     if (topState == PlayerSpawn)
         topImgs[topState]->startAnimation(AnimationMgr::cbAniToIdle, this);
-#if 1
-    colNum = 1;
-    for (int i = 0; i < colNum; i++)
-    {
-        colliders[i]->init(this, iSizeMake(40, 40));
-        objects->addObject(colliders[i]);
-    }
-#endif
+
+    addColliders(this, iSizeMake(40, 40));
 }
 
 void ProcPlayer::update(float dt)
@@ -151,6 +143,9 @@ void ProcPlayer::update(float dt)
         v.y = -1;
     else if (getKeyStat(keyboard_down))
         v.y = 1;
+
+    if (getKeyStat(keyboard_enter))
+        getDamage(100, NULL);
 #if 0
     {
         for (int i = 0; i < objects->count; i++)
@@ -384,11 +379,8 @@ void ProcPlayer::fixedUpdate(float dt)
             p = (iPointMake(p.x, p.y += down));
         }
     }
-    for (int i = 0; i < colNum; i++)
-        colliders[i]->update(p, degree, dt);   
 }
 
-static float alphaDelay = 0.0f; static float _alphaDelay = 0.5f;
 bool ProcPlayer::draw(float dt, iPoint off)
 {
     setRGBA(1, 1, 1, alpha);
@@ -409,37 +401,15 @@ bool ProcPlayer::draw(float dt, iPoint off)
         botImgCurr->paint(dt, p + off);
     topImgCurr->paint(dt, p + off);
 
-#if 1
     if (inviDt)
     {
         inviDt += dt;
-        alphaDelay += dt;
+        alpha = fabsf(_cos((inviDt / _inviDt * 540 * 5)));        //blink 3 time
+
         if (inviDt > _inviDt)
             inviDt = 0.0f;
-
-        if (alphaDelay > _alphaDelay)
-        {
-            alphaDelay -= _alphaDelay;
-            alpha *= _cos(180);        
-            alphaNum++;
-
-            if (alphaNum > _alphaNum)
-                printf("spawn\n");
-        }        
     }
-#endif
-    {
-#ifdef _DEBUG
-        setDotSize(10);
-        drawDot(p + off);
-        iRect c = colliders[0]->getCollider();
-        c.origin.x += off.x;
-        c.origin.y += off.y;
-        drawRect(c);
-        //drawRect(p.x - 100, p.y - 100, 200, 200);
-#endif
-    }
-    setRGBA(1, 1, 1, alpha);
+    setRGBA(1, 1, 1, 1);
 
     return !isActive;
 }
@@ -451,17 +421,26 @@ void ProcPlayer::fire(iPoint v)
 {
     topState = PlayerFire;
     fireing = true;
+
+#if 0
     ProcEnemy* eNear = NULL;
     float dNear = 0xffffff;
     for (int i = 0; i < enemyCount; i++)
     {
         ProcEnemy* e = enemies[i];
         float d = iPointLength(p - e->p);
-        if (attkRange > d)
+        if (attkRange > d) 
         {
-            dNear = d;
-            if (!e->isDead)
-                eNear = e;
+            for (int i = 0; e->colNum; i++)
+            {
+                Collider* c = e->colliders[i];                
+                if (c->isActive && c->damageable)
+                {
+                    dNear = d;
+                    if (!e->isDead)
+                        eNear = e;
+                }
+            }
         }
     }
 
@@ -501,6 +480,7 @@ void ProcPlayer::fire(iPoint v)
                 addBullet(this, curGun->gunIndex, fireDeg);
         }
     }
+#endif
 }
 
 void ProcPlayer::bomb(iPoint v)
@@ -518,6 +498,9 @@ void ProcPlayer::bomb(iPoint v)
 
 void ProcPlayer::getDamage(float damage, Collider* c)
 {
+    if (inviDt)
+        return;
+
     hp -= damage;
     if (hp <= 0)
     {
