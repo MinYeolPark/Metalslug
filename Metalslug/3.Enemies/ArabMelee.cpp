@@ -61,11 +61,14 @@ void ArabMelee::init(iPoint p)
 	this->p = p;
 	this->tp = p;
 
-	addColliders(this, iSize(40, 40));
+	collider = addColliders(this, p, iSize(40, 40));
 }
 
 void ArabMelee::update(float dt)
 {
+	if (isDead)
+		return;
+
 	if (!isAppear)
 	{
 		if (containPoint(p,
@@ -78,8 +81,7 @@ void ArabMelee::update(float dt)
 		isActive = containPoint(p,
 			iRectMake(-map->off.x - 40, -map->off.y - 40,
 				devSize.width + 80, devSize.height + 80));
-	}
-
+	}	
 	firePoint = { p.x, p.y - 20 };
 	aiDt += dt;
 	if (aiDt > _aiDt)
@@ -172,9 +174,15 @@ void ArabMelee::update(float dt)
 	}
 	fixedUpdate(dt);
 }
+void ArabMelee::fixedUpdate(float dt)
+{
+	ProcEnemy::fixedUpdate(dt);
+
+	collider->setPosition(p);
+}
 bool ArabMelee::draw(float dt, iPoint off)
 {
-	setRGBA(1, 1, 1, 1);
+	setRGBA(1, 1, 1, alpha);
 	imgCurr = imgs[state];
 	imgCurr->paint(dt, p + off);
 
@@ -187,6 +195,16 @@ bool ArabMelee::draw(float dt, iPoint off)
 				reload -= 1;
 				//addBullet(this, BulletMelee, 0);
 			}
+		}
+	}
+	if (alphaDt)
+	{
+		alphaDt += dt;
+		alpha = fabsf(_cos((alphaDt / _alphaDt * 270)));
+		if (alphaDt > _alphaDt)
+		{
+			alphaDt = 0.0f;
+			isActive = false;
 		}
 	}
 	setRGBA(1, 1, 1, 1);
@@ -206,34 +224,17 @@ void ArabMelee::free()
 	}
 }
 
-int ArabMelee::getFrame()
-{
-	return imgs[state]->frame;
-}
-
-bool ArabMelee::dead()
-{
-	isDead = true;
-#if 0
-	for (int i = 0; i < colNum; i++)
-	{
-		colliders[i]->disable();
-		//objects->removeObject(colliders[i]);
-	}
-#endif
-	state = (DeadMeleeL + state % 2);
-	imgs[state]->startAnimation(AnimationMgr::cbAniDead, this);
-
-	return state == (DeadMeleeL + state % 2);
-}
-
-void ArabMelee::getDamage(float damage, Collider* c)
+void ArabMelee::getDamage(float damage)
 {
 	hp -= damage;
 	if (hp <= 0)
 	{
 		if (!isDead)
-			dead();
+		{
+			isDead = true;
+			state = (DeadMeleeL + state % 2);
+			imgs[state]->startAnimation(AnimationMgr::cbAniDead, this);
+		}
 	}
 }
 

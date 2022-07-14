@@ -18,10 +18,8 @@ public:
 
 	int colID;
 	bool isActive;
-	bool isTrigger;
-	bool damageable;
 
-	void init(ProcObject* parent, iSize s);
+	void init(ProcObject* parent, iPoint p, iSize s);
 	void update(float dt);
 	bool draw(float dt, iPoint off);
 	void setPosition(iPoint p);
@@ -30,9 +28,12 @@ public:
 	void enable() { isActive = true; }
 	void disable() { isActive = false; }
 };
+#define colliderMax 50
 
 extern iArray* procColliders;
+extern Collider** colliders;
+extern int colNum;
 void loadProcColliders();
 void freeProcColliders();
 void drawProcColliders(float dt, iPoint off);
-void addColliders(ProcObject* parent, iSize s);
+Collider* addColliders(ProcObject* parent, iPoint p, iSize s);

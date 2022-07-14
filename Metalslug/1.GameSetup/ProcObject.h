@@ -33,6 +33,7 @@ public:
 
 	float degree;
 	float alpha;
+	float alphaDt, _alphaDt;
 
 	int index;
 	bool isDead;
@@ -48,5 +49,6 @@ public:
 public:
 	virtual int getScore();
 	virtual void addScore(int addScore);
-	virtual void getDamage(float damage, Collider* c) = 0;
+	virtual void getDamage(float damage);
+	virtual void getDamage(float damage, Collider* c);
 };

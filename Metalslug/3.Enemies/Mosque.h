@@ -2,6 +2,7 @@
 
 #include "iStd.h"
 
+#include "Collider.h"
 #include "ProcEnemy.h"
 enum MosqueBaseBehave
 {
@@ -41,6 +42,7 @@ public:
 	iPoint shutterP[3];
 	iPoint soldierP[3];
 
+	Collider* colliders[3];
 	float aiDt[3], _aiDt;
 	float hp[3], _hp;		//0 : left, 1: mid, 2: right
 	
@@ -52,7 +54,7 @@ public:
 	virtual void setState(int newState);
 
 public:
-	virtual void init(int index, iPoint p, iPoint v);
+	virtual void init(iPoint p);
 	virtual void update(float dt);
 	virtual void fixedUpdate(float dt);
 	virtual bool draw(float dt, iPoint off);

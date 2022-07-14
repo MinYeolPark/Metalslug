@@ -41,15 +41,16 @@ public:
 	iImage* imgCurr;
 
 	int reload;
+
+	Collider* collider;
 public:
 	virtual void init(iPoint p);
 	virtual void update(float dt);
+	virtual void fixedUpdate(float dt);
 	virtual bool draw(float dt, iPoint off);
 	virtual void free();
 
 public:
 	virtual void setState(int newState);
-	virtual void getDamage(float damage, Collider* c);
-	virtual int getFrame();
-	virtual bool dead();
+	virtual void getDamage(float damage);
 };

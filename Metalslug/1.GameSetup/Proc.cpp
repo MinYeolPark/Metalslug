@@ -18,15 +18,15 @@
 void loadProc()
 {
 	loadProcColliders();
-
 	loadProcField();
+	loadProcPlayer();
+	loadProcEnemy();
+	loadProcBullets();
+
 	//loadStructure();
 
-	loadProcPlayer();
 	//loadProcItem();
 	//loadProcNpcs();
-	loadProcEnemy();
-	//loadProcBullets();
 	//loadProcEffect();
 	//
 	loadUI();
@@ -36,13 +36,14 @@ void freeProc()
 	freeProcColliders();
 
 	freeProcField();
+	freeProcPlayer();
+	freeProcEnemy();
+	freeProcBullets();
+
 	//freeStructure();
 
-	freeProcPlayer();
 	//freeProcItem();
 	//freeProcNpcs();
-	freeProcEnemy();
-	//freeProcBullets();
 	//freeProcEffect();
 	//
 	freeUI();
@@ -51,13 +52,13 @@ void freeProc()
 void drawProc(float dt)
 {
 	iPoint off = drawProcField(dt);
+	drawProcEnemy(dt, off);
+	drawProcPlayer(dt, off);
+	drawProcBullets(dt, off);
 	//drawStructure(dt, off);
 
 	//drawProcNpcs(dt, off);
 	//drawProcItem(dt, off);
-	drawProcEnemy(dt, off);
-	//drawProcBullets(dt, off);
-	drawProcPlayer(dt, off);
 	//drawProcEffect(dt, off);
 
 	drawProcColliders(dt, off);
@@ -145,7 +146,7 @@ void freeProcPlayer()
 	delete player;
 }
 
-float spawnDt = 0.f, _spawnDt = 2.f;
+float spawnDt = 0.f;
 void drawProcPlayer(float dt, iPoint off)
 {
 	if (player->topState != (PlayerBehave)(PlayerDead + player->topState % 2)
@@ -154,9 +155,9 @@ void drawProcPlayer(float dt, iPoint off)
 	if (player->draw(dt, off))
 	{
 		spawnDt += dt;
-		if (spawnDt >= _spawnDt)
+		if (spawnDt >= _respawnDt)
 		{
-			spawnDt -= _spawnDt;			
+			spawnDt -= _respawnDt;
 			if (player->life > 0)
 				player->init(player->p);
 			else//player->life==0

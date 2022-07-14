@@ -5,11 +5,11 @@ enum EnemyIndex
 {
 	IdxArMelee = 0,
 	IdxArMeleeKessie,
+	IdxMosque,
 	//IdxArBurserker,
 	//IdxArCamel,
 	//IdxTruck,
 	//IdxKessie,
-	//IdxMosque,
 	//IdxAbul,
 
 	EnemyIndexMax,
@@ -43,9 +43,7 @@ public:
 
 	bool isAppear;
 public:	
-	virtual bool dead() = 0;
-
-	virtual void getDamage(float damage, Collider* c) = 0;
+	virtual void getDamage(float damage);
 	virtual void setState(int newState) = 0;
 public:
 	virtual void init(iPoint p) = 0;

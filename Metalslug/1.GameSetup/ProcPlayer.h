@@ -23,6 +23,7 @@ public:
 	iImage* botImgCurr;
 	float degree;
 
+	Collider* collider;
 	Gun* curGun;
 	iPoint fp;			//firePoint
 	iPoint bombPoint;
@@ -62,7 +63,7 @@ public:
 	void fire(iPoint v);
 	void bomb(iPoint v);	
 
-	void getDamage(float damage, Collider* c);
+	void getDamage(float damage);
 	void addScore(int score);
 	void addBomb(int bomb);
 	void changeGun(int index);

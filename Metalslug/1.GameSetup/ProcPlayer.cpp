@@ -5,6 +5,7 @@
 #include "BulletMgr.h"
 #include "InputMgr.h"
 
+#include "Collider.h"
 #include "Proc.h"
 #include "ProcField.h"
 #include "ProcItem.h"
@@ -128,7 +129,7 @@ void ProcPlayer::init(iPoint p)
     if (topState == PlayerSpawn)
         topImgs[topState]->startAnimation(AnimationMgr::cbAniToIdle, this);
 
-    addColliders(this, iSizeMake(40, 40));
+    collider = addColliders(this, p, iSizeMake(40, 40));
 }
 
 void ProcPlayer::update(float dt)
@@ -145,7 +146,7 @@ void ProcPlayer::update(float dt)
         v.y = 1;
 
     if (getKeyStat(keyboard_enter))
-        getDamage(100, NULL);
+        getDamage(100);
 #if 0
     {
         for (int i = 0; i < objects->count; i++)
@@ -379,6 +380,9 @@ void ProcPlayer::fixedUpdate(float dt)
             p = (iPointMake(p.x, p.y += down));
         }
     }
+
+    //collider update
+    collider->setPosition(p);
 }
 
 bool ProcPlayer::draw(float dt, iPoint off)
@@ -404,8 +408,8 @@ bool ProcPlayer::draw(float dt, iPoint off)
     if (inviDt)
     {
         inviDt += dt;
-        alpha = fabsf(_cos((inviDt / _inviDt * 540 * 5)));        //blink 3 time
-
+        //alpha = fabsf(_cos((inviDt / _inviDt * 540)));        //blink 3 time
+        alpha = fabsf(_cos((inviDt / _respawnDt * 540)));        //blink 3 time
         if (inviDt > _inviDt)
             inviDt = 0.0f;
     }
@@ -422,34 +426,33 @@ void ProcPlayer::fire(iPoint v)
     topState = PlayerFire;
     fireing = true;
 
-#if 0
-    ProcEnemy* eNear = NULL;
+#if 1
+    Collider* cNear = NULL;
     float dNear = 0xffffff;
-    for (int i = 0; i < enemyCount; i++)
+    for (int i = 0; i < colNum; i++)
     {
-        ProcEnemy* e = enemies[i];
-        float d = iPointLength(p - e->p);
-        if (attkRange > d) 
+        Collider* c = colliders[i];
+        if (c->isActive)
         {
-            for (int i = 0; e->colNum; i++)
+            float d = iPointLength(p - c->p);
+            if (dNear > d)
             {
-                Collider* c = e->colliders[i];                
-                if (c->isActive && c->damageable)
+                if (d < attkRange)
                 {
-                    dNear = d;
-                    if (!e->isDead)
-                        eNear = e;
+                    if (c->parent != this)
+                    {
+                        dNear = d;
+                        cNear = c;
+                    }
                 }
             }
         }
     }
 
-    if (eNear)
+    if (cNear)
     {
         topState = PlayerMeleeAttack;
-        eNear->hp -= 100;
-        if (eNear->hp <= 0)
-            eNear->dead();
+        cNear->parent->getDamage(100);       
     }
     else
     {
@@ -457,7 +460,6 @@ void ProcPlayer::fire(iPoint v)
         {
             topState = PlayerFireUp;
             topImgs[topState]->startAnimation(AnimationMgr::cbAniToIdle, this);            
-            printf("fireup\n");
         }
         else if (v.y > 0)   //aim down
         {
@@ -471,14 +473,8 @@ void ProcPlayer::fire(iPoint v)
         {
             topState = PlayerFire;
             topImgs[topState]->startAnimation(AnimationMgr::cbAniToIdle, this);            
-            printf("fire!!\n");
         }
-        addBullet(this, curGun->gunIndex, fireDeg);        
-        if (curGun->gunIndex == HeavyMachinegun)
-        {
-            for(int i=0;i<2;i++)
-                addBullet(this, curGun->gunIndex, fireDeg);
-        }
+        //addBullet(this, curGun->gunIndex, fireDeg);   
     }
 #endif
 }
@@ -496,7 +492,7 @@ void ProcPlayer::bomb(iPoint v)
 }
 
 
-void ProcPlayer::getDamage(float damage, Collider* c)
+void ProcPlayer::getDamage(float damage)
 {
     if (inviDt)
         return;

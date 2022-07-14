@@ -29,15 +29,15 @@ void AnimationMgr::cbAniToCrouch(void* parm)
 
 void AnimationMgr::cbAniDead(void* parm)
 {
-	ProcObject* e = (ProcObject*)parm;
-	e->isActive = false;
-
+	ProcObject* e = (ProcObject*)parm;	
+	e->alphaDt = 0.000001f;
+	e->_alphaDt = 0.5f;
 	if (e->layer == LayerPlayer)
 	{
 		ProcPlayer* p = (ProcPlayer*)parm;
-		p->inviDt = 0.0000001f;
+		p->inviDt = 0.000001f;
+		p->isActive = false;
 	}
-
 	printf("cb Ani dead\n");
 }
 

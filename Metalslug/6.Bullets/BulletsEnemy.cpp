@@ -30,21 +30,10 @@ void BulletsEnemy::init(ProcObject* parent, int index, float degree, int fpNum)
 		this->damage = 100.f;
 		colSize = { 40, 40 };
 	}
-#if 1
-	colNum = 1;
-	for (int i = 0; i < colNum; i++)
-	{
-		colliders[i]->init(this, iSizeMake(40, 40));
-		colliders[i]->enable();
-		colliders[i]->damageable = false;
-		objects->addObject(colliders[i]);
-	}
-#endif
 }
 
 void BulletsEnemy::update(float dt)
 {		
-
 	isActive = containPoint(p,
 		iRectMake(-map->off.x - 20, -map->off.y - 20,
 			devSize.width + 40, devSize.height + 40));
@@ -94,22 +83,7 @@ void BulletsEnemy::update(float dt)
 
 void BulletsEnemy::fixedUpdate(float dt)
 {
-	for (int i = 0; i < player->colNum; i++)
-	{
-		if (containPoint(p, player->colliders[i]->getCollider()))
-		{
-			if (!player->isDead)
-			{
-				isActive = false;
-				player->getDamage(damage, player->colliders[i]);
-				iPoint bp = iPointMake(rand() % 10 + p.x, rand() % 10 + p.y);
-				addProcEffect(index, bp);		//bulletIndex=effectIndex
-			}
-		}
-	}
-
-	for (int i = 0; i < colNum; i++)
-		colliders[i]->update(p, degree, dt);
+	
 }
 
 void BulletsEnemy::getDamage(float damage, Collider* c)

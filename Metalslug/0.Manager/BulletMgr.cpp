@@ -16,21 +16,21 @@ void loadProcBullets()
 	for (int i = 0; i < BulletIndexMax; i++)
 	{
 		_bullets[i] = new ProcBullets * [bulletMax];
-		//if (i == BulletHandGun || i == BulletHeavyMachinegun)
-		//{
-		//	for (int j = 0; j < bulletMax; j++)
-		//		_bullets[i][j] = new BulletsPlayer(i);
-		//}
-		//else if (i == BulletMelee)
-		//{
-		//	for (int j = 0; j < bulletMax; j++)
-		//		_bullets[i][j] = new BulletsEnemy(i);
-		//}
-		//else if (i == BulletMosque || i == BulletMosqueTrace)
-		//{
-		//	for (int j = 0; j < bulletMax; j++)
-		//		_bullets[i][j] = new BulletsMosque(i);
-		//}
+		if (i == BulletHandGun || i == BulletHeavyMachinegun)
+		{
+			for (int j = 0; j < bulletMax; j++)
+				_bullets[i][j] = new BulletsPlayer(i);
+		}
+		else if (i == BulletMelee)
+		{
+			for (int j = 0; j < bulletMax; j++)
+				_bullets[i][j] = new BulletsEnemy(i);
+		}
+		else if (i == BulletMosque || i == BulletMosqueTrace)
+		{
+			for (int j = 0; j < bulletMax; j++)
+				_bullets[i][j] = new BulletsMosque(i);
+		}
 	}
 	bullets = new ProcBullets * [BulletIndexMax * bulletMax];
 	bulletNum = 0;

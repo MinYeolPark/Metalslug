@@ -34,6 +34,7 @@ iPoint drawProcField(float dt);
 ///////////////////////////////////////////////////
 //Player
 ///////////////////////////////////////////////////
+#define _respawnDt 1
 extern ProcPlayer* player;
 void loadProcPlayer();
 void freeProcPlayer();

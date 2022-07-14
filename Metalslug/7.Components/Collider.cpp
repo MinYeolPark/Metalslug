@@ -1,7 +1,6 @@
 #include "Collider.h"
 
 #include "InputMgr.h"
-#define colliderMax 50
 Collider* _colliders;
 Collider** colliders;
 int colNum;
@@ -27,24 +26,23 @@ void drawProcColliders(float dt, iPoint off)
 		if (c->draw(dt, off))
 		{
 			colNum--;
-			printf("colNum=%d\n",colNum);
 			colliders[i] = colliders[colNum];
 			i--;
 		}
 	}
 }
 
-void addColliders(ProcObject* parent, iSize s)
+Collider* addColliders(ProcObject* parent, iPoint p, iSize s)
 {
 	for (int i = 0; i < colliderMax; i++)
 	{
 		Collider* c = &_colliders[i];
 		if (!c->isActive)
 		{			
-			c->init(parent, s);
+			c->init(parent, p, s);
 			colliders[colNum] = c;
 			colNum++;
-			return;
+			return c;
 		}
 	}
 }
@@ -67,18 +65,17 @@ Collider::Collider()
 	parent = NULL;
 
 	colID = 0;
-	isActive = false;
-	isTrigger = false;
-	damageable = false;
+	isActive = false;	
 }
 Collider::~Collider()
 {
 
 }
-void Collider::init(ProcObject* parent, iSize s)
+void Collider::init(ProcObject* parent, iPoint p, iSize s)
 {
 	isActive = true;
 	this->parent = parent;
+	this->p = p;
 	this->s = s;
 	colID = colNum;
 }
@@ -86,10 +83,8 @@ void Collider::init(ProcObject* parent, iSize s)
 void Collider::update(float dt)
 {
 	isActive = !parent->isDead;
-	printf("#%d Parent is dead ? =", colID);
-	printf(parent->isDead ? "true\n" : "false\n");
-	p = parent->p;
 	degree = parent->degree;
+	//p = parent->p;
 }
 
 bool Collider::draw(float dt, iPoint off)

@@ -97,21 +97,7 @@ void BulletsMosque::update(float dt)
 
 void BulletsMosque::fixedUpdate(float dt)
 {
-	for (int i = 0; i < player->colNum; i++)
-	{
-		if (containPoint(p, player->colliders[i]->getCollider()))
-		{
-			if (!player->isDead)
-			{
-				isActive = false;
-				player->getDamage(damage, player->colliders[i]);
-				iPoint bp = iPointMake(rand() % 10 + p.x, rand() % 10 + p.y);
-				addProcEffect(index, bp);		//bulletIndex=effectIndex
-			}
-		}
-	}
-	for (int i = 0; i < colNum; i++)
-		colliders[i]->update(p, degree, dt);
+	
 }
 
 void BulletsMosque::getDamage(float damage, Collider* c)
@@ -121,11 +107,6 @@ void BulletsMosque::getDamage(float damage, Collider* c)
 	if (hp <= 0)
 	{
 		isActive = false;
-		for (int i = 0; i < colNum; i++)
-		{
-			colliders[i]->disable();
-			//objects->removeObject(colliders[i]);
-		}
 		addProcEffect(index, p);
 	}
 }

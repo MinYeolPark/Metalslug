@@ -49,6 +49,10 @@ ProcEnemy::~ProcEnemy()
 {
 }
 
+void ProcEnemy::getDamage(float damage)
+{
+}
+
 void ProcEnemy::setState(int newState)
 {
 	state = newState;

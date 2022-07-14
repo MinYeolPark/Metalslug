@@ -40,17 +40,6 @@ Mosque::Mosque(int index) : ProcEnemy(index)
 	memset(soldierP, 0x00, sizeof(soldierP));
 	memset(towerP, 0x00, sizeof(towerP));
 	
-#if 1
-	colNum = 3;
-	for (int i = 0; i < colNum; i++)
-	{
-		iSize s[3] = {
-			{60, 60},{60,60},{60,60}
-		};
-		colliders[i]->init(this, s[i]);
-	}
-#endif
-
 	isActive = false;
 	isAppear = false;
 	memset(hp, 0x00, sizeof(hp));
@@ -121,9 +110,9 @@ Mosque::~Mosque()
 	_imgMosqueAdd = NULL;
 }
 
-void Mosque::init(int index, iPoint p, iPoint v)
+void Mosque::init(iPoint p)
 {
-	ProcEnemy::init(index, p, v);
+	this->p = p;
 	doorP[0] = { p.x - 60, p.y - 3 };
 	doorP[1] = { p.x + 110, p.y - 3 };
 
@@ -131,8 +120,11 @@ void Mosque::init(int index, iPoint p, iPoint v)
 	towerP[1] = { p.x + 30, p.y - 50 };
 	towerP[2] = { p.x + 125, p.y - 50 };
 
+	
 	for (int i = 0; i < 3; i++)
+	{		
 		hp[i] = _hp;
+	}
 
 	//fix
 	memset(aiDt, 0x00, 3);
@@ -142,25 +134,31 @@ void Mosque::init(int index, iPoint p, iPoint v)
 	aiDt[1] = 5.f;
 	aiDt[2] = 0.f;
 	_aiDt = 6.f;		//fire prer 2 sec
+
+	for (int i = 0; i < 3; i++)
+		colliders[i] = addColliders(this, towerP[i], iSizeMake(60, 60));
 }
 
 static float dramaDt = 0.f, _dramaDt = 5.f;
 static float intervalDt = 0.f, _intervalDt = 0.18f;
 void Mosque::update(float dt)
 {		
+	if (isDead)
+		return;
+
 	if (!isAppear)
 	{
 		if (containPoint(p,
 			iRectMake(-map->off.x - 40, -map->off.y - 40,
 				devSize.width + 80, devSize.height + 80)))
 			isAppear = true;
-		return;
 	}
 	else
 	{
 		isActive= containPoint(p,
-			iRectMake(-map->off.x - 40, -map->off.y - 40,
-				devSize.width + 80, devSize.height + 80));
+			iRectMake(-map->off.x - 200, -map->off.y - 40,
+				devSize.width + 400, devSize.height + 80));
+		isDead = !isActive;		
 	}
 	//Appear
 	for(int i = 0; i < 3; i++)
@@ -181,9 +179,9 @@ void Mosque::update(float dt)
 				int len = iPointLength(tp - p);
 				if (len < attkRange)
 				{					
-					addBullet(this, BulletMosque, 360-ang, i);		//x축 기준, 시계방향 degree
+					//addBullet(this, BulletMosque, 360-ang, i);		//x축 기준, 시계방향 degree
  					//addBullet(this, BulletMosque, 0, i);		//x축 기준, 시계방향 degree
-					addProcEffect(EffectMoskTrail, firePoint[i]);
+					//addProcEffect(EffectMoskTrail, firePoint[i]);
 				}
 			}
 		}
@@ -200,6 +198,7 @@ void Mosque::update(float dt)
 		firePoint[i] = soldierP[i];
 	}
 
+#if 0
 	//Dead Event
 	if (isDead)
 	{
@@ -227,20 +226,14 @@ void Mosque::update(float dt)
 			}
 		}
 	}
+#endif
 	fixedUpdate(dt);
 }
 
 void Mosque::fixedUpdate(float dt)
 {	
 	for (int i = 0; i < 3; i++)
-	{
-		if (colliders[i]->isActive)
-		{
-			colliders[i]->update(
-				iPointMake(towerP[i].x, towerP[i].y - colliders[i]->getCollider().size.height),
-				degree, dt);
-		}
-	}
+		colliders[i]->setPosition(soldierP[i]);
 }
 
 bool Mosque::draw(float dt, iPoint off)
@@ -263,21 +256,6 @@ bool Mosque::draw(float dt, iPoint off)
 		}
 	}
 	imgBase[state]->paint(dt, p + off);
-	//render sort
-
-#ifdef _DEBUG
-	drawDot(p);
-	for (int i = 0; i < 3; i++)
-	{
-		if (colliders[i]->isActive)
-		{
-			iRect c = colliders[i]->getCollider();
-			c.origin.x += off.x;
-			c.origin.y += off.y;		
-			drawRect(c);
-		}
-	}
-#endif // _DEBUG
 
 	return !isActive;
 }
