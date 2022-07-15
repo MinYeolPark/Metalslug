@@ -84,7 +84,6 @@ void Collider::update(float dt)
 {
 	isActive = !parent->isDead;
 	degree = parent->degree;
-	//p = parent->p;
 }
 
 bool Collider::draw(float dt, iPoint off)
@@ -93,7 +92,6 @@ bool Collider::draw(float dt, iPoint off)
 #ifdef _DEBUG
 	alpha = 1;
 #endif // DEBUG
-
 	drawRect(getCollider());
 	setRGBA(1, 1, 1, 1);
 	return !isActive;

@@ -80,36 +80,42 @@ void AnimationMgr::cbAniMosque(void* parm)
 
 void AnimationMgr::cbAniNpcRelease(void* parm)
 {
+#if 0
 	printf("cb ani release");
 	ProcNpc* n = (ProcNpc*)parm;
 
 	int r = (rand() % 2 - 0.5) * 2;
 	n->v.x = r;
 	n->setState((NpcBehave)(WalkNpcL + n->state % 2));
+#endif
 }
 
 void AnimationMgr::cbAniNpcSpawnItem(void* n)
 {
-	ProcNpc* npc = (ProcNpc*)n;
+#if 0
+	ProcNpc* nn = (ProcNpc*)n;
 
-	npc->complete = true;
-	npc->spawnItem();
-	npc->setState((NpcBehave)(SaluteNpcL + npc->state % 2));
+	nn->complete = true;
+	nn->spawnItem();
+	nn->setState((NpcBehave)(SaluteNpcL + nn->state % 2));
+#endif
 }
 
 void AnimationMgr::cbAniNpcSalute(void* n)
 {
-	ProcNpc* npc = (ProcNpc*)n;
+#if 0
+	ProcNpc* nn = (ProcNpc*)n;
 
 	int r = (rand() % 2 - 0.5) * 2;
-	npc->v = iPointRotate(iPointMake(r, 0), iPointZero, 0);
-	if (npc->v != iPointZero)
+	nn->v = iPointRotate(iPointMake(r, 0), iPointZero, 0);
+	if (nn->v != iPointZero)
 	{
-		if (npc->v.x > 0)
-			npc->setState(EscapeNpcR);
-		else if (npc->v.x < 0)
-			npc->setState(EscapeNpcL);
+		if (nn->v.x > 0)
+			nn->setState(EscapeNpcR);
+		else if (nn->v.x < 0)
+			nn->setState(EscapeNpcL);
 	}
+#endif
 }
 
 void AnimationMgr::cbAniBulletDisappear(void* parm)

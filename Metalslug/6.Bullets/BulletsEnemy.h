@@ -12,6 +12,6 @@ public:
 	virtual void update(float dt);
 	virtual void fixedUpdate(float dt);
 
-	virtual void getDamage(float damage, Collider* c);
+	virtual void getDamage(float damage);
 };
 

@@ -58,7 +58,7 @@ void ProcMap::init(int stage)
 		Texture* t = imgs[i]->tex;
 		maxW += t->width;
 	}	
-
+	//#issue
 	maxW = 1176 + 786 + 550 + 1008 + 331;
 	printf("maxW = %d\n", maxW);
 	maxY = new int[maxW];	

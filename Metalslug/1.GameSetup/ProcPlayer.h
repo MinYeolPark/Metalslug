@@ -23,7 +23,6 @@ public:
 	iImage* botImgCurr;
 	float degree;
 
-	Collider* collider;
 	Gun* curGun;
 	iPoint fp;			//firePoint
 	iPoint bombPoint;
@@ -55,7 +54,6 @@ public:
 	int bombs;
 	int score;
 
-	//test
 	float alpha;
 	float inviDt, _inviDt;		//Immortality
 

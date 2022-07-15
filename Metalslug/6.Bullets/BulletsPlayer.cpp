@@ -43,14 +43,57 @@ void BulletsPlayer::init(ProcObject* parent, int index, float degree, int fpNum)
 #endif		
 }
 
+#include "EnemyMgr.h"	
+#include "ProcNpc.h"
 void BulletsPlayer::update(float dt)
 {
 	isActive = containPoint(p,
 		iRectMake(-map->off.x - 20, -map->off.y - 20,
 			devSize.width + 40, devSize.height + 40));	
 
-	Collider* cNear = NULL;
-	float dNear = 0xffffff;
+	ProcObject* dst = NULL;
+	float dMin = 0xfffff;
+	for (int i = 0; i < enemyNum; i++)
+	{
+		ProcEnemy* e = enemies[i];
+		float d = iPointLength(e->p - p);
+		if (dMin > d)
+		{
+			dMin = d;
+			if (e->rect)
+				dst = e;
+		}
+	}
+	/*for (int j = 0; j < npcNum; j++)
+	{
+		ProcNpc* n = npcs[j];
+		float d = iPointLength(n->p - p);
+		if (dMin > d)
+		{
+			dMin = d;
+			dst = n;
+		}
+	}*/
+
+	if (dst)
+	{
+		iRect r;
+		for (int i = 0; i < dst->rectNum; i++)
+		{
+			r = dst->getRect(i);
+			if (containPoint(p + map->off, r))
+			{
+				setRGBA(1, 0, 0, 1);
+				drawRect(r);
+				setRGBA(1, 1, 1, 1);
+
+				isActive = false;
+				dst->getDamage(damage);
+				iPoint bp = iPointMake(rand() % 10 + p.x, rand() % 10 + p.y);
+				//addProcEffect(index, bp);		//bulletIndex=effectIndex
+			}
+		}
+	}
 #if 0
 	for (int i = 0; i < objects->count; i++)
 	{

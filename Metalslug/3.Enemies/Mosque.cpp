@@ -133,10 +133,18 @@ void Mosque::init(iPoint p)
 	aiDt[0] = 3.f;
 	aiDt[1] = 5.f;
 	aiDt[2] = 0.f;
-	_aiDt = 6.f;		//fire prer 2 sec
+	_aiDt = 6.f;		//fire prer 2 sec	
 
-	for (int i = 0; i < 3; i++)
-		colliders[i] = addColliders(this, towerP[i], iSizeMake(60, 60));
+	rectNum = 3;
+	rect = new iRect * [rectNum];
+	for (int i = 0; i < rectNum; i++)
+		rect[i] = new iRect();
+
+	for (int i = 0; i < rectNum; i++)
+	{
+		iRect* r = rect[i];
+		r->size = iSizeMake(60, 60);
+	}
 }
 
 static float dramaDt = 0.f, _dramaDt = 5.f;
@@ -226,14 +234,25 @@ void Mosque::update(float dt)
 			}
 		}
 	}
+#else
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 2; j++)
+			imgSoldier[i][j]->alpha = 0.0f;
+		//addProcEnemy();
+	}
 #endif
 	fixedUpdate(dt);
 }
 
 void Mosque::fixedUpdate(float dt)
 {	
-	for (int i = 0; i < 3; i++)
-		colliders[i]->setPosition(soldierP[i]);
+	for (int i = 0; i < rectNum; i++)
+	{
+		rect[i]->origin = iPointMake(
+			shutterP[i].x + map->off.x - rect[i]->size.width / 2,
+			shutterP[i].y + map->off.y - rect[i]->size.height);
+	}
 }
 
 bool Mosque::draw(float dt, iPoint off)
@@ -257,6 +276,9 @@ bool Mosque::draw(float dt, iPoint off)
 	}
 	imgBase[state]->paint(dt, p + off);
 
+	for (int i = 0; i < rectNum; i++)
+		drawRect(getRect(i));
+
 	return !isActive;
 }
 iPoint Mosque::getFirePoint()
@@ -266,16 +288,16 @@ iPoint Mosque::getFirePoint()
 }
 bool Mosque::dead()
 {
-	for (int i = 0; i < colNum; i++)
-	{
-		if (colliders[i]->isActive == false)
-		{
-			if(towerState[i]!=MosqueDead)
-				addProcEffect(EffectExplosionM, shutterP[i]);
-			towerState[i] = MosqueDead;
-			soldierState[i] = MosqueDead;
-		}
-	}
+	//for (int i = 0; i < colNum; i++)
+	//{
+	//	/*if (colliders[i]->isActive == false)
+	//	{
+	//		if (towerState[i] != MosqueDead)
+	//			addProcEffect(EffectExplosionM, shutterP[i]);
+	//		towerState[i] = MosqueDead;
+	//		soldierState[i] = MosqueDead;
+	//	}*/
+	//}
 	
 	if (towerState[0] == MosqueDead &&
 		towerState[1] == MosqueDead &&
@@ -285,9 +307,9 @@ bool Mosque::dead()
 	}
 	return isDead;
 }
-void Mosque::getDamage(float damage, Collider* c)
+void Mosque::getDamage(float damage)
 {
-	for (int i = 0; i < colNum; i++)
+	/*for (int i = 0; i < colNum; i++)
 	{
 		if (containPoint(c->p, colliders[i]->getCollider()))
 		{
@@ -299,7 +321,7 @@ void Mosque::getDamage(float damage, Collider* c)
 				dead();
 			}
 		}
-	}
+	}*/
 }
 void Mosque::setState(int newState)
 {
@@ -472,3 +494,16 @@ ImageInfo imgMosqueAddInfo[] =
 		NULL,
 	},
 };
+
+
+bool canCollision(int index)
+{
+	// 0 ~ 99 : monstrer
+	// 100 ~ 200 : npc
+	if (index < 100)
+		return true;
+	else if (index < 200)
+		return false;
+
+	return true;
+}

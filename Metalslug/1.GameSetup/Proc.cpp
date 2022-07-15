@@ -17,7 +17,6 @@
 
 void loadProc()
 {
-	loadProcColliders();
 	loadProcField();
 	loadProcPlayer();
 	loadProcEnemy();
@@ -33,8 +32,6 @@ void loadProc()
 }
 void freeProc()
 {
-	freeProcColliders();
-
 	freeProcField();
 	freeProcPlayer();
 	freeProcEnemy();
@@ -60,8 +57,6 @@ void drawProc(float dt)
 	//drawProcNpcs(dt, off);
 	//drawProcItem(dt, off);
 	//drawProcEffect(dt, off);
-
-	drawProcColliders(dt, off);
 
 	drawUI(dt, off);
 #if 0

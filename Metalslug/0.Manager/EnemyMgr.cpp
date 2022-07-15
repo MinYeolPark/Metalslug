@@ -15,7 +15,7 @@
 
 ProcEnemy*** _enemies;
 ProcEnemy** enemies;
-int enemyCount;
+int enemyNum;
 
 ArabCamel* arabCamel;
 Truck* truck;
@@ -27,7 +27,7 @@ int maxNum[EnemyIndexMax] =
 	50,		//melee
 	20,		//kessie melee
 	1,		//mosque
-	//50,		//burser
+	50,		//burser
 	//1,		//camel
 	//1,		//truck
 	//1,		//kessie
@@ -39,7 +39,7 @@ void loadProcEnemy()
 	for (int i = 0; i < EnemyIndexMax; i++)
 	{		
 		_enemies[i] = new ProcEnemy * [maxNum[i]];
-		if (i == IdxArMelee || i==IdxArMeleeKessie)
+		if (i == IdxMelee || i==IdxMeleeKessie)
 		{
 			for (int j = 0; j < maxNum[i]; j++)
 				_enemies[i][j] = new ArabMelee(i);
@@ -49,12 +49,12 @@ void loadProcEnemy()
 			for (int j = 0; j < maxNum[i]; j++)
 				_enemies[i][j] = new Mosque(i);
 		}
-#if 0
-		else if (i == IdxArBurserker)
+		else if (i == IdxBurserker)
 		{
 			for (int j = 0; j < maxNum[i]; j++)
 				_enemies[i][j] = new ArabBurserker(i);
 		}
+#if 0
 		else if (i == IdxArCamel)
 		{
 			for (int j = 0; j < maxNum[i]; j++)
@@ -79,7 +79,7 @@ void loadProcEnemy()
 #endif
 		enemies = new ProcEnemy * [EnemyIndexMax *  maxNum[i]];
 	}
-	enemyCount = 0;
+	enemyNum = 0;
 
 	//boss monster
 	//arabCamel = new ArabCamel(IdxArCamel);
@@ -91,8 +91,8 @@ void loadProcEnemy()
 	//addProcEnemy(IdxMosque, iPointMake(2030, 175));
 	addProcEnemy(IdxMosque, iPointMake(230, 175));
 	//addProcEnemy(IdxTruck, iPointMake(1680, 100), iPointZero);
-	addProcEnemy(IdxArMelee, iPointMake(500, 50));
-	//addProcEnemy(IdxArBurserker, iPointMake(300, 100), iPointMake(0, 0));
+	addProcEnemy(IdxMelee, iPointMake(500, 50));
+	addProcEnemy(IdxBurserker, iPointMake(300, 100));
 
 
 	//addProcEnemy(IdxArMelee, iPointMake(400, 100), iPointMake(0, 0));
@@ -118,7 +118,7 @@ void freeProcEnemy()
 
 void drawProcEnemy(float dt, iPoint off)
 {
-	for (int i = 0; i < enemyCount; i++)
+	for (int i = 0; i < enemyNum; i++)
 	{
 		ProcEnemy* e = enemies[i];
 		if (e->isActive)
@@ -126,8 +126,8 @@ void drawProcEnemy(float dt, iPoint off)
 			e->update(dt);
 			if (e->draw(dt, off))
 			{
-				enemyCount--;
-				enemies[i] = enemies[enemyCount];
+				enemyNum--;
+				enemies[i] = enemies[enemyNum];
 				i--;
 			}
 		}
@@ -145,8 +145,8 @@ void addProcEnemy(int index, iPoint p)
 			{
 				e->isActive = true;
 				e->init(p);			//default direction = Left
-				enemies[enemyCount] = e;
-				enemyCount++;
+				enemies[enemyNum] = e;
+				enemyNum++;
 				return;
 			}
 		}

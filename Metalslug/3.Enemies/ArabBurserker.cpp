@@ -19,11 +19,6 @@ ArabBurserker::ArabBurserker(int index) : ProcEnemy(index)
 	attkRate = 0.f;	_attkRate = 2.f;
 	aiDt = 0.f;	_aiDt = 2.f;
 	///////////////////////////////////
-#if 1
-	colNum = 1;
-	for (int i = 0; i < colNum; i++)
-		colliders[i]->init(this, iSizeMake(40, 40));
-#endif
 	imgs = NULL;
 	imgCurr = NULL;
 
@@ -39,6 +34,11 @@ ArabBurserker::ArabBurserker(int index) : ProcEnemy(index)
 	for (int i = 0; i < BurserkBehaveMax; i++)
 		imgs[i] = _imgBurserk[i]->clone();
 	imgCurr = imgs[index];
+
+	rectNum = 1;
+	rect = new iRect * [rectNum];
+	for (int i = 0; i < rectNum; i++)
+		rect[i] = new iRect();
 }
 
 ArabBurserker::~ArabBurserker()
@@ -46,13 +46,34 @@ ArabBurserker::~ArabBurserker()
 	for (int i = 0; i < BurserkBehaveMax; i++)
 		delete imgs[i];
 	delete imgs;
+
+	for (int i = 0; i < rectNum; i++)
+		delete rect[i];
+	delete rect;
 }
 
+
+void ArabBurserker::init(iPoint p)
+{
+	this->isActive = true;
+	this->index = index;
+	this->p = p;
+	this->tp = p;
+
+	for (int i = 0; i < rectNum; i++)
+	{
+		iRect* r = rect[i];
+		r->size = iSizeMake(40, 40);
+		r->origin = p;
+	}
+}
 
 void ArabBurserker::update(float dt)
 {	
 	if (isDead)
 	{
+		for (int i = 0; i < rectNum; i++)
+			rect[i]->size = iSizeZero;
 		return;
 	}
 
@@ -115,21 +136,21 @@ void ArabBurserker::update(float dt)
 		else if (v.x < 0)
 			setState(WalkBurserkL);
 
-		for (int i = 0; i < player->colNum; i++)
-		{
-			Collider* c = player->colliders[i];
-			if (containPoint(p, c->getCollider()))
-			{
-				float d = iPointLength(p - c->p);
+		//for (int i = 0; i < player->colNum; i++)
+		//{
+		//	Collider* c = player->colliders[i];
+		//	if (containPoint(p, c->getCollider()))
+		//	{
+		//		float d = iPointLength(p - c->p);
 
-				if (!player->isDead)
-				{
-					player->getDamage(100, c);
-					iPoint bp = iPointMake(rand() % 10 + p.x, rand() % 10 + p.y);
-					addProcEffect(EffectBlood, bp);		//bulletIndex=effectIndex
-				}
-			}			
-		}		
+		//		if (!player->isDead)
+		//		{
+		//			player->getDamage(100, c);
+		//			iPoint bp = iPointMake(rand() % 10 + p.x, rand() % 10 + p.y);
+		//			addProcEffect(EffectBlood, bp);		//bulletIndex=effectIndex
+		//		}
+		//	}			
+		//}		
 	}
 	else
 	{
@@ -141,9 +162,19 @@ void ArabBurserker::update(float dt)
 				setState((ArabBurserkBehave)IdleBurserkL + state % 2);
 		}
 	}
-	p.y = *(map->maxY + (int)p.x);	
-
 	fixedUpdate(dt);
+}
+void ArabBurserker::fixedUpdate(float dt)
+{
+	ProcEnemy::fixedUpdate(dt);
+
+	//ColliderUpdate
+	for (int i = 0; i < rectNum; i++)
+	{
+		rect[i]->origin = iPointMake(
+			p.x + map->off.x - rect[i]->size.width / 2,
+			p.y + map->off.y - rect[i]->size.height);
+	}
 }
 bool ArabBurserker::draw(float dt, iPoint off)
 {
@@ -151,13 +182,22 @@ bool ArabBurserker::draw(float dt, iPoint off)
 	imgCurr = imgs[state];
 	imgCurr->paint(dt, p + off);
 
+	if (alphaDt)
+	{
+		alphaDt += dt;
+		alpha = fabsf(_cos((alphaDt / _alphaDt * 270)));
+		if (alphaDt > _alphaDt)
+		{
+			alphaDt = 0.0f;
+			isActive = false;
+		}
+	}
 #ifdef _DEBUG
-	drawDot(p + off);
-	iRect c = colliders[0]->getCollider();
-	c.origin.x += off.x;
-	c.origin.y += off.y;
-	drawRect(c);
-#endif
+	for (int i = 0; i < rectNum; i++)
+		drawRect(getRect());
+
+#endif // _DEBUG
+
 	setRGBA(1, 1, 1, 1);
 
 	return !isActive;
@@ -175,29 +215,18 @@ void ArabBurserker::free()
 	}
 }
 
-bool ArabBurserker::dead()
-{
-	isDead = true;
-	for (int i = 0; i < colNum; i++)
-	{
-		colliders[i]->disable();
-		//objects->removeObject(colliders[i]);
-	}
-	state = (DeadBurserkL + state % 2);
-	if (state == DeadBurserkL)
-		v.x = 1;
-	else//if(state==DeadEnemyR)
-		v.x = -1;
-
-	imgs[state]->startAnimation(AnimationMgr::cbAniDead, this);
-	return state == (DeadBurserkL + state % 2);
-}
-
-void ArabBurserker::getDamage(float damage, Collider* c)
+void ArabBurserker::getDamage(float damage)
 {
 	hp -= damage;
 	if (hp <= 0)
-		dead();
+	{
+		if (!isDead)
+		{
+			isDead = true;
+			state = (DeadBurserkL + state % 2);
+			imgs[state]->startAnimation(AnimationMgr::cbAniDead, this);
+		}
+	}
 }
 
 void ArabBurserker::setState(int newState)

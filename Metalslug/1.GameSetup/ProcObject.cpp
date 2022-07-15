@@ -2,6 +2,7 @@
 
 #include "ProcField.h"
 
+static int rectMax = 3;
 ProcObject::ProcObject()
 {
 	layer = ObjLayer::LayerDefault;
@@ -26,6 +27,12 @@ ProcObject::ProcObject()
 
 ProcObject::~ProcObject()
 {
+}
+
+iRect& ProcObject::getRect(int index)
+{
+	iRect rt = *rect[index];
+	return rt;
 }
 
 int ProcObject::getScore()

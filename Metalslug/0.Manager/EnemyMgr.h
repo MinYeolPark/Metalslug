@@ -8,7 +8,7 @@
 #define kessieMax 1
 #define mosqueMax 1
 extern ProcEnemy** enemies;
-extern int enemyCount;
+extern int enemyNum;
 void loadProcEnemy();
 void freeProcEnemy();
 void drawProcEnemy(float dt, iPoint off);

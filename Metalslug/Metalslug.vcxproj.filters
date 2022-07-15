@@ -126,9 +126,6 @@
     <ClInclude Include="Sorting.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="1.GameSetup\ProcNpc.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="0.Manager\AnimationMgr.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -153,9 +150,6 @@
     <ClInclude Include="6.Bullets\BulletsPlayer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="7.Components\Collider.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Gun.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -169,6 +163,12 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="6.Bullets\BulletsMosque.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="3.Enemies\ArabBurserker.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="1.GameSetup\ProcNpc.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -284,9 +284,6 @@
     <ClCompile Include="Sorting.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="1.GameSetup\ProcNpc.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="0.Manager\AnimationMgr.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -311,9 +308,6 @@
     <ClCompile Include="6.Bullets\BulletsPlayer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="7.Components\Collider.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Gun.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -327,6 +321,12 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="6.Bullets\BulletsMosque.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="3.Enemies\ArabBurserker.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="1.GameSetup\ProcNpc.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

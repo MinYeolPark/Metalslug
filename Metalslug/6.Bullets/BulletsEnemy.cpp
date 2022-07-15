@@ -70,8 +70,7 @@ void BulletsEnemy::update(float dt)
 	{
 		p.y = maxY;
 		index = BulletMeleeEnd;
-		for (int i = 0; i < colNum; i++)
-			colliders[i]->isActive = false;
+		//collider disable
 		up = 0.0f;
 		down = 0.0f;
 		return;
@@ -86,6 +85,6 @@ void BulletsEnemy::fixedUpdate(float dt)
 	
 }
 
-void BulletsEnemy::getDamage(float damage, Collider* c)
+void BulletsEnemy::getDamage(float damage)
 {
 }

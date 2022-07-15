@@ -1,8 +1,6 @@
 #pragma once
 
 #include "iStd.h"
-
-#include "Collider.h"
 #include "ProcEnemy.h"
 enum MosqueBaseBehave
 {
@@ -42,7 +40,6 @@ public:
 	iPoint shutterP[3];
 	iPoint soldierP[3];
 
-	Collider* colliders[3];
 	float aiDt[3], _aiDt;
 	float hp[3], _hp;		//0 : left, 1: mid, 2: right
 	
@@ -50,7 +47,7 @@ public:
 	virtual int getFrame() { return NULL; }
 	virtual bool dead();
 public:
-	virtual void getDamage(float damage, Collider* c);
+	virtual void getDamage(float damage);
 	virtual void setState(int newState);
 
 public:

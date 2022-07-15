@@ -99,6 +99,10 @@ ProcPlayer::~ProcPlayer()
     delete _imgEriBot;
 
     delete curGun;
+    for (int i = 0; i < rectNum; i++)
+        delete rect[i];
+    delete rect;
+
     delete player;
 
     _imgEriTop = NULL;
@@ -117,6 +121,18 @@ void ProcPlayer::init(iPoint p)
     topState = PlayerSpawn;
     botState = PlayerIdle;
     this->p = p;
+
+    rectNum = 1;   
+    rect = new iRect * [rectNum];
+    for (int i = 0; i < rectNum; i++)
+        rect[i] = new iRect();
+
+    for (int i = 0; i < rectNum; i++)
+    {
+        iRect* r = rect[i];
+        r->size = iSizeMake(40, 40);
+        r->origin = p;
+    }    
     curGun->gunIndex = Handgun;
     //curGun->gunIndex = HeavyMachinegun;
     topImgs = _imgEriTop;
@@ -128,12 +144,14 @@ void ProcPlayer::init(iPoint p)
 
     if (topState == PlayerSpawn)
         topImgs[topState]->startAnimation(AnimationMgr::cbAniToIdle, this);
-
-    collider = addColliders(this, p, iSizeMake(40, 40));
 }
 
 void ProcPlayer::update(float dt)
 {   
+    if (isDead)
+    {
+        return;
+    }
     v = iPointZero;
     if (getKeyStat(keyboard_left))
         v.x = -1;
@@ -349,7 +367,6 @@ void ProcPlayer::update(float dt)
     fixedUpdate(dt);
 }
 
-Collider* cNear = NULL;
 void ProcPlayer::fixedUpdate(float dt)
 { 
     int maxH = *(map->maxY + (int)p.x);
@@ -381,8 +398,13 @@ void ProcPlayer::fixedUpdate(float dt)
         }
     }
 
-    //collider update
-    collider->setPosition(p);
+    //ColliderUpdate
+    for (int i = 0; i < rectNum; i++)
+    {
+        rect[i]->origin = iPointMake(
+            p.x + map->off.x - rect[i]->size.width / 2,
+            p.y + map->off.y - rect[i]->size.height);
+    }
 }
 
 bool ProcPlayer::draw(float dt, iPoint off)
@@ -408,11 +430,17 @@ bool ProcPlayer::draw(float dt, iPoint off)
     if (inviDt)
     {
         inviDt += dt;
-        //alpha = fabsf(_cos((inviDt / _inviDt * 540)));        //blink 3 time
         alpha = fabsf(_cos((inviDt / _respawnDt * 540)));        //blink 3 time
         if (inviDt > _inviDt)
             inviDt = 0.0f;
     }
+
+#ifdef _DEBUG
+    for (int i = 0; i < rectNum; i++)
+        drawRect(getRect());           
+#endif // _DEBUG
+
+
     setRGBA(1, 1, 1, 1);
 
     return !isActive;
@@ -427,32 +455,28 @@ void ProcPlayer::fire(iPoint v)
     fireing = true;
 
 #if 1
-    Collider* cNear = NULL;
-    float dNear = 0xffffff;
-    for (int i = 0; i < colNum; i++)
+    ProcObject* dst = NULL;
+    float dMin = 0xfffff;
+    for (int i = 0; i < enemyNum; i++)
     {
-        Collider* c = colliders[i];
-        if (c->isActive)
+        ProcEnemy* e = enemies[i];
+        float d = iPointLength(e->p - p);
+        if (dMin > d)
         {
-            float d = iPointLength(p - c->p);
-            if (dNear > d)
+            if (d < attkRange)
             {
-                if (d < attkRange)
-                {
-                    if (c->parent != this)
-                    {
-                        dNear = d;
-                        cNear = c;
-                    }
-                }
+                dMin = d;
+                if(e->getRect().size!=iSizeZero)
+                    dst = e;                    
             }
         }
     }
 
-    if (cNear)
+    if (dst)
     {
         topState = PlayerMeleeAttack;
-        cNear->parent->getDamage(100);       
+        topImgs[topState]->startAnimation(AnimationMgr::cbAniToIdle, this);
+        dst->getDamage(100);       
     }
     else
     {
@@ -474,7 +498,7 @@ void ProcPlayer::fire(iPoint v)
             topState = PlayerFire;
             topImgs[topState]->startAnimation(AnimationMgr::cbAniToIdle, this);            
         }
-        //addBullet(this, curGun->gunIndex, fireDeg);   
+        addBullet(this, curGun->gunIndex, fireDeg);   
     }
 #endif
 }
@@ -844,3 +868,19 @@ ImageInfo infoEriTopHeavy[] =
       AnimationMgr::cbAniDead,
    },
 };
+
+//
+//iPoint moveDuration(iPoint s, iPoint e, float duration, float _duration)
+//{
+//    float rate = duration / _duration;
+//    return moveDuration(s, e, rate);
+//}
+//
+//iPoint moveDuration(iPoint s, iPoint e, float rate)
+//{
+//    iPoint p;
+//    p.x = s.x * (1 - rate) + e.x * rate;
+//    p.y = s.y * (1 - rate) + e.y * rate;
+//
+//    return p;
+//}

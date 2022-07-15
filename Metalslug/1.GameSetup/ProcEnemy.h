@@ -3,10 +3,10 @@
 
 enum EnemyIndex
 {
-	IdxArMelee = 0,
-	IdxArMeleeKessie,
+	IdxMelee = 0,
+	IdxMeleeKessie,
 	IdxMosque,
-	//IdxArBurserker,
+	IdxBurserker,
 	//IdxArCamel,
 	//IdxTruck,
 	//IdxKessie,

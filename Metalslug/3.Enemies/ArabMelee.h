@@ -41,8 +41,6 @@ public:
 	iImage* imgCurr;
 
 	int reload;
-
-	Collider* collider;
 public:
 	virtual void init(iPoint p);
 	virtual void update(float dt);

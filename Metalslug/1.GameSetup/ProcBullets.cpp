@@ -53,6 +53,7 @@ ProcBullets::~ProcBullets()
 
 void ProcBullets::fixedUpdate(float dt)
 {
+	
 }
 
 bool ProcBullets::draw(float dt, iPoint off)
@@ -75,10 +76,7 @@ void ProcBullets::getDamage(float damage, Collider* c)
 	printf("get damage bulletss\n");
 	hp -= damage;
 	if (hp <= 0)
-	{
-		
 		isActive = false;
-	}
 }
 
 ImageInfo bulletImageInfo[] =

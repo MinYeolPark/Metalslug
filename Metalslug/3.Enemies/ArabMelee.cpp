@@ -25,11 +25,7 @@ ArabMelee::ArabMelee(int index) : ProcEnemy(index)
 	attkRate = 0.f;	_attkRate = 1.f;
 	aiDt = 0.f;	_aiDt = 5.f;
 	reload = 1;
-#if 0
-	colNum = 1;
-	for (int i = 0; i < colNum; i++)
-		colliders[i]->init(this, iSizeMake(40, 40));
-#endif
+
 	imgs = NULL;
 	imgCurr = NULL;	
 
@@ -45,6 +41,11 @@ ArabMelee::ArabMelee(int index) : ProcEnemy(index)
 	for (int i = 0; i < MeleeBehaveMax; i++)
 		imgs[i] = _imgMelee[i]->clone();
 	imgCurr = imgs[index];
+
+	rectNum = 1;
+	rect = new iRect * [rectNum];
+	for (int i = 0; i < rectNum; i++)
+		rect[i] = new iRect();
 }
 
 ArabMelee::~ArabMelee()
@@ -52,6 +53,10 @@ ArabMelee::~ArabMelee()
 	for (int i = 0; i < MeleeBehaveMax; i++)
 		delete imgs[i];
 	delete imgs;
+
+	for (int i = 0; i < rectNum; i++)
+		delete rect[i];
+	delete rect;
 }
 
 void ArabMelee::init(iPoint p)
@@ -59,15 +64,24 @@ void ArabMelee::init(iPoint p)
 	this->isActive = true;
 	this->index = index;
 	this->p = p;
-	this->tp = p;
+	this->tp = p;	
 
-	collider = addColliders(this, p, iSize(40, 40));
+	for (int i = 0; i < rectNum; i++)
+	{
+		iRect* r = rect[i];
+		r->size = iSizeMake(40, 40);
+		r->origin = p;
+	}
 }
 
 void ArabMelee::update(float dt)
 {
 	if (isDead)
+	{
+		for (int i = 0; i < rectNum; i++)
+			rect[i]->size = iSizeZero;
 		return;
+	}
 
 	if (!isAppear)
 	{
@@ -178,7 +192,13 @@ void ArabMelee::fixedUpdate(float dt)
 {
 	ProcEnemy::fixedUpdate(dt);
 
-	collider->setPosition(p);
+	//ColliderUpdate
+	for (int i = 0; i < rectNum; i++)
+	{
+		rect[i]->origin = iPointMake(
+			p.x + map->off.x - rect[i]->size.width / 2,
+			p.y + map->off.y - rect[i]->size.height);
+	}
 }
 bool ArabMelee::draw(float dt, iPoint off)
 {
@@ -207,6 +227,13 @@ bool ArabMelee::draw(float dt, iPoint off)
 			isActive = false;
 		}
 	}
+
+#ifdef _DEBUG
+	for (int i = 0; i < rectNum; i++)
+		drawRect(getRect());
+
+#endif // _DEBUG
+
 	setRGBA(1, 1, 1, 1);
 
 	return !isActive;
