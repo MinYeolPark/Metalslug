@@ -95,7 +95,8 @@ void ArabMelee::update(float dt)
 		isActive = containPoint(p,
 			iRectMake(-map->off.x - 40, -map->off.y - 40,
 				devSize.width + 80, devSize.height + 80));
-	}	
+	}
+
 	firePoint = { p.x, p.y - 20 };
 	aiDt += dt;
 	if (aiDt > _aiDt)
@@ -264,23 +265,6 @@ void ArabMelee::getDamage(float damage)
 		}
 	}
 }
-
-void ArabMelee::setState(int newState)
-{
-	state = newState;
-
-	if (state == FireMeleeL || state == FireMeleeR)
-	{
-		imgs[state]->startAnimation(AnimationMgr::cbAniEnemyMotion2Idle, this);
-	}
-	if (state == AttackMeleeL || state == AttackMeleeR)
-	{
-		imgs[state]->startAnimation(AnimationMgr::cbAniEnemyMotion2Idle, this);
-	}
-}
-
-
-
 
 ImageInfo imgMeleeInfo[] =
 {

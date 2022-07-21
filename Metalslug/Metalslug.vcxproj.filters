@@ -132,7 +132,7 @@
     <ClInclude Include="1.GameSetup\ProcPlayer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Abul.h">
+    <ClInclude Include="3.Enemies\Abul.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="EventMgr.h">
@@ -169,6 +169,18 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="1.GameSetup\ProcNpc.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="3.Enemies\Truck.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="3.Enemies\ArabCamel.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="3.Enemies\Kessie.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="std\iOpenAL.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -287,7 +299,7 @@
     <ClCompile Include="0.Manager\AnimationMgr.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Abul.cpp">
+    <ClCompile Include="3.Enemies\Abul.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="EventMgr.cpp">
@@ -327,6 +339,18 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="1.GameSetup\ProcNpc.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="3.Enemies\Truck.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="3.Enemies\ArabCamel.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="3.Enemies\Kessie.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="std\iOpenAL.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

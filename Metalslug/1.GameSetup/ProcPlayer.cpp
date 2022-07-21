@@ -1,5 +1,6 @@
 #include "ProcPlayer.h"
 
+#include "UIMgr.h"
 #include "ImgMgr.h"
 #include "AnimationMgr.h"
 #include "BulletMgr.h"
@@ -60,7 +61,7 @@ ProcPlayer::ProcPlayer(int index) : ProcObject()
     life = 3;
     moveSpeed = 120.f;
     bombSpeed = 10.f;
-    attkRange = 40;
+    attkRange = 30;
     bombRange = 100.0f;
 
     bombs = 10;
@@ -280,7 +281,7 @@ void ProcPlayer::update(float dt)
     if (getKeyDown(keyboard_x))
         fire(v);
     if (getKeyDown(keyboard_space))
-        bomb(v);
+        ;// bomb(v);
     
     //Animation
     if (!up)
@@ -451,6 +452,7 @@ void ProcPlayer::free()
 }
 void ProcPlayer::fire(iPoint v)
 {
+    audioPlay(1);
     topState = PlayerFire;
     fireing = true;
 

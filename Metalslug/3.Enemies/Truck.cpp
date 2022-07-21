@@ -3,13 +3,14 @@
 #include "EnemyMgr.h"
 #include "ImgMgr.h"
 #include "AnimationMgr.h"
+
+#include "Abul.h"
 ImageInfo imgTruckInfo[];
 static iImage** _imgTruck = NULL;
 Truck::Truck(int index) : ProcEnemy(index)
 {
     this->index = index;
     state = IdleTruckL;
-    ai = ProcEnemyAI::TruckAI0;
 
     hp = 2000;
     dmg = 0;
@@ -19,11 +20,6 @@ Truck::Truck(int index) : ProcEnemy(index)
     attkRate = 0.f; _attkRate = 0.f;
     aiDt = 0.f; _aiDt = 2.f;
 
-#if 0
-    colNum = 1;
-    for (int i = 0; i < colNum; i++)
-        colliders[i]->init(this, iSizeMake(100, 70));
-#endif
     imgs = NULL;
     imgCurr = NULL;
 
@@ -39,6 +35,11 @@ Truck::Truck(int index) : ProcEnemy(index)
     for (int i = 0; i < TruckBehaveMax; i++)
         imgs[i] = _imgTruck[i]->clone();
     imgCurr = imgs[index];
+
+    rectNum = 1;
+    rect = new iRect * [rectNum];
+    for (int i = 0; i < rectNum; i++)
+        rect[i] = new iRect();
 }
 
 Truck::~Truck()
@@ -48,55 +49,55 @@ Truck::~Truck()
     delete imgs;
 }
 
-void Truck::init(int index, iPoint p, iPoint v)
+void Truck::init(iPoint p)
 {
-    printf("Truck Init\n");
     this->isActive = true;
     this->index = index;
     this->p = p;
     this->tp = p;
-    this->v = v;
-    //this->tp = iPointMake(1650, 180);
-    this->tp = iPointMake(500, 180);
-    if (v.x > 0)
-        setState(0);
-    else if (v.x < 0)
-        setState(1);
-    else
-        setState(0);
 
-#if 0
-    for (int i = 0; i < colNum; i++)
+    for (int i = 0; i < rectNum; i++)
     {
-        //init
-        colliders[i]->enable();
-        objects->addObject(colliders[i]);
+        iRect* r = rect[i];
+        r->size = iSizeMake(40, 40);
+        r->origin = p;
     }
-#endif
-
-    for(int i=0;i<3;i++)
-        addProcEnemy(IdxArBurserker, iPointMake(p.x + i * 20, p.y), iPointZero);
 }
 
 void Truck::update(float dt)
 {
     if (isDead)
     {
+        for (int i = 0; i < rectNum; i++)
+            rect[i]->size = iSizeZero;
         return;
     }
 
     if (!isAppear)
     {
-        if (containPoint(p,
-            iRectMake(-map->off.x - 40, -map->off.y - 40,
-                devSize.width + 80, devSize.height + 80)))
-            isAppear = true;
+        if (player->p.x > 1550)
+        {            
+            setState(MoveTruckL + state % 2);
+            if (movePoint(p, p, iPointMake(1650, p.y), moveSpeed * dt))
+            {
+                setState(DeployTruckL + state % 2);
+                _aiDt = 3.0f;
+                isAppear = true;
+            }
+        }
     }
     else
     {
         isActive = containPoint(p,
             iRectMake(-map->off.x - 40, -map->off.y - 40,
                 devSize.width + 80, devSize.height + 80));
+
+        aiDt += dt;
+        if (aiDt > _aiDt)
+        {
+            aiDt -= _aiDt;
+            addProcEnemy(IdxBurserker, { p.x - 20 , p.y });
+        }
     }
 
     if (v != iPointZero)
@@ -108,26 +109,23 @@ void Truck::update(float dt)
             setState(MoveTruckL);
         if (v.x > 0)
             setState(MoveTruckR);
-        if (movePoint(p, p, iPointMake(1600, p.y), moveSpeed * dt))
-        {
-            setState(DeployTruckL + state % 2);   
-            _aiDt = 3.0f;
-            isAppear = true;
-        }
-    }
-    if (isAppear)
-    {
-        aiDt += dt;
-        if (aiDt > _aiDt)
-        {
-            aiDt -= _aiDt;
-            addProcEnemy(IdxArBurserker, { p.x - 20 , p.y}, iPointZero);
-        }
     }    
-
     if (player->isDead)
         aiDt = 0.0f;
     fixedUpdate(dt);
+}
+
+void Truck::fixedUpdate(float dt)
+{
+    ProcEnemy::fixedUpdate(dt);
+
+    //ColliderUpdate
+    for (int i = 0; i < rectNum; i++)
+    {
+        rect[i]->origin = iPointMake(
+            p.x + map->off.x - rect[i]->size.width / 2,
+            p.y + map->off.y - rect[i]->size.height);
+    }
 }
 
 bool Truck::draw(float dt, iPoint off)
@@ -136,54 +134,52 @@ bool Truck::draw(float dt, iPoint off)
     imgCurr = imgs[state];
     imgCurr->paint(dt, p + off);
 
+    if (alphaDt)
+    {
+        alphaDt += dt;
+        alpha = fabsf(_cos((alphaDt / _alphaDt * 270)));
+        if (alphaDt > _alphaDt)
+        {
+            alphaDt = 0.0f;
+            isActive = false;
+        }
+    }
+
+#ifdef _DEBUG
+    for (int i = 0; i < rectNum; i++)
+        drawRect(getRect());
+
+#endif // _DEBUG
     setRGBA(1, 1, 1, 1);
     return !IsAccelerator;
 }
 
 void Truck::free()
 {
+   
 }
 
-int Truck::getFrame()
-{
-    return 0;
-}
-
-bool Truck::dead()
-{
-    isDead = true;
-    for (int i = 0; i < colNum; i++)
-    {
-        colliders[i]->disable();
-        //objects->removeObject(colliders[i]);
-    }
-    state = (DeadTruckL + state % 2);
-    addProcEffect(EffectBomb, p);
-    imgs[state]->startAnimation(AnimationMgr::cbAniDead, this);
-
-    return state == (DeadTruckL + state % 2);
-}
-
-void Truck::getDamage(float damage, Collider* c)
+void Truck::getDamage(float damage)
 {
     hp -= damage;
     if (hp <= 0)
     {
         if (!isDead)
-            dead();
+        {
+            isDead = true;
+            state = (DeadTruckL + state % 2);
+            imgs[state]->startAnimation(AnimationMgr::cbAniDead, this);
+            for (int i = 0; i < enemyNum; i++)
+            {
+                ProcEnemy* e = enemies[i];
+                if (e->index == IdxAbul)
+                {
+                    e->tp = iPointMake(e->p.x + 200, e->p.y);
+                }
+            }
+        }
     }
 }
-
-void Truck::setState(int newState)
-{
-    state = newState;
-
-    if (state == DeployTruckL || state == DeployTruckR)
-    {
-        v = iPointZero;
-    }
-}
-
 
 ImageInfo imgTruckInfo[] =
 {

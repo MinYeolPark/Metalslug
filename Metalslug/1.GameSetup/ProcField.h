@@ -31,6 +31,7 @@ public:
 	MapData* md;
 	LayerData* ld;
 
+	iPoint clipOff;
 	iPoint off;				//좌 상단 anchor
 	iPoint offMin;			//움직일 수 있는 최소 범위
 	iPoint offMax;
@@ -39,9 +40,7 @@ public:
 	void init(int stage);
 	void update(float dt);
 	void paint(float dt);
-	bool move(iPoint mp);
-
-	bool clip(iPoint p);
+	bool move(iPoint mp, float dt, float speed = 0);
 };
 #define layerNum 3
 extern ProcMap* map;

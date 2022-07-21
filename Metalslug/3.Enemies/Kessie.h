@@ -75,24 +75,21 @@ public:
 	int craterState[2];
 	int fanState;
 	int blastState[2];
-	bool isAppear;					//appear state
+
 	bool isHeadOpen;
 
+	iRect* atkRect[2];
 	float rageDt, _rageDt;	
 	float aiDt, _aiDt;
-	int hpLeft, hpRight, _hp;
-
-	Collider* attkCollider[2];
+	int hp[3], _hp;
+public:
+	virtual void init(iPoint p);
+	virtual void update(float dt);
+	virtual void fixedUpdate(float dt);
+	virtual bool draw(float dt, iPoint off);
+	virtual void free();
 
 public:
-	void update(float dt);
-	void fixedUpdate(float dt);
-	bool draw(float dt, iPoint off);
-	void free();
-
-public:
-	virtual bool dead();
-	virtual void getDamage(float damage, Collider* c);
-	virtual void setState(int newState);
+	virtual void getDamage(float damage);
 };
 

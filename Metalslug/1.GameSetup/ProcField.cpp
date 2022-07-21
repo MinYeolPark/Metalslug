@@ -60,7 +60,7 @@ void ProcMap::init(int stage)
 	}	
 	//#issue
 	maxW = 1176 + 786 + 550 + 1008 + 331;
-	printf("maxW = %d\n", maxW);
+	
 	maxY = new int[maxW];	
 	for (int j = 0; j < mapNum[stage]; j++)
 	{
@@ -76,61 +76,63 @@ void ProcMap::init(int stage)
 				maxY[m] = sp.y + (ep.y - sp.y) * a;
 			}
 		}
-	}
+	}		
 	off = iPointZero;
+	clipOff = off;
 	offMax = iPointMake(0, 18);
 	offMin = iPointMake(devSize.width - maxW, 0);	
 }
 void ProcMap::update(float dt)
 {
+	if (isClipped)
+		return;
+
+	if (clipOff != iPointZero)
+	{
+		if (clipOff.x > off.x)
+		{
+			clipOff.x -= dt;
+			if (clipOff.x < off.x)
+				clipOff.x = off.x;
+			off.x = clipOff.x;
+		}
+		else if (clipOff.x < off.x)
+		{
+			clipOff.x += dt;
+			if (clipOff.x > off.x)
+				clipOff.x = off.x;
+			off.x = clipOff.x;
+		}
+	}
 	//Camera Move
 	float x = player->p.x + off.x;
-	
+	if (off.x > offMax.x || off.x < offMin.x)
+		return;
+	if (x < devSize.width / 3)
+		move(iPointMake((devSize.width / 3 - x), off.y), dt);
+	else if (x > devSize.width * 2 / 3)
+		move(iPointMake((devSize.width * 2 / 3 - x), off.y), dt);
+
 	if (!viewChange)
 	{
-		if (player->p.x > 1050)
+		if (player->p.x > 1100)
 		{
-			if (move(iPointMake(100 * dt, 100 * dt)))
+			if (move(iPointMake(0, dt), dt))
 			{
-				viewChange = true;			
+				viewChange = true;
 				//bg collider -> true : block to backward
 			}
 		}
 	}
-	if (player->p.x > 3600)
-	{		
-		if (!isClipped)
-		{
-			if (move(iPointMake(-100, 0)))
-			{
-				isClipped = true;
-				printf("clipped\n");
-			}
-			
-		}
-		//if (move(iPointMake(devSize.width / 3 - tx, 0)))
-		//{
-		//	isClipped = true;
-		//	printf("clipped\n");
-		//}
-	}
-
-	if (!isClipped)
-	{		
-		if (off.x > offMax.x || off.x < offMin.x)
-			return;
-
-		if (x < devSize.width / 3)
-			move(iPointMake(devSize.width / 3 - x, 0));
-		else if (x > devSize.width * 2 / 3)
-			move(iPointMake(devSize.width * 2 / 3 - x, 0));
-	}
-	else
-		return;
 }
 #include "InputMgr.h"
 void ProcMap::paint(float dt)
 {
+	if (getKeyStat(keyboard_x))
+	{
+		isClipped = !isClipped;
+		clipOff = off;
+	}
 	iPoint p;
 	//Layer
 	for (int i = 0; i < layerNum; i++)
@@ -147,10 +149,6 @@ void ProcMap::paint(float dt)
 				iPointMake(p.x + t->width * j * layerImageInfo[i].s, p.y));
 		}
 	}
-	//Map
-	//float ay[] = { +20, 0, 0};
-	// 0 ~ -40
-	// max min(map y)
 	for (int i = 0; i < mapNum[stage]; i++)
 	{
 		md = &mapData[i];
@@ -171,10 +169,9 @@ void ProcMap::paint(float dt)
 
 
 }
-bool ProcMap::move(iPoint mp)
+bool ProcMap::move(iPoint mp, float dt, float speed)
 {
-#if 1	
-	off += mp;
+	off += mp;	
 	if (off.x < offMin.x)
 		off.x = offMin.x;
 	else if (off.x > offMax.x)
@@ -184,42 +181,8 @@ bool ProcMap::move(iPoint mp)
 		off.y = offMin.y;
 	else if (off.y > offMax.y)
 		off.y = offMax.y;
-#else
-	iPoint v = mp - off;
-	v /= iPointLength(v);
-	v *= 100;
-	
-	printf("v=%f, %f\n", v.x, v.y);
-	printf("mp=%f, %f\n", mp.x, mp.y);
-	if (off.x < mp.x)
-	{
-		off += v;
-		if (off.x > mp.x)
-			off.x = mp.x;
-	}
-	else if (off.x > mp.x)
-	{
-		//off += v;
-		//if (off.x < mp.x)
-		//	off.x = mp.x;
-	}
-
-	if (off.y < offMin.y)
-		off.y = offMin.y;
-	else if (off.y > offMax.y)
-		off.y = offMax.y;	
-
-#endif
-
 	return off.x == offMax.x || off.y == offMax.y;
 }
-
-bool ProcMap::clip(iPoint p)
-{
-
-	return isClipped;
-}
-
 
 
 

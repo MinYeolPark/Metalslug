@@ -6,7 +6,7 @@
 
 //#include "ProcBullets.h"
 #include "InputMgr.h"
-
+#include "AnimationMgr.h"
 ImageInfo imgMosqueBaseInfo[];
 ImageInfo imgMosqueAddInfo[];
 static iImage** _imgMosqueBase = NULL;
@@ -120,10 +120,10 @@ void Mosque::init(iPoint p)
 	towerP[1] = { p.x + 30, p.y - 50 };
 	towerP[2] = { p.x + 125, p.y - 50 };
 
-	
 	for (int i = 0; i < 3; i++)
 	{		
 		hp[i] = _hp;
+		soldierP[i] = shutterP[i];
 	}
 
 	//fix
@@ -187,61 +187,24 @@ void Mosque::update(float dt)
 				int len = iPointLength(tp - p);
 				if (len < attkRange)
 				{					
-					//addBullet(this, BulletMosque, 360-ang, i);		//x축 기준, 시계방향 degree
- 					//addBullet(this, BulletMosque, 0, i);		//x축 기준, 시계방향 degree
-					//addProcEffect(EffectMoskTrail, firePoint[i]);
+					addBullet(this, BulletMosque, 360-ang, i);		//x축 기준, 시계방향 degree 					
+					addProcEffect(EffectMoskTrail, firePoint[i]);
 				}
 			}
 		}
 	}
-	//Update
+	//Update	
 	for (int i = 0; i < 3; i++)
 	{
 		shutterP[i] = { towerP[i].x + 10, towerP[i].y - 70 };
 		if (i == 2)
 			shutterP[i].x += 6;
 		curtainP[i] = { shutterP[i].x - 5, shutterP[i].y + 5 };
-		if(soldierState[i]!=MosqueDead)
+		if (soldierState[i] != MosqueDead)
 			soldierP[i] = { shutterP[i].x - 5, shutterP[i].y - 5 };
 		firePoint[i] = soldierP[i];
 	}
 
-#if 0
-	//Dead Event
-	if (isDead)
-	{
-		dramaDt += dt;
-		intervalDt += dt;
-		if (intervalDt > _intervalDt)
-		{
-			intervalDt -= _intervalDt;
-			int rx = p.x + (((rand() % 150) - 50) * 2);
-			int ry = p.y - (((rand() % 50)) * 2);
-			addProcEffect(EffectExplosionM, iPointMake(rx,ry));
-		}
-
-		if (dramaDt > _dramaDt)
-		{		
-			if (state == MosqueDead)
-				return;
-			isDead = true;			
-			state = MosqueDead;
-			for (int i = 0; i < 10; i++)
-			{
-				int rx = p.x + (rand() % 80 - 40 * 2) * i;
-				int ry = p.y - (rand() % 40) * i;
-				addProcEffect(EffectExplosionM, iPointMake(rx, ry));
-			}
-		}
-	}
-#else
-	for (int i = 0; i < 3; i++)
-	{
-		for (int j = 0; j < 2; j++)
-			imgSoldier[i][j]->alpha = 0.0f;
-		//addProcEnemy();
-	}
-#endif
 	fixedUpdate(dt);
 }
 
@@ -261,24 +224,57 @@ bool Mosque::draw(float dt, iPoint off)
 	for (int i = 0; i < 3; i++)
 	{
 		imgTower[i][towerState[i]]->paint(dt, towerP[i] + off);
-		imgTower[i][towerState[i]]->frame = i;
-		imgSoldier[i][soldierState[i]]->paint(dt, soldierP[i] + off);
-
-		if (soldierState[i] == MosqueDead)
-			soldierP[i].y += 100 * dt;
-				//{ soldierP[i].x, (float)*(map->maxY + (int)soldierP[i].x) },
-				//(50 * dt));
+		imgTower[i][towerState[i]]->frame = i;		
+		//if (soldierState[i] == MosqueDead)
+		//	soldierP[i].y += (50 * dt);
 		if (towerState[i] != MosqueDead)
 		{
+			imgSoldier[i][soldierState[i]]->paint(dt, soldierP[i] + off);
 			imgCurtain[i][curtainState[i]]->paint(dt, curtainP[i] + off);			
 			imgShutter[i][shutterState[i]]->paint(dt, shutterP[i] + off);
 		}
 	}
-	imgBase[state]->paint(dt, p + off);
+	imgBase[baseState]->paint(dt, p + off);
 
+
+#if 1
+	//Dead Event
+	if (isDead)
+	{
+		dramaDt += dt;
+		intervalDt += dt;
+		if (intervalDt > _intervalDt)
+		{
+			intervalDt -= _intervalDt;
+			int rx = p.x + (((rand() % 150) - 50) * 2);
+			int ry = p.y - (((rand() % 50)) * 2);
+			addProcEffect(EffectExplosionM, iPointMake(rx, ry));
+		}
+
+		if (dramaDt > _dramaDt)
+		{			
+			state = MosqueDead;
+			for (int i = 0; i < 10; i++)
+			{
+				int rx = p.x + (rand() % 80 - 40 * 2) * i;
+				int ry = p.y - (rand() % 40) * i;
+				addProcEffect(EffectExplosionM, iPointMake(rx, ry));
+			}
+			isActive = false;
+		}
+	}
+#else
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 2; j++)
+			;//imgSoldier[i][j]->alpha = 0.0f;
+		//addProcEnemy();
+	}
+#endif
+#ifdef _DEBUG
 	for (int i = 0; i < rectNum; i++)
 		drawRect(getRect(i));
-
+#endif // _DEBUG
 	return !isActive;
 }
 iPoint Mosque::getFirePoint()
@@ -286,78 +282,41 @@ iPoint Mosque::getFirePoint()
 	
 	return iPoint();
 }
-bool Mosque::dead()
-{
-	//for (int i = 0; i < colNum; i++)
-	//{
-	//	/*if (colliders[i]->isActive == false)
-	//	{
-	//		if (towerState[i] != MosqueDead)
-	//			addProcEffect(EffectExplosionM, shutterP[i]);
-	//		towerState[i] = MosqueDead;
-	//		soldierState[i] = MosqueDead;
-	//	}*/
-	//}
-	
-	if (towerState[0] == MosqueDead &&
-		towerState[1] == MosqueDead &&
-		towerState[2] == MosqueDead)
-	{
-		isDead = true;		
-	}
-	return isDead;
-}
+
 void Mosque::getDamage(float damage)
 {
-	/*for (int i = 0; i < colNum; i++)
+	for (int i = 0; i < bulletNum; i++)
 	{
-		if (containPoint(c->p, colliders[i]->getCollider()))
-		{
-			if(c == colliders[i])
-				hp[i] -= damage;		
-			if (hp[i] < 1)
+		for (int k = 0; k < rectNum; k++)
+		{		
+			ProcBullets* b = bullets[i];
+			if (containPoint(b->p + map->off, rect[k][0]))
 			{
-				colliders[i]->disable();				
-				dead();
+				hp[k] -= damage;
+				if (hp[k] <= 0)
+				{
+					rect[k]->size = iSizeZero;		//disable
+					
+					towerState[k] = MosqueDead;
+					soldierState[k] = MosqueDead;
+					//shutterState[k] = MosqueDead;
+				}
 			}
 		}
-	}*/
-}
-void Mosque::setState(int newState)
-{
-	state = newState;
+
+		//Check all destroyed
+		if (hp[0] <= 0 && hp[1] <= 0 && hp[2] <= 0)
+		{
+			isDead = true;
+			baseState = MosqueDead;
+		}
+	}	
 }
 
 void Mosque::free()
 {
 }
 
-void Mosque::cbAniShutterOpen(void* parm)
-{
-	printf("cbAni Door Open\n");
-	Mosque* m = (Mosque*)parm;
-	for (int i = 0; i < 3; i++)
-	{
-		m->curtainState[i] = 1;
-		m->shutterState[i] = 1;
-	}
-}
-
-void Mosque::cbAniCurOpen(void* parm)
-{
-	printf("Curtain was opened\n");
-}
-
-void Mosque::cbAniAddOut(void* parm)
-{
-	Mosque* mt = (Mosque*)parm;
-
-	for (int i = 0; i < 3; i++)
-	{
-		
-	}
-	mt->isActive = false;	
-}
 
 ImageInfo imgMosqueBaseInfo[] =
 {
@@ -403,7 +362,7 @@ ImageInfo imgMosqueBaseInfo[] =
 	},
 	{
 		"assets/Mosque/Mosque_Dead_%02d.png",
-		3, 1.f, { -64 / 2, 0},
+		3, 1.f, { -80 / 2, 0},
 		0.06f,
 		1,
 		{255,0,0,255},
@@ -475,7 +434,7 @@ ImageInfo imgMosqueAddInfo[] =
 		0.1f,
 		1,
 		{63,72,204,255},
-		Mosque::cbAniShutterOpen,
+		AnimationMgr::cbAniShutterOpen,
 	},
 	{
 		"assets/Mosque/Mosque_Soldier_%02d.png",

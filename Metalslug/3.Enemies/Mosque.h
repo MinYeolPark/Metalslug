@@ -44,11 +44,8 @@ public:
 	float hp[3], _hp;		//0 : left, 1: mid, 2: right
 	
 	virtual iPoint getFirePoint();
-	virtual int getFrame() { return NULL; }
-	virtual bool dead();
 public:
 	virtual void getDamage(float damage);
-	virtual void setState(int newState);
 
 public:
 	virtual void init(iPoint p);
@@ -56,11 +53,6 @@ public:
 	virtual void fixedUpdate(float dt);
 	virtual bool draw(float dt, iPoint off);
 	virtual void free();
-
-public:
-	static void cbAniShutterOpen(void* parm);
-	static void cbAniCurOpen(void* parm);
-	static void cbAniAddOut(void* parm);
 
 public:
 	void setDoorPos(iPoint p)

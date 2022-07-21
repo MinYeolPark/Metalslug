@@ -1,6 +1,10 @@
 #include "BulletsPlayer.h"
 
+#include "EnemyMgr.h"	
 #include "EffectMgr.h"
+#include "BulletMgr.h"
+
+#include "ProcNpc.h"
 BulletsPlayer::BulletsPlayer(int index) : ProcBullets(index)
 {
 
@@ -32,19 +36,9 @@ void BulletsPlayer::init(ProcObject* parent, int index, float degree, int fpNum)
 		120,
 	};
 	this->damage = damageInfo[index];
-#if 0
-	colNum = 1;
-	iSize bs[] = {
-		{20,10},		//Handgun,
-		{40,10},		//Machinegun
-	};
-	for (int i = 0; i < colNum; i++)
-		colliders[i]->init(parent, bs[index]);
-#endif		
+	
 }
 
-#include "EnemyMgr.h"	
-#include "ProcNpc.h"
 void BulletsPlayer::update(float dt)
 {
 	isActive = containPoint(p,
@@ -52,48 +46,83 @@ void BulletsPlayer::update(float dt)
 			devSize.width + 40, devSize.height + 40));	
 
 	ProcObject* dst = NULL;
-	float dMin = 0xfffff;
+	for (int i = 0; i < bulletNum; i++)
+	{
+		ProcBullets* b = bullets[i];
+		float dMin = 0xfffff;
+		float d = iPointLength(b->p - p);
+		if (dMin > d)
+		{
+			dMin = d;
+			if (b->rect)
+			{
+				dst = b;
+				for (int j = 0; j < dst->rectNum; j++)
+				{
+
+					if (containPoint(p + map->off, dst->getRect(j)))
+					{
+						setRGBA(1, 0, 0, 1);
+						drawRect(dst->getRect(j));
+						setRGBA(1, 1, 1, 1);
+
+						isActive = false;
+						dst->getDamage(damage);
+						iPoint bp = iPointMake(rand() % 10 + p.x, rand() % 10 + p.y);
+						addProcEffect(index, bp);		//bulletIndex=effectIndex
+					}
+				}
+			}
+		}
+	}
 	for (int i = 0; i < enemyNum; i++)
 	{
 		ProcEnemy* e = enemies[i];
-		float d = iPointLength(e->p - p);
+		float dMin = 0xfffff;
+		float d = iPointLength(e->p - p);		
 		if (dMin > d)
 		{
 			dMin = d;
 			if (e->rect)
-				dst = e;
-		}
-	}
-	/*for (int j = 0; j < npcNum; j++)
-	{
-		ProcNpc* n = npcs[j];
-		float d = iPointLength(n->p - p);
-		if (dMin > d)
-		{
-			dMin = d;
-			dst = n;
-		}
-	}*/
-
-	if (dst)
-	{
-		iRect r;
-		for (int i = 0; i < dst->rectNum; i++)
-		{
-			r = dst->getRect(i);
-			if (containPoint(p + map->off, r))
 			{
-				setRGBA(1, 0, 0, 1);
-				drawRect(r);
-				setRGBA(1, 1, 1, 1);
+				dst = e;
+				for (int j = 0; j < dst->rectNum; j++)
+				{
 
-				isActive = false;
-				dst->getDamage(damage);
-				iPoint bp = iPointMake(rand() % 10 + p.x, rand() % 10 + p.y);
-				//addProcEffect(index, bp);		//bulletIndex=effectIndex
+					if (containPoint(p + map->off, dst->getRect(j)))
+					{
+						setRGBA(1, 0, 0, 1);
+						drawRect(dst->getRect(j));
+						setRGBA(1, 1, 1, 1);
+
+						isActive = false;
+						dst->getDamage(damage);
+						iPoint bp = iPointMake(rand() % 10 + p.x, rand() % 10 + p.y);
+						addProcEffect(index, bp);		//bulletIndex=effectIndex
+					}
+				}
 			}
-		}
+		}	
 	}
+	//if (dst)
+	//{
+	//	iRect r;
+	//	for (int i = 0; i < dst->rectNum; i++)
+	//	{
+	//		r = dst->getRect(i);
+	//		if (containPoint(p + map->off, r))
+	//		{
+	//			setRGBA(1, 0, 0, 1);
+	//			drawRect(r);
+	//			setRGBA(1, 1, 1, 1);
+
+	//			isActive = false;
+	//			dst->getDamage(damage);
+	//			iPoint bp = iPointMake(rand() % 10 + p.x, rand() % 10 + p.y);
+	//			addProcEffect(index, bp);		//bulletIndex=effectIndex
+	//		}
+	//	}
+	//}
 #if 0
 	for (int i = 0; i < objects->count; i++)
 	{

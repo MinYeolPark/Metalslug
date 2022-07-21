@@ -76,11 +76,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_USE_MATH_DEFINES;_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_WINDOWS;GDIPVER=0x0110;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\workspace\Metalslug\Metalslug\std;C:\workspace\Metalslug\Metalslug;C:\workspace\Metalslug\Metalslug\0.Manager;C:\workspace\Metalslug\Metalslug\1.GameSetup;C:\workspace\Metalslug\Metalslug\2.UI;C:\workspace\Metalslug\Metalslug\3.Enemies;C:\workspace\Metalslug\Metalslug\4.Effect;C:\workspace\Metalslug\Metalslug\5.NPC;C:\workspace\Metalslug\Metalslug\6.Bullets;C:\workspace\Metalslug\Metalslug\7.Components;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\workspace\Metalslug\Metalslug\std;C:\workspace\Metalslug\Metalslug;C:\workspace\Metalslug\Metalslug\0.Manager;C:\workspace\Metalslug\Metalslug\1.GameSetup;C:\workspace\Metalslug\Metalslug\2.UI;C:\workspace\Metalslug\Metalslug\3.Enemies;C:\workspace\Metalslug\Metalslug\4.Effect;C:\workspace\Metalslug\Metalslug\5.NPC;C:\workspace\Metalslug\Metalslug\6.Bullets;C:\workspace\Metalslug\Metalslug\7.Components;C:\Program Files %28x86%29\OpenAL 1.1 SDK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\Program Files %28x86%29\OpenAL 1.1 SDK\libs\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -142,11 +143,14 @@
     <ClInclude Include="1.GameSetup\ProcPlayer.h" />
     <ClInclude Include="0.Manager\AnimationMgr.h" />
     <ClInclude Include="3.Enemies\ArabBurserker.h" />
+    <ClInclude Include="3.Enemies\ArabCamel.h" />
     <ClInclude Include="3.Enemies\ArabMelee.h" />
+    <ClInclude Include="3.Enemies\Kessie.h" />
     <ClInclude Include="3.Enemies\Mosque.h" />
+    <ClInclude Include="3.Enemies\Truck.h" />
     <ClInclude Include="6.Bullets\BulletsEnemy.h" />
     <ClInclude Include="6.Bullets\BulletsMosque.h" />
-    <ClInclude Include="Abul.h" />
+    <ClInclude Include="3.Enemies\Abul.h" />
     <ClInclude Include="App.h" />
     <ClInclude Include="0.Manager\GameMgr.h" />
     <ClInclude Include="0.Manager\ImgMgr.h" />
@@ -170,6 +174,7 @@
     <ClInclude Include="std\iGraphics.h" />
     <ClInclude Include="std\iImage.h" />
     <ClInclude Include="std\iMatrix.h" />
+    <ClInclude Include="std\iOpenAL.h" />
     <ClInclude Include="std\iOpenGL.h" />
     <ClInclude Include="std\iPoint.h" />
     <ClInclude Include="std\iPopup.h" />
@@ -196,11 +201,14 @@
     <ClCompile Include="1.GameSetup\ProcPlayer.cpp" />
     <ClCompile Include="0.Manager\AnimationMgr.cpp" />
     <ClCompile Include="3.Enemies\ArabBurserker.cpp" />
+    <ClCompile Include="3.Enemies\ArabCamel.cpp" />
     <ClCompile Include="3.Enemies\ArabMelee.cpp" />
+    <ClCompile Include="3.Enemies\Kessie.cpp" />
     <ClCompile Include="3.Enemies\Mosque.cpp" />
+    <ClCompile Include="3.Enemies\Truck.cpp" />
     <ClCompile Include="6.Bullets\BulletsEnemy.cpp" />
     <ClCompile Include="6.Bullets\BulletsMosque.cpp" />
-    <ClCompile Include="Abul.cpp" />
+    <ClCompile Include="3.Enemies\Abul.cpp" />
     <ClCompile Include="App.cpp" />
     <ClCompile Include="0.Manager\GameMgr.cpp" />
     <ClCompile Include="0.Manager\BulletMgr.cpp" />
@@ -223,6 +231,7 @@
     <ClCompile Include="std\iGraphics.cpp" />
     <ClCompile Include="std\iImage.cpp" />
     <ClCompile Include="std\iMatrix.cpp" />
+    <ClCompile Include="std\iOpenAL.cpp" />
     <ClCompile Include="std\iOpenGL.cpp" />
     <ClCompile Include="std\iPoint.cpp" />
     <ClCompile Include="std\iPopup.cpp" />

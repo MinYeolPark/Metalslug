@@ -7,10 +7,10 @@ enum EnemyIndex
 	IdxMeleeKessie,
 	IdxMosque,
 	IdxBurserker,
-	//IdxArCamel,
-	//IdxTruck,
-	//IdxKessie,
-	//IdxAbul,
+	IdxArCamel,
+	IdxTruck,
+	IdxKessie,
+	IdxAbul,
 
 	EnemyIndexMax,
 };
@@ -44,7 +44,7 @@ public:
 	bool isAppear;
 public:	
 	virtual void getDamage(float damage);
-	virtual void setState(int newState) = 0;
+	virtual void setState(int newState);
 public:
 	virtual void init(iPoint p) = 0;
 	virtual void fixedUpdate(float dt);

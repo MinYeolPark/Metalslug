@@ -28,6 +28,7 @@
 #include "iUtil.h"
 
 #include "iOpenGL.h"
+#include "iOpenAL.h"
 
 #define va_start_end(szFormat, strText)  {					\
 	va_list args;											\

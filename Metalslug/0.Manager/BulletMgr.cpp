@@ -127,7 +127,7 @@ void ProcBulletsPattern::patternMelee(ProcBullets* b, float dt)
 		//for (int i = 0; i < b->colNum; i++)
 		//	b->colliders[i]->isActive = false;
 		b->up = 0.0f;
-		b->pattern = patternMeleeEnd;		
+		//b->pattern = patternMeleeEnd;		
 		return;
 	}
 }
@@ -147,7 +147,7 @@ void ProcBulletsPattern::patternMosque(ProcBullets* b, float dt)
 	if (b->imgs[b->index]->frame == 29)
 	{
 		b->index = BulletMosqueTrace;
-		b->pattern = patternMosqueTrace;
+		//b->pattern = patternMosqueTrace;
 	}
 }
 

@@ -9,6 +9,7 @@ public:
 public:
 	iPoint rp;					//real Position
 
+	int parentIndex;
 	int hp, _hp;
 	float wave;
 	float d, _d;				//curDistance , leftDistance
@@ -17,6 +18,6 @@ public:
 	virtual void update(float dt);
 	virtual void fixedUpdate(float dt);
 
-	virtual void getDamage(float damage, Collider* c);
+	virtual void getDamage(float damage);
 };
 

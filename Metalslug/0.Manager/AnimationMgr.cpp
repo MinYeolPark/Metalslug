@@ -152,9 +152,35 @@ void AnimationMgr::cbAniKessieBlastEnd(void* parm)
 		if (k->blastState[i] == 3)		//blast Start
 		{
 			k->blastState[i] = 1;		//blasting
-			k->attkCollider[i]->enable();
 			k->imgLeftBlast[3]->startAnimation(cbAniKessieBlastEnd, k);
 			k->imgRightBlast[3]->startAnimation(cbAniKessieBlastEnd, k);			
 		}
 	}
+}
+
+void AnimationMgr::cbAniShutterOpen(void* parm)
+{
+	printf("cbAni Door Open\n");
+	Mosque* m = (Mosque*)parm;
+	for (int i = 0; i < 3; i++)
+	{
+		m->curtainState[i] = 1;
+		m->shutterState[i] = 1;
+	}
+}
+
+void AnimationMgr::cbAniCurOpen(void* parm)
+{
+	printf("Curtain was opened\n");
+}
+
+void AnimationMgr::cbAniAddOut(void* parm)
+{
+	Mosque* mt = (Mosque*)parm;
+
+	for (int i = 0; i < 3; i++)
+	{
+
+	}
+	mt->isActive = false;
 }

@@ -28,8 +28,6 @@ ProcBullets::ProcBullets(int index) : ProcObject()
 	speed = 0;
 	damage = 0;
 
-	pattern = NULL;
-
 	if (_imgBullets == NULL)
 		_imgBullets = createSingleImage(bulletImageInfo, BulletIndexMax, this);
 	imgs = new iImage * [BulletIndexMax];
@@ -63,6 +61,11 @@ bool ProcBullets::draw(float dt, iPoint off)
 	imgCurr->degree = degree;
 	imgCurr->paint(dt, p + off);
 	setRGBA(1, 1, 1, 1);
+
+#ifdef _DEBUG
+	for (int i = 0; i < rectNum; i++)
+		drawRect(getRect());
+#endif // _DEBUG
 
 	return !isActive;
 }
@@ -122,7 +125,7 @@ ImageInfo bulletImageInfo[] =
 		"assets/Bullets/MidBoss_Fire_%02d.png",
 		30,
 		1.0f, {-50/2,0},
-		0.12f,
+		0.06f,
 		1,
 		{255, 0, 0, 255},
 		NULL,

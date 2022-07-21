@@ -10,10 +10,15 @@ BulletsMosque::BulletsMosque(int index): ProcBullets(index)
 	d = 0.f;
 	_d = 0.f;
 	imgCurr = imgs[index];
+
+
 }
 
 BulletsMosque::~BulletsMosque()
 {
+	for (int i = 0; i < rectNum; i++)
+		delete rect[i];
+	delete rect;
 }
 
 
@@ -26,6 +31,7 @@ void BulletsMosque::init(ProcObject* parent, int index, float degree, int fpNum)
 	this->degree = degree;
 	this->p = owner->firePoint[fpNum];
 	this->index = index;
+	this->parentIndex = fpNum;
 	this->alpha = 1.0f;
 	this->v = iPointRotate(iPointMake(1, 0), iPointZero, degree);	
 
@@ -42,24 +48,38 @@ void BulletsMosque::init(ProcObject* parent, int index, float degree, int fpNum)
 		this->damage = 100.0f;
 		colSize = { 40,40 };
 	}
-#if 0
-	colNum = 1;
-	for (int i = 0; i < colNum; i++)
-	{
-		colliders[i]->init(this, iSizeMake(40, 40));
-		colliders[i]->enable();
-		objects->addObject(colliders[i]);
-	}
-#endif
 
 	rp = p;
 	wave = 15.f;
 	d = 0.f;
 	_d = 0.f;
+	_hp = 300;
+	hp = _hp;
+
+	rectNum = 1;
+	rect = new iRect * [rectNum];
+	for (int i = 0; i < rectNum; i++)
+		rect[i] = new iRect();
+	for (int i = 0; i < rectNum; i++)
+	{
+		iRect* r = rect[i];
+		r->size = iSizeMake(20, 20);
+		r->origin = p;
+	}
 }
 
 void BulletsMosque::update(float dt)
 {
+	Mosque* owner = (Mosque*)parent;
+	if (owner->towerState[parentIndex] == MosqueDead)
+		getDamage(_hp);
+	if (isDead)
+	{
+		for (int i = 0; i < rectNum; i++)
+			rect[i]->size = iSizeZero;
+		return;
+	}
+
 	if (hp > 0)
 	{
 		isActive = containPoint(p,
@@ -97,12 +117,17 @@ void BulletsMosque::update(float dt)
 
 void BulletsMosque::fixedUpdate(float dt)
 {
-	
+	//ColliderUpdate
+	for (int i = 0; i < rectNum; i++)
+	{
+		rect[i]->origin = iPointMake(
+			p.x + map->off.x - rect[i]->size.width / 2,
+			p.y + map->off.y - rect[i]->size.height);
+	}
 }
 
-void BulletsMosque::getDamage(float damage, Collider* c)
+void BulletsMosque::getDamage(float damage)
 {
-	printf("damage= %f, hp = %d\n", damage, hp);
 	hp -= damage;
 	if (hp <= 0)
 	{

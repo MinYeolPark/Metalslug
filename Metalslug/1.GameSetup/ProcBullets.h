@@ -44,8 +44,6 @@ struct Ball
 	}
 };
 
-class ProcBullets;
-typedef void(*BulletPattern)(ProcBullets* b, float dt);
 enum BulletIndex
 {
 	BulletHandGun = 0,
@@ -62,7 +60,6 @@ enum BulletIndex
 	BulletIndexMax,
 };
 
-typedef void (*BulletPattern)(ProcBullets* b, float dt);
 class ProcBullets:
 	public ProcObject
 {
@@ -84,9 +81,6 @@ public:
 	float speed;
 	float damage;
 
-	//Components
-public:
-	BulletPattern pattern;
 public:
 	virtual void init(ProcObject* parent, int index, float degree, int fpNum) = 0;	
 	virtual void update(float dt) = 0;

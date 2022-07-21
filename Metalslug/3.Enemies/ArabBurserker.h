@@ -24,7 +24,6 @@ public:
 	iImage** topImgs;
 public:
 	virtual void getDamage(float damage);
-	virtual void setState(int newState);
 public:
 	virtual void init(iPoint p);
 	virtual void update(float dt);

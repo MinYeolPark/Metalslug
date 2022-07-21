@@ -28,14 +28,12 @@ public:
 	iImage** imgs;
 	iImage* imgCurr;
 
-	virtual int getFrame();
-	virtual bool dead();
 public:
-	virtual void getDamage(float damage, Collider* c);
-	virtual void setState(int newState);
+	virtual void getDamage(float damage);
 public:
-	virtual void init(int index, iPoint p, iPoint v);
+	virtual void init(iPoint p);
 	virtual void update(float dt);
+	virtual void fixedUpdate(float dt);
 	virtual bool draw(float dt, iPoint off);
 	virtual void free();
 };

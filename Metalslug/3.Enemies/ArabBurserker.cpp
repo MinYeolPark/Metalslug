@@ -59,6 +59,7 @@ void ArabBurserker::init(iPoint p)
 	this->index = index;
 	this->p = p;
 	this->tp = p;
+	state = IdleBurserkL;
 
 	for (int i = 0; i < rectNum; i++)
 	{
@@ -229,10 +230,6 @@ void ArabBurserker::getDamage(float damage)
 	}
 }
 
-void ArabBurserker::setState(int newState)
-{
-	state = newState;
-}
 ImageInfo imgBurserkInfo[] =
 {
 	{

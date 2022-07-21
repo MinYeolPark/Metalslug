@@ -21,12 +21,12 @@ void loadProc()
 	loadProcPlayer();
 	loadProcEnemy();
 	loadProcBullets();
+	loadProcEffect();
 
 	//loadStructure();
 
 	//loadProcItem();
 	//loadProcNpcs();
-	//loadProcEffect();
 	//
 	loadUI();
 }
@@ -36,12 +36,12 @@ void freeProc()
 	freeProcPlayer();
 	freeProcEnemy();
 	freeProcBullets();
+	freeProcEffect();
 
 	//freeStructure();
 
 	//freeProcItem();
 	//freeProcNpcs();
-	//freeProcEffect();
 	//
 	freeUI();
 }
@@ -52,11 +52,11 @@ void drawProc(float dt)
 	drawProcEnemy(dt, off);
 	drawProcPlayer(dt, off);
 	drawProcBullets(dt, off);
+	drawProcEffect(dt, off);
 	//drawStructure(dt, off);
 
 	//drawProcNpcs(dt, off);
 	//drawProcItem(dt, off);
-	//drawProcEffect(dt, off);
 
 	drawUI(dt, off);
 #if 0
@@ -129,9 +129,9 @@ void loadProcPlayer()
 	//#issue
 	player = new ProcPlayer(ERI);
 
-#if 0
-	player->init({ 3500, 200 });
-#elif 1
+#if 1
+	player->init({ 3600, 200 });
+#else
 	player->init({ 100, 200 });
 #endif
 }

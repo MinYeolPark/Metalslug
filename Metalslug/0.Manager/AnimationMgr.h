@@ -30,5 +30,10 @@ public:
 public:
 	static void cbAniKessieBlast(void* parm);
 	static void cbAniKessieBlastEnd(void* parm);
+
+public:
+	static void cbAniShutterOpen(void* parm);
+	static void cbAniCurOpen(void* parm);
+	static void cbAniAddOut(void* parm);
 };
 

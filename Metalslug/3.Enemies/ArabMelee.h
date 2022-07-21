@@ -49,6 +49,5 @@ public:
 	virtual void free();
 
 public:
-	virtual void setState(int newState);
 	virtual void getDamage(float damage);
 };

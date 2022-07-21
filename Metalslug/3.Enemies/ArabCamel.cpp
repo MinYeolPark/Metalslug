@@ -9,7 +9,7 @@ static iImage** _imgArabCamel = NULL;
 static iImage** _imgCamel = NULL;
 ArabCamel::ArabCamel(int index) : ProcEnemy(index)
 {
-	index = IdxArMelee;
+	index = IdxArCamel;
 	state = 0;
 	camelState = CamelRunL;
 	arabState = ArabCamelFireL;
@@ -23,11 +23,7 @@ ArabCamel::ArabCamel(int index) : ProcEnemy(index)
 	attkRate = 0.f;	_attkRate = 2.f;
 	aiDt = 0.f;	_aiDt = 2.f;
 	///////////////////////////////////
-#if 1
-	colNum = 1;
-	for (int i = 0; i < colNum; i++)
-		colliders[i]->init(this, iSizeMake(40, 40));
-#endif
+
 	camelImgs = NULL;
 	camelImgCurr = NULL;
 	arabImgs = NULL;
@@ -64,37 +60,17 @@ ArabCamel::~ArabCamel()
 	delete arabImgs;
 }
 
-bool ArabCamel::dead()
-{
-	isDead = true;
-	for (int i = 0; i < colNum; i++)
-	{
-		colliders[i]->disable();
-		//objects->removeObject(colliders[i]);
-	}
-	arabState = (ArabCamelBehave)(ArabCamelDeadL + arabState % 2);
-	camelState = (CamelBehave)(CamelDeadL + camelState % 2);
-
-	arabImgs[arabState]->startAnimation(AnimationMgr::cbAniDead, this);
-	camelImgs[camelState]->startAnimation(AnimationMgr::cbAniDead, this);
-	return arabState == (ArabCamelBehave)(ArabCamelDeadL + arabState % 2);
-}
-
-void ArabCamel::getDamage(float damage, Collider* c)
+void ArabCamel::getDamage(float damage)
 {
 	hp -= damage;
 	if (hp <= 0)
 	{
-		if (!isDead)
-			dead();
+		
 	}
 }
 
-void ArabCamel::setState(int newState)
+void ArabCamel::init(iPoint p)
 {
-	state = newState;
-	arabState = (ArabCamelBehave)newState;
-	camelState = (CamelBehave)newState;
 }
 
 void ArabCamel::update(float dt)
@@ -110,7 +86,7 @@ void ArabCamel::update(float dt)
 	if (aiDt > _aiDt)
 	{
 		aiDt -= _aiDt;
-		ai(this, dt);
+		//ai(this, dt);
 	}
 
 	if (camelState == CamelDeadL)
@@ -126,8 +102,7 @@ void ArabCamel::update(float dt)
 }
 
 void ArabCamel::fixedUpdate(float dt)
-{
-	colliders[0]->setPosition(arabPos);
+{	
 	int maxY = *(map->maxY + (int)p.x);
 	if (p.y >= maxY)
 	{
@@ -161,11 +136,6 @@ bool ArabCamel::draw(float dt, iPoint off)
 	camelImgCurr = camelImgs[camelState];
 	camelImgCurr->paint(dt, p + off);
 
-#ifdef _DEBUG
-	drawDot(p + off);
-	for (int i = 0; i < colNum; i++)
-		drawRect(colliders[i]->getCollider());
-#endif // DEBUG
 	setRGBA(1, 1, 1, 1);
 
 	return !isActive;

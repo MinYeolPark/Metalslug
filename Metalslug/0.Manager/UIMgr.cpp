@@ -1,11 +1,50 @@
 #include "UIMgr.h"
 
+#include "iOpenAL.h"
+
 #include "GameMgr.h"
 #include "ImgMgr.h"
 
 #include "StatusUI.h"
 #include "PopupUI.h"
 
+#if 0
+AudioInfo ai[5] =
+{
+	{ (char*)"assets/sound/TITLE.wav", false, 1.0f },
+
+enum
+{
+	snd_title = 0,
+
+	snd_eff_max,
+
+	snd_bgm_title = snd_eff_max,
+	snd_bgm_map,
+	snd_bgm_song,
+
+	snd_max,
+};
+#endif
+AudioInfo ai[5] = {
+	{ (char*)"assets/sound/btn0.wav", false, 1.0f },
+	{ (char*)"assets/sound/btn1.wav", false, 1.0f },	
+	{ (char*)"assets/sound/bgm0.wav", true, 0.4f },
+	{ (char*)"assets/sound/bgm1.wav", true, 1.0f },
+	{ (char*)"assets/sound/bgm2.wav", true, 1.0f },
+};
+enum {
+	snd_btn_sel = 0,
+	snd_btn_ok,
+
+	snd_eff_max,
+
+	snd_bgm_title = snd_eff_max,
+	snd_bgm_map,
+	snd_bgm_song,
+
+	snd_max,
+};
 bool isPopup;
 iStrTex* stPlaytime;
 
@@ -15,6 +54,10 @@ igImage** goldNumber;
 igImage** normAlphabet;
 void loadUI()
 {
+	loadAudio(ai, snd_max);
+	audioVolume(1, 1, snd_eff_max);
+	audioPlay(snd_bgm_song);
+
 	isPopup = false;
 	iGraphics* g = new iGraphics();
 

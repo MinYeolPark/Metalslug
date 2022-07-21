@@ -1,10 +1,17 @@
-﻿  ProcObject.cpp
+﻿  Kessie.cpp
 C:\workspace\Metalslug\Metalslug\std\iOpenGL.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
-  ArabBurserker.cpp
-C:\workspace\Metalslug\Metalslug\std\iOpenGL.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
-C:\workspace\Metalslug\Metalslug\3.Enemies\ArabBurserker.cpp(220,8): warning C4244: '-=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  코드를 생성하고 있습니다...
-C:\workspace\Metalslug\Metalslug\1.GameSetup\ProcObject.cpp(35): warning C4172: 지역 변수 또는 임시: rt의 주소를 반환하고 있습니다.
+C:\workspace\Metalslug\Metalslug\3.Enemies\Kessie.cpp(50,8): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\3.Enemies\Kessie.cpp(51,8): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\3.Enemies\Kessie.cpp(138,54): warning C4244: '인수': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\3.Enemies\Kessie.cpp(260,11): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\3.Enemies\Kessie.cpp(264,39): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\3.Enemies\Kessie.cpp(264,62): warning C4244: '인수': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\3.Enemies\Kessie.cpp(269,12): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\3.Enemies\Kessie.cpp(270,12): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\3.Enemies\Kessie.cpp(271,57): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\3.Enemies\Kessie.cpp(271,53): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\workspace\Metalslug\Metalslug\3.Enemies\Kessie.cpp(278,5): warning C4390: ';': 제어된 빈 문이 있습니다. 이 문이 필요합니까?
+C:\workspace\Metalslug\Metalslug\3.Enemies\Kessie.cpp(301,14): warning C4244: '-=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
      C:\workspace\Metalslug\Debug\Metalslug.lib 라이브러리 및 C:\workspace\Metalslug\Debug\Metalslug.exp 개체를 생성하고 있습니다.
 LINK : warning LNK4217: '_glewInit@0'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"void __cdecl loadOpenGL(void *)" (?loadOpenGL@@YAXPAX@Z)'이(가) 가져왔습니다.
 LINK : warning LNK4217: '_glewGetErrorString@4'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"void __cdecl loadOpenGL(void *)" (?loadOpenGL@@YAXPAX@Z)'이(가) 가져왔습니다.

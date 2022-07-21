@@ -28,11 +28,13 @@ int maxNum[EnemyIndexMax] =
 	20,		//kessie melee
 	1,		//mosque
 	50,		//burser
-	//1,		//camel
-	//1,		//truck
-	//1,		//kessie
-	//1,		//abul
+	1,		//camel
+	1,		//truck
+	1,		//kessie
+	1,		//abul
 };
+
+static bool truckTrigger = false;
 void loadProcEnemy()
 {
 	_enemies = new ProcEnemy * * [EnemyIndexMax];
@@ -54,7 +56,6 @@ void loadProcEnemy()
 			for (int j = 0; j < maxNum[i]; j++)
 				_enemies[i][j] = new ArabBurserker(i);
 		}
-#if 0
 		else if (i == IdxArCamel)
 		{
 			for (int j = 0; j < maxNum[i]; j++)
@@ -76,30 +77,19 @@ void loadProcEnemy()
 			for (int j = 0; j < maxNum[i]; j++)
 				_enemies[i][j] = new Abul(i);
 		}
-#endif
 		enemies = new ProcEnemy * [EnemyIndexMax *  maxNum[i]];
 	}
 	enemyNum = 0;
 
-	//boss monster
-	//arabCamel = new ArabCamel(IdxArCamel);
-	//truck = new Truck(IdxTruck);
-	//abul = new Abul(IdxAbul);
-	//kessie = new Kessie(IdxKessie);
-	//spawn pattern
-	
-	//addProcEnemy(IdxMosque, iPointMake(2030, 175));
-	addProcEnemy(IdxMosque, iPointMake(230, 175));
-	//addProcEnemy(IdxTruck, iPointMake(1680, 100), iPointZero);
+	addProcEnemy(IdxMosque, iPointMake(2030, 175));	
+	addProcEnemy(IdxTruck, iPointMake(1700, 100));
 	addProcEnemy(IdxMelee, iPointMake(500, 50));
-	addProcEnemy(IdxBurserker, iPointMake(300, 100));
+	//addProcEnemy(IdxBurserker, iPointMake(300, 100));
 
 
 	//addProcEnemy(IdxArMelee, iPointMake(400, 100), iPointMake(0, 0));
 	//addProcEnemy(IdxArCamel, iPointMake(300, 100), iPointMake(0, 0));
-	//addProcEnemy(IdxKessie, iPointMake(3680, -50), iPointMake(0, 0));
-
-	//addProcEnemy(IdxAbul, iPointMake(300, 100), iPointMake(0, 0));
+	addProcEnemy(IdxKessie, iPointMake(3680, 100));
 }
 void freeProcEnemy()
 {
@@ -132,23 +122,30 @@ void drawProcEnemy(float dt, iPoint off)
 			}
 		}
 	}
+
+
+	if (!truckTrigger)
+	{		
+		if (player->p.x > 1550)
+		{
+			truckTrigger = true;
+			addProcEnemy(IdxAbul, iPointMake(1700, 150));
+		}
+	}
 }
 
 void addProcEnemy(int index, iPoint p)
 {
-	for (int j = 0; j < maxNum[j]; j++)
+	for (int i = 0; i < maxNum[i]; i++)
 	{
-		for (int i = 0; i < maxNum[j]; i++)
+		ProcEnemy* e = _enemies[index][i];
+		if (e->isActive == false)
 		{
-			ProcEnemy* e = _enemies[index][i];
-			if (e->isActive == false)
-			{
-				e->isActive = true;
-				e->init(p);			//default direction = Left
-				enemies[enemyNum] = e;
-				enemyNum++;
-				return;
-			}
+			e->isActive = true;
+			e->init(p);			//default direction = Left
+			enemies[enemyNum] = e;
+			enemyNum++;
+			return;
 		}
 	}
 }
@@ -227,14 +224,9 @@ void ProcEnemyAI::TruckAI0(ProcEnemy* e, float dt)
 
 }
 
-static iPoint initPos;
-void ProcEnemyAI::KessieAI(ProcEnemy* k, float dt)
-{
-}
-
 void ProcEnemyAI::KessieRageAI(ProcEnemy* e, float dt)
 {
-	Kessie* k = (Kessie*)e;
+	/*Kessie* k = (Kessie*)e;
 	if (!k->isDead)
 	{
 		if (k->v != iPointZero)
@@ -270,5 +262,5 @@ void ProcEnemyAI::KessieRageAI(ProcEnemy* e, float dt)
 			}
 		}
 		k->p += k->v * k->moveSpeed * dt;
-	}
+	}*/
 }
