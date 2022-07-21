@@ -96,39 +96,9 @@ void ArabBurserker::update(float dt)
 	if (aiDt > _aiDt)
 	{
 		aiDt -= _aiDt;
-		ai(this, dt);
+		//ai(this, dt);
 	}
-	if (p != tp)
-	{
-		if (p.x < tp.x)
-		{
-			p.x += v.x;
-			if (p.x > tp.x)
-				p.x = tp.x;
-		}
-		else if (p.x > tp.x)
-		{
-			p.x += v.x;
-			if (p.x < tp.x)
-				p.x = tp.x;
-		}
-
-		if (p.y < tp.y)
-		{
-			p.y += v.y;
-			if (p.y > tp.y)
-				p.y = tp.y;
-		}
-		else if (p.y > tp.y)
-		{
-			p.y += v.y;
-			if (p.y < tp.y)
-				p.y = tp.y;
-		}
-
-		if (p == tp)
-			v = iPointZero;
-	}
+	
 
 	if (v != iPointZero)
 	{
@@ -225,7 +195,7 @@ void ArabBurserker::getDamage(float damage)
 		{
 			isDead = true;
 			state = (DeadBurserkL + state % 2);
-			imgs[state]->startAnimation(AnimationMgr::cbAniDead, this);
+			imgs[state]->startAnimation(AnimationMgr::cbAniDead, this);			
 		}
 	}
 }

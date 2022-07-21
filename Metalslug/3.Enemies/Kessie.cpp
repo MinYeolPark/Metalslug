@@ -15,6 +15,8 @@ ImageInfo imgKessieInfo[];
 static iImage** _imgKessie = NULL;
 Kessie::Kessie(int index) : ProcEnemy(index)
 {	
+	_alphaDt = 1.f;
+
 	layer = LayerKessie;	
 	index = IdxKessie;
 
@@ -95,7 +97,6 @@ Kessie::~Kessie()
 	_imgKessie = NULL;
 }
 
-static iPoint initPos = iPointZero;
 void Kessie::init(iPoint p)
 {
 	this->p = p;
@@ -115,32 +116,62 @@ void Kessie::init(iPoint p)
 		r->size = iSizeMake(40, 80);
 		iPoint pos[2] =
 		{
-			{p.x - 80, p.y + 30},
-			{p.x + 80, p.y + 30},
+			{p.x - 80, p.y},
+			{p.x + 80, p.y},
 		};
 		r->origin = pos[i];
 	}
 }
 
 float x = 0;
+float y = 0;
 float delta = 0;
+static iPoint initPos = iPointZero;
 void Kessie::update(float dt)
 {	
+	int maxY = *(map->maxY + (int)p.x);
 	if (isDead)
 	{
 		for (int i = 0; i < rectNum; i++)
 			rect[i]->size = iSizeZero;
+		for (int j = 0; j < 2; j++)
+			atkRect[j]->size = iSizeZero;
 		return;
 	}
 
 	if (!isAppear)
 	{
-		if (movePoint(p, p, iPointMake(p.x, 90), moveSpeed * 0.01))
-			isAppear = true;
+		if (containPoint(p,
+			iRectMake(-map->off.x - 80, -map->off.y - 100,
+				devSize.width, devSize.height)))
+		{
+			if (movePoint(p, p, iPointMake(p.x, 120), moveSpeed * 0.01))
+			{
+				isAppear = true;
+				for (int i = 0; i < 2; i++)
+				{
+					iPoint pos[2] =
+					{
+						{p.x - 88, (float)maxY + 20},
+						{p.x + 88, (float)maxY + 20},
+					};
+					addProcEffect(this, EffectKessieBlastStart, pos[i], i);
+				}
+			}
+		}
+		else
+			return;
 	}
 	else//isAppear
 	{
 		aiDt += dt;
+
+		delta += dt;
+		while (delta > 2)
+			delta -= 2;
+		float r = delta / 2;
+		y = 0.3 * _cos(360 * r);
+		p.y+= y;
 		if (aiDt > _aiDt)
 		{
 			aiDt -= _aiDt;
@@ -156,28 +187,51 @@ void Kessie::update(float dt)
 		if (rageDt)
 		{
 			rageDt += dt;
-#if 1 //sin move
-			delta += dt;
-			while (delta > 3)
-				delta -= 3;
-			float r = delta / 3;
-			x = _cos(360 * r);
-			p.x += x;
-#endif 
+			if(v==iPointZero)
+				v.x = rand() % 2 - 0.5 * 2;
+			if (initPos == iPointZero)
+				initPos = p;
+			int maxX;
+			if (v.x > 0)
+			{
+				maxX = initPos.x + 70;
+				if (p.x > maxX)
+					v.x = -1;
+			}
+			else if (v.x < 0)
+			{
+				maxX = initPos.x - 70;
+				if (p.x < maxX)
+					v.x = 1;
+			}		
+			p += v * moveSpeed * dt;
+
 			if (rageDt > _rageDt)
 			{
 				rageDt -= _rageDt;
 				fanState = 1;
 				for (int i = 0; i < 2; i++)
+				{
 					blastState[i] = 3;
+					for (int i = 0; i < 2; i++)
+					{
+						iPoint pos[2] =
+						{
+							{p.x - 88,(float)maxY + 20},
+							{p.x + 88,(float)maxY + 20},
+						};
+						addProcEffect(this, EffectKessieBlastEnd, pos[i], i);
+					}
+				}
 			}			
 		}
-	}	
+	}		
 	fixedUpdate(dt);
 }
 
 void Kessie::fixedUpdate(float dt)
-{	
+{
+	printf("fixedupdate~~\n");
 	//ColliderUpdate		
 	iPoint rectPos[3] =
 	{
@@ -190,9 +244,43 @@ void Kessie::fixedUpdate(float dt)
 	{
 		rect[i]->origin = iPointMake(
 			rectPos[i].x + map->off.x - rect[i]->size.width / 2,
-			rectPos[i].y + map->off.y - rect[i]->size.height);		
+			rectPos[i].y + map->off.y - rect[i]->size.height);
 	}
-	 
+
+	for (int i = 0; i < 2; i++)
+	{
+		printf("atkrect[%d]=%f,%f\n", i, atkRect[i]->origin.x, atkRect[i]->origin.y);
+		iRect* r = atkRect[i];
+		iPoint pos[2] =
+		{
+			{p.x - 110, p.y},
+			{p.x + 70, p.y},
+		};
+		r->origin = pos[i];
+		drawRect(r->origin.x + map->off.x, r->origin.y + map->off.y,
+			r->size.width, r->size.height);
+	}
+	for (int i = 0; i < 2; i++)
+	{
+		if (blastState[i] > 1)
+		{
+			iPoint pos[2] =
+			{
+				{p.x - 110, p.y},
+				{p.x + 70, p.y},
+			};
+			atkRect[i]->origin = pos[i];
+			
+			if (containPoint(player->p, *atkRect[i]))
+			{
+				if (!player->isDead)
+				{
+					player->getDamage(100);
+					addProcEffect(this, EffectExplosionM, player->p);
+				}
+			}
+		}
+	}
 #if 0
 	for (int i = 0; i < 2; i++)
 	{
@@ -216,6 +304,8 @@ void Kessie::fixedUpdate(float dt)
 
 bool Kessie::draw(float dt, iPoint off)
 {
+	int maxY = *(map->maxY + (int)p.x);
+
 	setRGBA(1, 1, 1, 1);
 	imgHead->paint(dt, { p.x + off.x, p.y + off.y - 95 });
 	imgBase[baseState]->paint(dt, p + off);
@@ -226,24 +316,13 @@ bool Kessie::draw(float dt, iPoint off)
 		{
 			imgLeftFan[fanState]->paint(dt, { p.x + off.x - 96, p.y + off.y - 48 });			
 			imgLeftCrater[craterState[0]]->paint(dt, { p.x + off.x - 88, p.y + off.y - 25 });
-			imgLeftBlast[blastState[0]]->paint(dt, { p.x + off.x - 88, p.y + off.y - 42 });
+			imgLeftBlast[blastState[0]]->paint(dt, { p.x + off.x - 88, p.y + off.y - 42 });			
 		}
 		if (hp[2] > 0)
 		{
 			imgRightFan[fanState]->paint(dt, { p.x + off.x + 96, p.y + off.y - 48 });
 			imgRightCrater[craterState[1]]->paint(dt, { p.x + off.x + 88, p.y + off.y - 25 });
-			imgRightBlast[blastState[1]]->paint(dt, { p.x + off.x + 88, p.y + off.y -42});
-		}
-	}
-
-	if (alphaDt)
-	{
-		alphaDt += dt;
-		alpha = fabsf(_cos((alphaDt / _alphaDt * 270)));
-		if (alphaDt > _alphaDt)
-		{
-			alphaDt = 0.0f;
-			isActive = false;
+			imgRightBlast[blastState[1]]->paint(dt, { p.x + off.x + 88, p.y + off.y -42});			
 		}
 	}
 
@@ -253,29 +332,25 @@ bool Kessie::draw(float dt, iPoint off)
 	
 	if (isDead)
 	{
-		int maxY = *(map->maxY + (int)p.x);	
-
-#if 1 //sin move
 		delta += dt;
 		float r = delta / 0.2;
 		x = 5 * _sin(360 * r);
 		p.x += x;
-#endif 
 		if (movePoint(p, p, iPointMake(p.x, maxY), moveSpeed * 0.7 * dt))
 		{
 			//Game Clear
-			for (int i = 0; i < 3; i++)
+			for (int i = 0; i < 5; i++)
 			{
-				int rx = p.x - 60 + (rand() % 120);
-				int ry = p.y - 50 + (rand() % 100);
-				addProcEffect(EffectKessieExplosion, iPointMake(rx, ry));
+				int rx = p.x + (rand() % 120 - 20 * 2) * i;
+				int ry = p.y - (rand() % 30) * i;
+				addProcEffect(this, EffectExplosionM, iPointMake(rx, ry));
 			}
 			isActive = false;
 
 			//Game End			
 			stageClear = true;
 			if (stageClear)
-				;// setLoading(GameStateMenu, 2, freeProc, loadMenu);
+				setLoading(GameStateMenu, 2, freeProc, loadMenu);
 		}
 	}
 

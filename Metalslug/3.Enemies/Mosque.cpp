@@ -148,7 +148,7 @@ void Mosque::init(iPoint p)
 }
 
 static float dramaDt = 0.f, _dramaDt = 5.f;
-static float intervalDt = 0.f, _intervalDt = 0.18f;
+static float intervalDt = 0.f, _intervalDt = 0.3f;
 void Mosque::update(float dt)
 {		
 	if (isDead)
@@ -157,9 +157,10 @@ void Mosque::update(float dt)
 	if (!isAppear)
 	{
 		if (containPoint(p,
-			iRectMake(-map->off.x - 40, -map->off.y - 40,
-				devSize.width + 80, devSize.height + 80)))
+			iRectMake(-map->off.x - 100, -map->off.y,
+				devSize.width, devSize.height)))
 			isAppear = true;
+		return;
 	}
 	else
 	{
@@ -188,7 +189,7 @@ void Mosque::update(float dt)
 				if (len < attkRange)
 				{					
 					addBullet(this, BulletMosque, 360-ang, i);		//x축 기준, 시계방향 degree 					
-					addProcEffect(EffectMoskTrail, firePoint[i]);
+					addProcEffect(this, EffectMoskTrail, firePoint[i]);
 				}
 			}
 		}
@@ -224,13 +225,13 @@ bool Mosque::draw(float dt, iPoint off)
 	for (int i = 0; i < 3; i++)
 	{
 		imgTower[i][towerState[i]]->paint(dt, towerP[i] + off);
-		imgTower[i][towerState[i]]->frame = i;		
+		imgTower[i][towerState[i]]->frame = i;
 		//if (soldierState[i] == MosqueDead)
 		//	soldierP[i].y += (50 * dt);
 		if (towerState[i] != MosqueDead)
 		{
 			imgSoldier[i][soldierState[i]]->paint(dt, soldierP[i] + off);
-			imgCurtain[i][curtainState[i]]->paint(dt, curtainP[i] + off);			
+			imgCurtain[i][curtainState[i]]->paint(dt, curtainP[i] + off);
 			imgShutter[i][shutterState[i]]->paint(dt, shutterP[i] + off);
 		}
 	}
@@ -239,7 +240,7 @@ bool Mosque::draw(float dt, iPoint off)
 
 #if 1
 	//Dead Event
-	if (isDead)
+	if (dramaDt)
 	{
 		dramaDt += dt;
 		intervalDt += dt;
@@ -248,19 +249,20 @@ bool Mosque::draw(float dt, iPoint off)
 			intervalDt -= _intervalDt;
 			int rx = p.x + (((rand() % 150) - 50) * 2);
 			int ry = p.y - (((rand() % 50)) * 2);
-			addProcEffect(EffectExplosionM, iPointMake(rx, ry));
+			addProcEffect(this, EffectExplosionM, iPointMake(rx, ry));
 		}
 
 		if (dramaDt > _dramaDt)
-		{			
+		{
 			state = MosqueDead;
 			for (int i = 0; i < 10; i++)
 			{
-				int rx = p.x + (rand() % 80 - 40 * 2) * i;
+				int rx = p.x + (rand() % 120 - 40 * 2) * i;
 				int ry = p.y - (rand() % 40) * i;
-				addProcEffect(EffectExplosionM, iPointMake(rx, ry));
+				addProcEffect(this, EffectExplosionM, iPointMake(rx, ry));
 			}
-			isActive = false;
+			isDead = true;
+			dramaDt = 0.0f;
 		}
 	}
 #else
@@ -273,7 +275,11 @@ bool Mosque::draw(float dt, iPoint off)
 #endif
 #ifdef _DEBUG
 	for (int i = 0; i < rectNum; i++)
+	{
+		if (!isAppear)
+			setRGBA(1, 1, 1, 0);
 		drawRect(getRect(i));
+	}
 #endif // _DEBUG
 	return !isActive;
 }
@@ -308,6 +314,7 @@ void Mosque::getDamage(float damage)
 		if (hp[0] <= 0 && hp[1] <= 0 && hp[2] <= 0)
 		{
 			isDead = true;
+			dramaDt = 0.0000001f;
 			baseState = MosqueDead;
 		}
 	}	

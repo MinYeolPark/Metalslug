@@ -44,14 +44,15 @@ void drawProcEffect(float dt, iPoint off)
 	}
 }
 
-void addProcEffect(int index, iPoint p)
-{	
+void addProcEffect(ProcObject* parent, int index, iPoint p, int id)
+{
 	for (int i = 0; i < effectMax; i++)
 	{
 		ProcEffect* e = &_effect[index][i];
 		if (e->isActive == false)
 		{
-			e->initEffect(index, p);
+			e->id = id;
+			e->initEffect(parent, index, p);
 			effect[effectNum] = e;
 			effectNum++;
 			return;
@@ -59,14 +60,14 @@ void addProcEffect(int index, iPoint p)
 	}
 }
 
-void addProcEffect(int index, iPoint p, float spawnDt)
+void addProcEffect(ProcObject* parent, int index, iPoint p, float spawnDt)
 {
 	for (int i = 0; i < effectMax; i++)
 	{
 		ProcEffect* e = &_effect[index][i];
 		if (e->isActive == false)
 		{
-			e->initEffect(index, p , spawnDt);
+			e->initEffect(parent, index, p , spawnDt);
 			effect[effectNum] = e;
 			effectNum++;
 			return;
@@ -108,25 +109,44 @@ ProcEffect::~ProcEffect()
 #endif
 }
 
-void ProcEffect::initEffect(int idx, iPoint p)
+void ProcEffect::initEffect(ProcObject* parent, int idx, iPoint p)
 {
 	isActive = true;
+	this->parent = parent;
 	this->index = (EffectIndex)idx;
 	this->p = p;
 
 	imgs[idx]->startAnimation(cbAniEffect, this);
 }
-void ProcEffect::initEffect(int idx, iPoint p, float spawnDt)
+
+void ProcEffect::initEffect(ProcObject* parent, int idx, iPoint p, float spawnDt)
 {
 	this->spawnDt = spawnDt - 1.f;
 	this->_spawnDt = spawnDt;
-	initEffect(idx, p);
+	initEffect(parent, idx, p);
 }
 
 
 void ProcEffect::updateEffect(float dt)
 {
-	//Add pattern
+	if (index == EffectKessieBlastStart ||
+		index ==EffectKessieBlast ||
+		index == EffectKessieBlastEnd)
+	{
+		if (parent->isDead)
+			isActive = false;
+		if (id == 0)
+			p.x = parent->p.x - 88;
+		else if(id==1)
+			p.x = parent->p.x + 88;
+
+		Kessie* k = (Kessie*)parent;
+		for (int i = 0; i < 2; i++)
+		{
+			if (index - EffectKessieBlastStart != k->blastState[i])
+				isActive = false;
+		}
+	}
 }
 
 bool ProcEffect::drawEffect(float dt, iPoint off)
@@ -214,17 +234,25 @@ ImageInfo imgEffectInfo[] =
 		ProcEffect::cbAniEffect,
 	},
 	{
-		"assets/Effect/Blast_%02d.png",
+		"assets/Effect/Blast_Start_%02d.png",
 		6, 1.0f, { -64 / 2, 0},
-		0.06f,
-		1,
+		0.10f,
+		0,
 		{0,248,0,255},
 		ProcEffect::cbAniEffect,
 	},
 	{
 		"assets/Effect/Blast_%02d.png",
-		22, 1.0f, { -64 / 2, 0},
-		0.06f,
+		12, 1.0f, { -64 / 2, 0},
+		0.1f,
+		0,
+		{0,248,0,255},
+		ProcEffect::cbAniEffect,
+	},
+	{
+		"assets/Effect/Blast_End_%02d.png",
+		6, 1.0f, { -64 / 2, 0},
+		0.1f,
 		1,
 		{0,248,0,255},
 		ProcEffect::cbAniEffect,

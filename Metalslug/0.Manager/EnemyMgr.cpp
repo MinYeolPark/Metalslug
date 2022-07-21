@@ -78,18 +78,21 @@ void loadProcEnemy()
 				_enemies[i][j] = new Abul(i);
 		}
 		enemies = new ProcEnemy * [EnemyIndexMax *  maxNum[i]];
+		printf("maxnum[%d]= %d\n", i, maxNum[i]);
 	}
 	enemyNum = 0;
 
 	addProcEnemy(IdxMosque, iPointMake(2030, 175));	
 	addProcEnemy(IdxTruck, iPointMake(1700, 100));
 	addProcEnemy(IdxMelee, iPointMake(500, 50));
-	//addProcEnemy(IdxBurserker, iPointMake(300, 100));
+	addProcEnemy(IdxBurserker, iPointMake(1300, 100));
+	addProcEnemy(IdxBurserker, iPointMake(1350, 100));
+	addProcEnemy(IdxBurserker, iPointMake(1400, 100));
 
 
 	//addProcEnemy(IdxArMelee, iPointMake(400, 100), iPointMake(0, 0));
 	//addProcEnemy(IdxArCamel, iPointMake(300, 100), iPointMake(0, 0));
-	addProcEnemy(IdxKessie, iPointMake(3680, 100));
+	addProcEnemy(IdxKessie, iPointMake(3680, -50));
 }
 void freeProcEnemy()
 {
@@ -134,7 +137,7 @@ void drawProcEnemy(float dt, iPoint off)
 	}
 }
 
-void addProcEnemy(int index, iPoint p)
+ProcEnemy* addProcEnemy(int index, iPoint p)
 {
 	for (int i = 0; i < maxNum[i]; i++)
 	{
@@ -145,7 +148,7 @@ void addProcEnemy(int index, iPoint p)
 			e->init(p);			//default direction = Left
 			enemies[enemyNum] = e;
 			enemyNum++;
-			return;
+			return e;
 		}
 	}
 }

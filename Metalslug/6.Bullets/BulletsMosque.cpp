@@ -132,6 +132,6 @@ void BulletsMosque::getDamage(float damage)
 	if (hp <= 0)
 	{
 		isActive = false;
-		addProcEffect(index, p);
+		addProcEffect(this, index, p);
 	}
 }

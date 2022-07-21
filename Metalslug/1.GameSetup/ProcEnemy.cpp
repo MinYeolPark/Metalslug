@@ -1,7 +1,5 @@
 #include "ProcEnemy.h"
 
-#include "Collider.h"
-
 #include "EnemyMgr.h"
 #include "ProcPlayer.h"
 #include "ProcField.h"

@@ -96,7 +96,7 @@ void Truck::update(float dt)
         if (aiDt > _aiDt)
         {
             aiDt -= _aiDt;
-            addProcEnemy(IdxBurserker, { p.x - 20 , p.y });
+            //addProcEnemy(IdxBurserker, { p.x - 20 , p.y });
         }
     }
 

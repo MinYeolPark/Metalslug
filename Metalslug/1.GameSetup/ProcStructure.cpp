@@ -104,7 +104,7 @@ void ProcStructure::getDamage(float damage, Collider* c)
         if (hp <= 0)
         {
             isActive = false;
-            addProcEffect(EffectExplosionL, p);
+            addProcEffect(this, EffectExplosionL, p);
         }
     }
 

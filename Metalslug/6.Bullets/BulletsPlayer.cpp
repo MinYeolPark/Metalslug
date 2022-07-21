@@ -69,7 +69,7 @@ void BulletsPlayer::update(float dt)
 						isActive = false;
 						dst->getDamage(damage);
 						iPoint bp = iPointMake(rand() % 10 + p.x, rand() % 10 + p.y);
-						addProcEffect(index, bp);		//bulletIndex=effectIndex
+						addProcEffect(this, index, bp);		//bulletIndex=effectIndex
 					}
 				}
 			}
@@ -98,7 +98,7 @@ void BulletsPlayer::update(float dt)
 						isActive = false;
 						dst->getDamage(damage);
 						iPoint bp = iPointMake(rand() % 10 + p.x, rand() % 10 + p.y);
-						addProcEffect(index, bp);		//bulletIndex=effectIndex
+						addProcEffect(this, index, bp);		//bulletIndex=effectIndex
 					}
 				}
 			}

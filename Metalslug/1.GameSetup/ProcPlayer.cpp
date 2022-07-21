@@ -6,7 +6,6 @@
 #include "BulletMgr.h"
 #include "InputMgr.h"
 
-#include "Collider.h"
 #include "Proc.h"
 #include "ProcField.h"
 #include "ProcItem.h"

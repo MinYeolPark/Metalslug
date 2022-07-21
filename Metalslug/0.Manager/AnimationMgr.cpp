@@ -5,6 +5,8 @@
 #include "ProcNpc.h"
 #include "ProcBullets.h"
 #include "Truck.h"
+
+#include "EffectMgr.h"
 #include "BulletMgr.h"
 
 #include "ArabMelee.h"
@@ -38,7 +40,6 @@ void AnimationMgr::cbAniDead(void* parm)
 		p->inviDt = 0.000001f;
 		p->isActive = false;
 	}
-	printf("cb Ani dead\n");
 }
 
 //need fix
@@ -137,7 +138,20 @@ void AnimationMgr::cbAniKessieBlast(void* parm)
 	for (int i = 0; i < 2; i++)
 	{
 		if (k->blastState[i] == 1)		//blast Start
+		{
 			k->blastState[i] = 2;		//blasting
+			int maxY = *(map->maxY + (int)k->p.x);	
+			for (int i = 0; i < 2; i++)
+			{
+				iPoint pos[2] =
+				{
+					{k->p.x - 88,(float)maxY+20},
+					{k->p.x + 88,(float)maxY+20},
+				};
+				addProcEffect(k, EffectKessieBlast, pos[i], i);
+
+			}
+		}
 		k->imgLeftBlast[1]->startAnimation(cbAniKessieBlast, k);
 		k->imgRightBlast[1]->startAnimation(cbAniKessieBlast, k);
 	}
@@ -153,7 +167,7 @@ void AnimationMgr::cbAniKessieBlastEnd(void* parm)
 		{
 			k->blastState[i] = 1;		//blasting
 			k->imgLeftBlast[3]->startAnimation(cbAniKessieBlastEnd, k);
-			k->imgRightBlast[3]->startAnimation(cbAniKessieBlastEnd, k);			
+			k->imgRightBlast[3]->startAnimation(cbAniKessieBlastEnd, k);
 		}
 	}
 }
@@ -171,7 +185,7 @@ void AnimationMgr::cbAniShutterOpen(void* parm)
 
 void AnimationMgr::cbAniCurOpen(void* parm)
 {
-	printf("Curtain was opened\n");
+	
 }
 
 void AnimationMgr::cbAniAddOut(void* parm)

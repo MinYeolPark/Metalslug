@@ -7,8 +7,8 @@
 void loadProcEffect();
 void freeProcEffect();
 void drawProcEffect(float dt, iPoint off);
-void addProcEffect(int index, iPoint p);
-void addProcEffect(int index, iPoint p, float spawnDt);
+void addProcEffect(ProcObject* parent, int index, iPoint p, int id = 0);
+void addProcEffect(ProcObject* parent, int index, iPoint p, float spawnDt);
 
 enum EffectIndex
 {
@@ -23,8 +23,9 @@ enum EffectIndex
 	EffectExplosionL,
 	EffectExplosionM,
 	EffectMoskTrail,
+	EffectKessieBlastStart,
 	EffectKessieBlast,
-	EffectKessieBlastRage,
+	EffectKessieBlastEnd,
 	EffectKessieFanFire,
 	EffectKessieExplosion,
 
@@ -42,16 +43,20 @@ struct ProcEffect
 	iPoint p;
 	iSize s;
 
-	EffectIndex index;
+	ProcObject* parent;
+	int id;		//compare position
+	int index;
 	bool isActive;
 	float delta, _delta;
 	float spawnDt, _spawnDt;
 
-	void initEffect(int idx, iPoint p);
-	void initEffect(int idx, iPoint p, float spawnDt);
+	void initEffect(ProcObject* parent, int idx, iPoint p);
+	void initEffect(ProcObject* parent, int idx, iPoint p, float spawnDt);
 	void updateEffect(float dt);
 	bool drawEffect(float dt, iPoint off);
 	void freeEffect();
 		
 	static void cbAniEffect(void* parm);
 };
+
+extern ProcEffect** effect;

@@ -14,7 +14,6 @@
 
 #include "Mosque.h"
 //Components
-#include "Collider.h"
 
 ///////////////////////////////////////////////////
 //Proc

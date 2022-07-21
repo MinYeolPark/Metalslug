@@ -2,8 +2,6 @@
 
 #include "iStd.h"
 
-#include "Collider.h"
-
 #include "Mosque.h"
 #include "ProcObject.h"
 #include "ProcEnemy.h"

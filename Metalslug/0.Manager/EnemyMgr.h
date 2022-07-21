@@ -12,7 +12,7 @@ extern int enemyNum;
 void loadProcEnemy();
 void freeProcEnemy();
 void drawProcEnemy(float dt, iPoint off);
-void addProcEnemy(int index, iPoint p);
+ProcEnemy* addProcEnemy(int index, iPoint p);
 
 struct ProcEnemyAI
 {
@@ -25,3 +25,5 @@ struct ProcEnemyAI
 	static void KessieAI(ProcEnemy* k, float dt);
 	static void KessieRageAI(ProcEnemy* k, float dt);
 };
+
+extern int maxNum[EnemyIndexMax];

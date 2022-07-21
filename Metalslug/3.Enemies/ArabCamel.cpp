@@ -13,7 +13,6 @@ ArabCamel::ArabCamel(int index) : ProcEnemy(index)
 	state = 0;
 	camelState = CamelRunL;
 	arabState = ArabCamelFireL;
-	ai = (EnemyAI)ProcEnemyAI::ArabCamelAI0;
 
 	hp = 1000;
 	dmg = 100;

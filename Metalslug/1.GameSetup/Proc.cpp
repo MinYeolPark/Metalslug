@@ -129,8 +129,10 @@ void loadProcPlayer()
 	//#issue
 	player = new ProcPlayer(ERI);
 
-#if 1
+#if 0
 	player->init({ 3600, 200 });
+#elif 1
+	player->init({ 1250,200 });
 #else
 	player->init({ 100, 200 });
 #endif
