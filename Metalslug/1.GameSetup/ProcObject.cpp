@@ -19,7 +19,6 @@ ProcObject::ProcObject()
 	index = 0;
 	isDead = false;
 	isActive = false;
-	isRight = false;
 
 	hp=0, _hp = 0;
 	score = 0;

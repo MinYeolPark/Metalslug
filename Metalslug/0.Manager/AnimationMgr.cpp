@@ -48,21 +48,22 @@ void AnimationMgr::cbAniAttack(void* parm)
 	ProcEnemy* e = (ProcEnemy*)parm;
 
 	printf("cb Ani Attack\n");
-	e->setState(0 + e->state % 2);
+	e->state = (0 + e->state % 2);	
 }
 
-void AnimationMgr::cbAniEnemyMotion2Idle(void* parm)
-{
-	ProcEnemy* e = (ProcEnemy*)parm;
-
-	e->setState(0 + e->state % 2);
-}
+//void AnimationMgr::cbAniEnemyMotion2Idle(void* parm)
+//{
+//	ProcEnemy* e = (ProcEnemy*)parm;
+//	
+//	e->state=(0 + e->state % 2);
+//}
 
 void AnimationMgr::cbAniMeleeFire(void* parm)
 {
 	ArabMelee* e = (ArabMelee*)parm;
 
-	e->setState( 6+ e->state % 2);//shuffle
+	e->state=( 6 + e->state % 2);//shuffle
+	//e->tp = e->p;
 }
 
 void AnimationMgr::cbAniTruck(void* parm)

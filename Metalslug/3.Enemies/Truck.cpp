@@ -77,10 +77,10 @@ void Truck::update(float dt)
     {
         if (player->p.x > 1550)
         {            
-            setState(MoveTruckL + state % 2);
+            state= (MoveTruckL + state % 2);            
             if (movePoint(p, p, iPointMake(1650, p.y), moveSpeed * dt))
             {
-                setState(DeployTruckL + state % 2);
+                state = DeployTruckL + state % 2;                
                 _aiDt = 3.0f;
                 isAppear = true;
             }
@@ -106,9 +106,9 @@ void Truck::update(float dt)
         v *= (moveSpeed * dt);
         //move reverse
         if (v.x < 0)
-            setState(MoveTruckL);
+            state = MoveTruckL;            
         if (v.x > 0)
-            setState(MoveTruckR);
+            state = MoveTruckR;            
     }    
     if (player->isDead)
         aiDt = 0.0f;

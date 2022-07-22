@@ -19,7 +19,6 @@ ProcEnemy::ProcEnemy(int index) : ProcObject()
 	index = 0;
 	isDead = false;
 	isActive = false;
-	isRight = false;
 
 	hp = 0; _hp = 0;
 	score = 0;
@@ -29,8 +28,6 @@ ProcEnemy::ProcEnemy(int index) : ProcObject()
 	up = 0.0f;
 	down = 0.0f;
 	fall = false;
-
-	ai = NULL;
 
 	firePoint = p;
 	dmg = 0;
@@ -49,11 +46,6 @@ ProcEnemy::~ProcEnemy()
 
 void ProcEnemy::getDamage(float damage)
 {
-}
-
-void ProcEnemy::setState(int newState)
-{
-	state = newState;
 }
 
 void ProcEnemy::fixedUpdate(float dt)

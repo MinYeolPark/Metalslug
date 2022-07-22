@@ -177,7 +177,7 @@ ImageInfo imgArabCamelInfo[] =
 		0.1f,
 		1,			//repeat
 		{255, 255, 255, 255},
-		AnimationMgr::cbAniEnemyMotion2Idle,
+		NULL,
 	},
 	{
 		"assets/ArabCamel/ArabCamel_Fire_%02d.png",
@@ -185,7 +185,7 @@ ImageInfo imgArabCamelInfo[] =
 		0.1f,
 		3,			//repeat
 		{255, 255, 255, 255},
-		AnimationMgr::cbAniEnemyMotion2Idle,
+		NULL,
 	},
 	{
 		"assets/ArabCamel/ArabCamel_Down_%02d.png",

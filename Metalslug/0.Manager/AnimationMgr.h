@@ -9,7 +9,7 @@ public:
 
 public:
 	//Enemies
-	static void cbAniEnemyMotion2Idle(void* parm);
+	//static void cbAniEnemyMotion2Idle(void* parm);
 	static void cbAniMeleeFire(void* parm);
 	static void cbAniTruck(void* parm);
 

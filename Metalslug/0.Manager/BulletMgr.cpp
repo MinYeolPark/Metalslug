@@ -116,7 +116,7 @@ void ProcBulletsPattern::patternMelee(ProcBullets* b, float dt)
 	if (b->p.y < maxY)
 	{
 		b->down += 9.81 * dt;
-		if (b->parent->isRight)
+		if (b->v.x>0)
 			b->p = iPointMake(b->p.x + 2, b->p.y += b->down);
 		else// if(!b->parent->isRight)
 			b->p = iPointMake(b->p.x - 2, b->p.y += b->down);

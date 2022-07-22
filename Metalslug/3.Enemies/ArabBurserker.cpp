@@ -9,8 +9,6 @@ ArabBurserker::ArabBurserker(int index) : ProcEnemy(index)
 	this->index = index;
 	state = IdleBurserkL;
 
-	ai = ProcEnemyAI::ArabBurserkAI0;
-
 	hp = 100;
 	dmg = 100;
 	sight = 200;
@@ -103,9 +101,9 @@ void ArabBurserker::update(float dt)
 	if (v != iPointZero)
 	{
 		if (v.x > 0)
-			setState(WalkBurserkR);
+			state = WalkBurserkR;
 		else if (v.x < 0)
-			setState(WalkBurserkL);
+			state = WalkBurserkL;
 
 		//for (int i = 0; i < player->colNum; i++)
 		//{
@@ -130,7 +128,7 @@ void ArabBurserker::update(float dt)
 		if (player->isDead)
 		{
 			if (state != (ArabBurserkBehave)IdleBurserkL + state % 2)
-				setState((ArabBurserkBehave)IdleBurserkL + state % 2);
+				state = (ArabBurserkBehave)IdleBurserkL + state % 2;				
 		}
 	}
 	fixedUpdate(dt);

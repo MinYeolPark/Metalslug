@@ -36,15 +36,9 @@ void ProcStructure::init(int index, iPoint p)
     iPoint pos[3];
     if (index == AppleStair)
     {
-#if 0
-        colNum = 2;
-        for (int i = 0; i < colNum; i++)
-            colliders[i]->damageable = false;
-#endif
         size[0] = { 80, 10 };
         size[1] = { 80, 10 };
         pos[0] = { p.x - 40, p.y - 30 };
-        printf("pos [0]=%f,%f\n", p.x - 40., p.y - 30);
         pos[1] = { p.x + 20, p.y - 70 };
     }
     else if (index == Wall)
@@ -57,23 +51,18 @@ void ProcStructure::init(int index, iPoint p)
         imgs[Wall]->stopAnimation();
         imgs[Wall]->frame = 0;
     }
-
-#if 0
-    for (int i = 0; i < colNum; i++)
+    else if (index == FootStep)
     {
-        colliders[i]->enable();
-        //colliders[i]->isTrigger = false;        
-        colliders[i]->init(this, size[i]);
-        colliders[i]->setPosition(pos[i]);
-
-        objects->addObject(colliders[i]);
+        int r = rand() % 4;
+        imgs[FootStep]->stopAnimation();
+        imgs[FootStep]->frame = r;
     }
-#endif
 }
 
 void ProcStructure::update(float dt)
 {
-
+    if (index == FootStep)
+        printf("draw footstep~\n");
 }
 
 bool ProcStructure::draw(float dt, iPoint off)
@@ -82,7 +71,8 @@ bool ProcStructure::draw(float dt, iPoint off)
 
     imgCurr = imgs[index];
     imgCurr->paint(dt, p + off);
-
+    if (index == FootStep)
+        printf("draw footstep~\n");
     setRGBA(1, 1, 1, 1);
     return !isActive;
 }
@@ -122,8 +112,8 @@ void loadStructure()
     structures = new ProcStructure * [StructureIndexMax * maxStruct];
     structNum = 0;
 
-    addStructure(AppleStair, iPointMake(650, 180));
-    addStructure(Wall, iPointMake(200, 200));
+    addStructure(AppleStair, iPointMake(630, 180));
+    addStructure(Wall, iPointMake(2700, 200));
 }
 
 void freeStructure()
@@ -181,6 +171,14 @@ ImageInfo imgStructureInfo[] =
     {
         "assets/Structure/Wall_%02d.png",
         3, 1.0f, { -104 / 2, 0},
+        0.18f,
+        1,
+        {248, 0, 248, 255},
+        NULL,
+    },
+    {
+        "assets/Structure/FootStep_%02d.png",
+        4, 1.0f, { -8 / 2, 0},
         0.18f,
         1,
         {248, 0, 248, 255},

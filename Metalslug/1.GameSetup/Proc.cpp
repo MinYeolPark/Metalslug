@@ -18,12 +18,12 @@
 void loadProc()
 {
 	loadProcField();
+	loadStructure();
 	loadProcPlayer();
 	loadProcEnemy();
 	loadProcBullets();
 	loadProcEffect();
 
-	//loadStructure();
 
 	//loadProcItem();
 	//loadProcNpcs();
@@ -33,12 +33,12 @@ void loadProc()
 void freeProc()
 {
 	freeProcField();
+	freeStructure();
 	freeProcPlayer();
 	freeProcEnemy();
 	freeProcBullets();
 	freeProcEffect();
 
-	//freeStructure();
 
 	//freeProcItem();
 	//freeProcNpcs();
@@ -49,26 +49,17 @@ void freeProc()
 void drawProc(float dt)
 {
 	iPoint off = drawProcField(dt);
+	drawStructure(dt, off);
 	drawProcEnemy(dt, off);
 	drawProcPlayer(dt, off);
 	drawProcBullets(dt, off);
 	drawProcEffect(dt, off);
-	//drawStructure(dt, off);
+
 
 	//drawProcNpcs(dt, off);
 	//drawProcItem(dt, off);
 
 	drawUI(dt, off);
-#if 0
-	//#issue
-	for (int i = 0; i < objects->count; i++)
-	{
-		ProcObject* o = (ProcObject*)objects->objectAtIndex(i);
-		if (o->isActive == false)
-			objects->removeObject(i);
-		return;
-	}
-#endif
 	setRGBA(1, 1, 1, 1);
 }
 
@@ -131,7 +122,7 @@ void loadProcPlayer()
 
 #if 0
 	player->init({ 3600, 200 });
-#elif 1
+#elif 0
 	player->init({ 1250,200 });
 #else
 	player->init({ 100, 200 });

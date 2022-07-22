@@ -14,10 +14,6 @@ enum EnemyIndex
 
 	EnemyIndexMax,
 };
-
-class Collider;
-class ProcEnemy;
-typedef void(*EnemyAI)(ProcEnemy* e, float dt);
 class ProcEnemy: 
 	public ProcObject
 {
@@ -30,7 +26,6 @@ public:
 	float up;
 	float down;
 	bool fall;
-	EnemyAI ai;
 
 	iPoint firePoint;
 	//stats
@@ -44,7 +39,6 @@ public:
 	bool isAppear;
 public:	
 	virtual void getDamage(float damage);
-	virtual void setState(int newState);
 public:
 	virtual void init(iPoint p) = 0;
 	virtual void fixedUpdate(float dt);

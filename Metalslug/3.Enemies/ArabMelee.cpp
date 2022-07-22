@@ -10,21 +10,15 @@ ArabMelee::ArabMelee(int index) : ProcEnemy(index)
 {	
 	this->index = index;
 	state = IdleMeleeL;	
-	EnemyAI ai[2] =
-	{
-		ProcEnemyAI::ArabMeleeAI0,
-		ProcEnemyAI::ArabMeleeKessie,
-	};
-	this->ai = ai[index];
-
 	hp = 100;
 	dmg = 100;
-	sight = 200;
+	sight = 250;
 	moveSpeed = 80.f;
-	attkRange = 120;
+	attkRange = 80;
 	attkRate = 0.f;	_attkRate = 1.f;
 	aiDt = 0.f;	_aiDt = 5.f;
 	reload = 1;
+	score = 100;
 
 	imgs = NULL;
 	imgCurr = NULL;	
@@ -98,20 +92,24 @@ void ArabMelee::update(float dt)
 	}
 
 	firePoint = { p.x, p.y - 20 };
-	aiDt += dt;
+	aiDt += dt;	
 	if (aiDt > _aiDt)
 	{
-		aiDt -= _aiDt;
-		EnemyAI ai[2] = {
-			ProcEnemyAI::ArabMeleeAI0,
-			ProcEnemyAI::ArabMeleeAI1,
-		};
-		int r = rand() % 2;
-		this->ai = ai[r];
-
-		//test
-		this->ai = ai[0];
-		this->ai(this, dt);			//update tp -> pattern
+		aiDt -= _aiDt;		
+		int len = iPointLength(p - player->p);
+		if (len < sight)
+		{
+			attkRate = 0.0f;
+			iPoint tv = player->p - p;
+			tv /= iPointLength(tv);
+			tv.setLength(moveSpeed * dt);
+			v = tv;
+			if (v.x > 0)
+				tp = iPointMake(player->p.x - attkRange, player->p.y);
+			else if (v.x < 0)
+				tp = iPointMake(player->p.x + attkRange, player->p.y);
+			printf("targetPosition=%f,%f\n", tp.x, tp.y);
+		}
 	}
 
 	if (p != tp)
@@ -141,52 +139,50 @@ void ArabMelee::update(float dt)
 			if (p.y < tp.y)
 				p.y = tp.y;
 		}
-	
-		if (p == tp)
+
+		if (tp.x == p.x)
+		{
 			v = iPointZero;
+			tp = p;
+		}
 	}
 
 	//Animation
-	if (v != iPointZero)
+	if (v!=iPointZero)
 	{
 		if (v.x > 0)
-		{
-			setState(WalkMeleeR);
-			isRight = true;
-		}
+			state = WalkMeleeR;
 		else if (v.x < 0)
-		{
-			setState(WalkMeleeL);
-			isRight = false;
-		}
+			state = WalkMeleeL;
 	}
-	else
+#if 1
+	else 
 	{
-		int len = iPointLength(p - player->p);
-		if (len < sight)
+		printf("v=%f\n", v.x);
+		attkRate += dt;
+		if (state != (ArabMeleeBehave)PreAttackMeleeL + state % 2
+			&& state != (ArabMeleeBehave)FireMeleeL + state % 2)
 		{
-			attkRate += dt;
-			if (state != (ArabMeleeBehave)PreAttackMeleeL + state % 2
-				&& state != (ArabMeleeBehave)FireMeleeL + state % 2)
+			state = (ArabMeleeBehave)PreAttackMeleeL + state % 2;
+		}
+		if (attkRate > _attkRate)
+		{
+			attkRate -= _attkRate;
+			reload = 1;
+			if (state != (ArabMeleeBehave)FireMeleeL + state % 2)
 			{
-				setState((ArabMeleeBehave)PreAttackMeleeL + state % 2);
-			}
-			if (attkRate > _attkRate)
-			{
-				attkRate -= _attkRate;
-				reload = 1;
-				if (state != (ArabMeleeBehave)FireMeleeL + state % 2)
-					setState((ArabMeleeBehave)FireMeleeL + state % 2);								
+				state = (ArabMeleeBehave)FireMeleeL + state % 2;
+				imgs[state]->startAnimation(AnimationMgr::cbAniMeleeFire, this);
 			}
 		}
-
 		//Except
 		if (player->isDead)
 		{
 			if (state != (ArabMeleeBehave)IdleMeleeL + state % 2)
-				setState((ArabMeleeBehave)IdleMeleeL + state % 2);
-		}
+				state = (ArabMeleeBehave)IdleMeleeL + state % 2;
+		}		
 	}
+#endif
 	fixedUpdate(dt);
 }
 void ArabMelee::fixedUpdate(float dt)
@@ -214,10 +210,11 @@ bool ArabMelee::draw(float dt, iPoint off)
 			if (reload)
 			{				
 				reload -= 1;
-				//addBullet(this, BulletMelee, 0);
+				addBullet(this, BulletMelee, 0);
 			}
 		}
 	}
+
 	if (alphaDt)
 	{
 		alphaDt += dt;
@@ -229,6 +226,8 @@ bool ArabMelee::draw(float dt, iPoint off)
 		}
 	}
 
+	//if (p.x == tp.x && p.y != tp.y)
+	//	tp.y = p.y;
 #ifdef _DEBUG
 	for (int i = 0; i < rectNum; i++)
 		drawRect(getRect());
@@ -262,6 +261,7 @@ void ArabMelee::getDamage(float damage)
 			isDead = true;
 			state = (DeadMeleeL + state % 2);
 			imgs[state]->startAnimation(AnimationMgr::cbAniDead, this);
+			player->addScore(score);
 		}
 	}
 }
@@ -322,7 +322,7 @@ ImageInfo imgMeleeInfo[] =
 		0.08f,
 		1,
 		{255, 0, 0, 255},
-		NULL,
+		AnimationMgr::cbAniMeleeFire,
 	},
 	{
 		"assets/ArabMelee/ArabMelee_Jump_%02d.png",

@@ -77,8 +77,7 @@ void loadProcEnemy()
 			for (int j = 0; j < maxNum[i]; j++)
 				_enemies[i][j] = new Abul(i);
 		}
-		enemies = new ProcEnemy * [EnemyIndexMax *  maxNum[i]];
-		printf("maxnum[%d]= %d\n", i, maxNum[i]);
+		enemies = new ProcEnemy * [EnemyIndexMax *  maxNum[i]];		
 	}
 	enemyNum = 0;
 
@@ -151,119 +150,4 @@ ProcEnemy* addProcEnemy(int index, iPoint p)
 			return e;
 		}
 	}
-}
-
-void ProcEnemyAI::ArabMeleeAI0(ProcEnemy* e, float dt)		//Check Player
-{
-	iPoint tp = e->p;
-	int len = iPointLength(e->p - player->p);
-	if (len < e->sight)
-	{
-		iPoint v = player->p - e->p;
-		v /= iPointLength(v);
-		e->v = v;
-		
-		tp = player->p;
-		e->tp = tp;
-	}	
-}
-
-void ProcEnemyAI::ArabMeleeAI1(ProcEnemy* e, float dt)
-{
-
-}
-
-void ProcEnemyAI::ArabMeleeKessie(ProcEnemy* e, float dt)
-{
-	//e->p += e->v * e->moveSpeed * dt;
-}
-
-void ProcEnemyAI::ArabBurserkAI0(ProcEnemy* e, float dt)		//Spawn From Kessie
-{
-	iPoint tp = e->p;
-	int len = iPointLength(e->p - player->p);
-	if (len < e->sight)
-	{
-		iPoint v = player->p - e->p;
-		v /= iPointLength(v);
-		e->v = v;
-		
-		tp = player->p;
-		e->tp = tp;
-	}
-}
-
-void ProcEnemyAI::ArabCamelAI0(ArabCamel* e, float dt)
-{
-	int len = iPointLength(player->p - e->p);
-
-	if (len < e->sight)
-		e->tp.x = map->off.x;
-	else
-		e->tp = { -1,-1 };
-
-	if (e->tp != iPointMake(-1, -1))
-	{
-		e->v = e->tp - e->p;
-		e->v /= iPointLength(e->v);
-
-		if (e->v.x > 0)
-		{
-			e->tp.x -= e->attkRange;
-			e->arabState = ArabCamelIdleR;
-			e->camelState = CamelRunR;
-		}
-		else if (e->v.x < 0)
-		{
-			e->tp.x += e->attkRange;
-			e->arabState = ArabCamelIdleL;
-			e->camelState = CamelRunL;
-		}	
-	}
-}
-
-void ProcEnemyAI::TruckAI0(ProcEnemy* e, float dt)
-{
-
-}
-
-void ProcEnemyAI::KessieRageAI(ProcEnemy* e, float dt)
-{
-	/*Kessie* k = (Kessie*)e;
-	if (!k->isDead)
-	{
-		if (k->v != iPointZero)
-		{
-			if (initPos == iPointZero)
-				initPos = k->p;
-			int maxX;
-			int maxY;
-			if (k->v.x > 0)
-			{
-				maxX = initPos.x + 70;
-				if (k->p.x > maxX)
-					k->v.x = -1;
-			}
-			else if (k->v.x < 0)
-			{
-				maxX = initPos.x - 70;
-				if (k->p.x < maxX)
-					k->v.x = 1;
-			}
-
-			if (k->v.y > 0)
-			{
-				maxY = initPos.y + 5;
-				if (k->p.y > maxY)
-					k->v.y = -1;
-			}
-			else if (k->v.y < 0)
-			{
-				maxY = initPos.y - 5;
-				if (k->p.y < maxY)
-					k->v.y = 1;
-			}
-		}
-		k->p += k->v * k->moveSpeed * dt;
-	}*/
 }

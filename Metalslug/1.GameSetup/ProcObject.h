@@ -38,7 +38,6 @@ public:
 	int index;
 	bool isDead;
 	bool isActive;
-	bool isRight;
 
 	int hp, _hp;
 	int score;

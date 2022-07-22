@@ -146,6 +146,7 @@ void ProcPlayer::init(iPoint p)
         topImgs[topState]->startAnimation(AnimationMgr::cbAniToIdle, this);
 }
 
+#include "ProcStructure.h"
 void ProcPlayer::update(float dt)
 {   
     if (isDead)
@@ -165,47 +166,9 @@ void ProcPlayer::update(float dt)
 
     if (getKeyStat(keyboard_enter))
         getDamage(100);
-#if 0
-    {
-        for (int i = 0; i < objects->count; i++)
-        {
-            Collider* c = (Collider*)objects->objectAtIndex(i);
-            if (c->parent != NULL &&
-                c->parent->layer != LayerPlayer &&
-                c->p.x > p.x)
-            {
-                if (!c->isTrigger)
-                {
-                    if (p.x > c->p.x - c->s.width / 2 &&
-                        p.x < c->p.x + c->s.width / 2 &&
-                        p.y < c->p.y - c->s.height)
-                    {
-                        maxX = c->p.x - c->s.width;
-                        printf("%f\n", (c->p.x - c->s.width / 2));
-                        printf("%f\n", (c->p.x + c->s.width / 2));
-                    }
-                    else
-                        maxX = p.x + map->off.x;
-                }
-
-                /*if (p.x > c->p.x - c->s.width / 2 &&
-                    p.x < c->p.x + c->s.width / 2 &&
-                    p.y > c->p.y - c->s.height)
-                {
-                    fall = false;
-                    p.y = c->p.y - c->s.height;
-                }*/
-            }
-        }
-    }
-    if (maxX != 0 && p.x > maxX)
-        p.x = maxX;
-#endif
-
     if (v != iPointZero)
-    {
-        v *= moveSpeed * dt;
-        //v.setLength(moveSpeed * dt);
+    {        
+        v.setLength(moveSpeed * dt);        
         if (v.x < 0)
         {
             dirRight = false;
@@ -300,9 +263,7 @@ void ProcPlayer::update(float dt)
                 if (!fireing)
                     topState = PlayerCrouch;
                 else
-                {
-                    topState = PlayerCrouchFire;                    
-                }
+                    topState = PlayerCrouchFire;
             }
             else if (v.y < 0)
             {

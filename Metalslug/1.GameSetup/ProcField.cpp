@@ -200,8 +200,6 @@ void ProcMap::paint(float dt)
 		}
 	}
 #endif // _DEBUG
-
-
 }
 bool ProcMap::move(iPoint mp)
 {

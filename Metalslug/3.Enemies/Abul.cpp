@@ -63,7 +63,7 @@ void Abul::update(float dt)
 		if (tp == p)
 		{
 			isAppear = true;
-			setState(SignalAbulL + state % 2);
+			state = (SignalAbulL + state % 2);			
 		}
 	}
 	else
@@ -112,15 +112,9 @@ void Abul::update(float dt)
 	if (v != iPointZero)
 	{
 		if (v.x > 0)
-		{
-			setState(WalkAbulR);
-			isRight = true;
-		}
+			state = WalkAbulR;
 		else if (v.x < 0)
-		{
-			setState(WalkAbulL);
-			isRight = false;
-		}
+			state = WalkAbulL;
 	}
 
 	fixedUpdate(dt);

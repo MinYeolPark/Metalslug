@@ -61,7 +61,7 @@ void BulletsEnemy::update(float dt)
 	if (p.y < maxY)
 	{
 		down += 9.81 * dt;
-		if (parent->isRight)
+		if (parent->v.x>0)
 			p = iPointMake(p.x + 2, p.y += down);
 		else// if(!b->parent->isRight)
 			p = iPointMake(p.x - 2, p.y += down);

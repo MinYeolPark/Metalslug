@@ -6,7 +6,7 @@ enum StructureIndex
 {
 	AppleStair,
 	Wall,
-
+	FootStep,
 	StructureIndexMax,
 };
 class ProcStructure:
