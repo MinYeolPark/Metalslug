@@ -20,6 +20,11 @@ ProcStructure::ProcStructure() : ProcObject()
     memset(imgs, 0x00, sizeof(iImage*) * StructureIndexMax);
     for (int i = 0; i < StructureIndexMax; i++)
         imgs[i] = _imgStructure[i]->clone();
+
+    rectNum = 1;
+    rect = new iRect * [rectNum];
+    for (int i = 0; i < rectNum; i++)
+        rect[i] = new iRect();
 }
 
 ProcStructure::~ProcStructure()
@@ -42,14 +47,18 @@ void ProcStructure::init(int index, iPoint p)
         pos[1] = { p.x + 20, p.y - 70 };
     }
     else if (index == Wall)
-    {
-        //colNum = 1;         
-        size[0] = { 50,130 };
-        pos[0] = p;
+    {      
         _hp = 1000;
         hp = _hp;
         imgs[Wall]->stopAnimation();
         imgs[Wall]->frame = 0;
+
+        for (int i = 0; i < rectNum; i++)
+        {
+            iRect* r = rect[i];
+            r->size = iSizeMake(40, 120);
+            r->origin = p;
+        }
     }
     else if (index == FootStep)
     {
@@ -61,8 +70,27 @@ void ProcStructure::init(int index, iPoint p)
 
 void ProcStructure::update(float dt)
 {
-    if (index == FootStep)
-        printf("draw footstep~\n");
+    if (index == Wall)
+    {
+        if (containPoint(p,
+            iRectMake(-map->off.x - 40, -map->off.y,
+                devSize.width, devSize.height)))
+        {
+            isAppear = true;            
+            map->isClipped = true;    
+
+            float x = player->p.x + map->_off.x;
+            map->move(iPointMake((devSize.width * 3 - x), map->_off.y));
+        }
+    }
+
+    //ColliderUpdate
+    for (int i = 0; i < rectNum; i++)
+    {
+        rect[i]->origin = iPointMake(
+            p.x + map->off.x - rect[i]->size.width / 2,
+            p.y + map->off.y - rect[i]->size.height);
+    }
 }
 
 bool ProcStructure::draw(float dt, iPoint off)
@@ -71,8 +99,12 @@ bool ProcStructure::draw(float dt, iPoint off)
 
     imgCurr = imgs[index];
     imgCurr->paint(dt, p + off);
-    if (index == FootStep)
-        printf("draw footstep~\n");
+
+#ifdef _DEBUG
+    for (int i = 0; i < rectNum; i++)
+        drawRect(getRect(i));
+#endif // _DEBUG
+
     setRGBA(1, 1, 1, 1);
     return !isActive;
 }
@@ -81,7 +113,7 @@ void ProcStructure::free()
 {
 }
 
-void ProcStructure::getDamage(float damage, Collider* c)
+void ProcStructure::getDamage(float damage)
 {
     if (hp <= 0)
         return;
@@ -90,38 +122,50 @@ void ProcStructure::getDamage(float damage, Collider* c)
     if (hp <= _hp * 0.5)
     {
         if (index == Wall)
+        {
             imgs[Wall]->frame = 1;
+            if (hp <= 0)
+            {
+                map->imgs[3]->alpha = 1.0f;
+                map->isClipped = false;
+            }
+        }
         if (hp <= 0)
         {
             isActive = false;
-            addProcEffect(this, EffectExplosionL, p);
+            addProcEffect(this, EffectExplosionM, p);
         }
     }
 
 }
 
 #define maxStruct 2
-ProcStructure** _structures;
+ProcStructure*** _structures;
 ProcStructure** structures;
 int structNum;
 void loadStructure()
 {
-    _structures = new ProcStructure * [StructureIndexMax];
+    _structures = new ProcStructure ** [StructureIndexMax];
     for (int i = 0; i < StructureIndexMax; i++)
-        _structures[i] = new ProcStructure[maxStruct];
+    {
+        _structures[i] = new ProcStructure*[maxStruct];
+        for (int j = 0; j < maxStruct; j++)
+            _structures[i][j] = new ProcStructure();
+    }
     structures = new ProcStructure * [StructureIndexMax * maxStruct];
     structNum = 0;
 
     addStructure(AppleStair, iPointMake(630, 180));
-    addStructure(Wall, iPointMake(2700, 200));
+    addStructure(Wall, iPointMake(2580, 200));
 }
 
 void freeStructure()
 {
     for (int i = 0; i < StructureIndexMax; i++)
     {
+        for(int j=0; j< maxStruct; j++)
+            delete _structures[i][j];
         delete _structures[i];
-        delete structures[i];
     }
     delete _structures;
     delete structures;
@@ -146,7 +190,7 @@ void addStructure(int index, iPoint p)
 {
     for (int i = 0; i < maxStruct; i++)
     {
-        ProcStructure* s = &_structures[index][i];
+        ProcStructure* s = _structures[index][i];
         if (s->isActive == false)
         {
             s->init(index, p);

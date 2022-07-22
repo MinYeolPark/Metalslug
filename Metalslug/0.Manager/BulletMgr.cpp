@@ -9,19 +9,19 @@
 ProcBullets*** _bullets;
 ProcBullets** bullets;
 int bulletNum;
-
 void loadProcBullets()
 {
 	_bullets = new ProcBullets * *[BulletIndexMax];
 	for (int i = 0; i < BulletIndexMax; i++)
 	{
 		_bullets[i] = new ProcBullets * [bulletMax];
-		if (i == BulletHandGun || i == BulletHeavyMachinegun)
+		if (i == BulletHandGun || i == BulletHeavyMachinegun ||
+			i==BulletBomb)
 		{
 			for (int j = 0; j < bulletMax; j++)
 				_bullets[i][j] = new BulletsPlayer(i);
 		}
-		else if (i == BulletMelee)
+		else if (i == BulletMelee || i==BulletMeleeEnd)
 		{
 			for (int j = 0; j < bulletMax; j++)
 				_bullets[i][j] = new BulletsEnemy(i);
@@ -38,11 +38,19 @@ void loadProcBullets()
 
 void freeProcBullets()
 {
-	for (int i = 0; i < bulletMax; i++)
+#if 1
+	for (int i = 0; i < BulletIndexMax; i++)
+	{
+		for (int j = 0; j < bulletMax; j ++ )
+		{
+			_bullets[i][j]->free();
+			delete _bullets[i][j];
+		}
 		delete _bullets[i];
+	}
 	delete _bullets;
-
 	delete bullets;
+#endif
 }
 
 void drawProcBullets(float dt, iPoint off)
@@ -123,11 +131,7 @@ void ProcBulletsPattern::patternMelee(ProcBullets* b, float dt)
 	}
 	else
 	{
-		b->index = BulletMeleeEnd;
-		//for (int i = 0; i < b->colNum; i++)
-		//	b->colliders[i]->isActive = false;
 		b->up = 0.0f;
-		//b->pattern = patternMeleeEnd;		
 		return;
 	}
 }

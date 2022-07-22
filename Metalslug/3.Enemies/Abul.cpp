@@ -12,7 +12,7 @@ Abul::Abul(int index) : ProcEnemy(index)
 	hp = 0;
 	dmg = 0;
 	sight = 0;
-	moveSpeed = 150.f;
+	moveSpeed = 200.f;
 	attkRange = 0;
 	attkRate = 0.f;	_attkRate = 0.f;
 	aiDt = 0.f;	_aiDt = 0.f;
@@ -68,7 +68,9 @@ void Abul::update(float dt)
 	}
 	else
 	{
-		
+		isActive = containPoint(p,
+			iRectMake(-map->off.x - 40, -map->off.y - 40,
+				devSize.width + 80, devSize.height + 80));
 	}
 
 	int len = iPointLength(tp - p);

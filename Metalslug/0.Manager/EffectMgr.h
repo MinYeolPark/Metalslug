@@ -50,11 +50,11 @@ struct ProcEffect
 	float delta, _delta;
 	float spawnDt, _spawnDt;
 
-	void initEffect(ProcObject* parent, int idx, iPoint p);
-	void initEffect(ProcObject* parent, int idx, iPoint p, float spawnDt);
-	void updateEffect(float dt);
-	bool drawEffect(float dt, iPoint off);
-	void freeEffect();
+	void init(ProcObject* parent, int idx, iPoint p);
+	void init(ProcObject* parent, int idx, iPoint p, float spawnDt);
+	void update(float dt);
+	bool draw(float dt, iPoint off);
+	void free();
 		
 	static void cbAniEffect(void* parm);
 };

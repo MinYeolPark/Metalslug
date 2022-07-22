@@ -24,6 +24,7 @@ public:
 	float degree;
 
 	Gun* curGun;
+	iPoint tp;
 	iPoint fp;			//firePoint
 	iPoint bombPoint;
 
@@ -57,6 +58,7 @@ public:
 	float alpha;
 	float inviDt, _inviDt;		//Immortality
 
+	bool canControl;
 public:
 	void fire(iPoint v);
 	void bomb(iPoint v);	

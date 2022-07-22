@@ -148,7 +148,6 @@ StatusUI::StatusUI()
 	igNumber = new igImage * [10];
 	for (int i = 0; i < 10; i++)
 		igNumber[i] = g->createIgImage("assets/NumFont/NumFont_%02d.png", i);
-
 	for (int i = 0; i < 26; i++)
 		alphabet[i] = g->createIgImage("assets/NumFont/AlphabetFont_%02d.png", i + 1);
 	for (int i = 0; i < 10; i++)
@@ -172,20 +171,20 @@ StatusUI::~StatusUI()
 	iGraphics* g = new iGraphics();
 	for (int i = 0; i < 10; i++)
 		g->freeIgImage(igNumber[i]);
+	delete igNumber;
 
 	for (int i = 0; i < 10; i++)
 		g->freeIgImage(alphabet[i]);
+	delete alphabet;
 
 	for (int i = 0; i < 10; i++)
 		g->freeIgImage(number[i]);
-
-	delete igNumber;
+	delete number;
 
 	delete stPlaytime;
 	delete stScore;
 	delete stAmmo;
-	delete stBomb;
-	delete status;
+	delete stBomb;	
 	delete g;
 }
 

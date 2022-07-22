@@ -10,12 +10,12 @@
 #include "ProcField.h"
 #include "ProcItem.h"
 ProcPlayer* player;
-static iImage** _imgEriHeavyTop = NULL;
 ImageInfo topImageInfo[];
 ImageInfo botImageInfo[];
 ImageInfo infoEriTopHeavy[];
 static iImage** _imgEriTop = NULL;
-static iImage** _imgEriBot = NULL;
+static iImage** _imgEriBot;
+static iImage** _imgEriHeavyTop;
 ProcPlayer::ProcPlayer(int index) : ProcObject()
 {
     layer = ObjLayer::LayerPlayer;
@@ -36,6 +36,7 @@ ProcPlayer::ProcPlayer(int index) : ProcObject()
 
     curGun = new Gun();//{ HandGun, 100, 100, 0 };
     fireDeg = 0;
+    tp = p;
     fp = iPointMake(p.x + 15, p.y - 20);
     bombPoint = p;
 
@@ -68,6 +69,8 @@ ProcPlayer::ProcPlayer(int index) : ProcObject()
 #if 1
     alpha = 1.0f;
     inviDt = 0.0f, _inviDt = 3.0f;
+
+    canControl = true;
 #endif
 
     _imgEriTop = createSingleImage(topImageInfo, PlayerBehaveMax, this);
@@ -87,27 +90,25 @@ ProcPlayer::ProcPlayer(int index) : ProcObject()
 
 ProcPlayer::~ProcPlayer()
 {
-    for (int i = 0; i < PlayerBehaveMax; i++)
+    //for (int i = 0; i < PlayerBehaveMax; i++)
+    //{
+    //    delete _imgEriTop[i];
+    //    delete _imgEriHeavyTop[i];
+    //}
+    //for (int i = 0; i < 4; i++)
+    //    delete _imgEriBot[i];
+    if (_imgEriTop)
     {
-        delete _imgEriTop[i];
-        delete _imgEriHeavyTop[i];
+        delete _imgEriTop;
+        _imgEriTop = NULL;
+        delete _imgEriBot;
+        delete _imgEriHeavyTop;
     }
-    for (int i = 0; i < 4; i++)
-        delete _imgEriBot[i];
-    delete _imgEriTop;
-    delete _imgEriHeavyTop;
-    delete _imgEriBot;
-
     delete curGun;
     for (int i = 0; i < rectNum; i++)
         delete rect[i];
     delete rect;
 
-    delete player;
-
-    _imgEriTop = NULL;
-    _imgEriHeavyTop = NULL;
-    _imgEriBot = NULL;
 }
 
 void ProcPlayer::init(iPoint p)
@@ -117,6 +118,7 @@ void ProcPlayer::init(iPoint p)
     dirRight = true;
     dirUp = false;
     fireDeg = 0;
+    tp = p;
     fp = iPointMake(p.x + 15, p.y - 22);
     topState = PlayerSpawn;
     botState = PlayerIdle;
@@ -149,10 +151,9 @@ void ProcPlayer::init(iPoint p)
 #include "ProcStructure.h"
 void ProcPlayer::update(float dt)
 {   
-    if (isDead)
-    {
+    if (isDead || !canControl)
         return;
-    }
+
     v = iPointZero;
     if (getKeyStat(keyboard_left))
         v.x = -1;
@@ -363,9 +364,9 @@ void ProcPlayer::fixedUpdate(float dt)
     for (int i = 0; i < rectNum; i++)
     {
         rect[i]->origin = iPointMake(
-            p.x + map->off.x - rect[i]->size.width / 2,
-            p.y + map->off.y - rect[i]->size.height);
-    }
+            p.x + map->_off.x - rect[i]->size.width / 2,
+			p.y + map->_off.y - rect[i]->size.height);
+    }    
 }
 
 bool ProcPlayer::draw(float dt, iPoint off)

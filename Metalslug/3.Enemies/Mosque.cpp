@@ -157,9 +157,13 @@ void Mosque::update(float dt)
 	if (!isAppear)
 	{
 		if (containPoint(p,
-			iRectMake(-map->off.x - 100, -map->off.y,
+			iRectMake(-map->off.x - 180, -map->off.y,
 				devSize.width, devSize.height)))
+		{
 			isAppear = true;
+			if (map->move(iPointMake(devSize.width / 5 - (p.x + map->_off.x), 0)))
+				map->isClipped = true;
+		}
 		return;
 	}
 	else
@@ -262,7 +266,9 @@ bool Mosque::draw(float dt, iPoint off)
 				addProcEffect(this, EffectExplosionM, iPointMake(rx, ry));
 			}
 			isDead = true;
+			baseState = MosqueDead;
 			dramaDt = 0.0f;
+			map->isClipped = false;
 		}
 	}
 #else
@@ -315,7 +321,6 @@ void Mosque::getDamage(float damage)
 		{
 			isDead = true;
 			dramaDt = 0.0000001f;
-			baseState = MosqueDead;
 		}
 	}	
 }

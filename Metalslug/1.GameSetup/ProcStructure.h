@@ -27,7 +27,7 @@ public:
 	virtual bool draw(float dt, iPoint off);
 	virtual void free();
 public:
-	virtual void getDamage(float damage, Collider* c);
+	virtual void getDamage(float damage);
 };
 
 void loadStructure();
@@ -35,4 +35,5 @@ void freeStructure();
 void drawStructure(float dt, iPoint off);
 void addStructure(int index, iPoint p);
 
-
+extern ProcStructure** structures;
+extern int structNum;

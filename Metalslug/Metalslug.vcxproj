@@ -242,7 +242,6 @@
     <ClCompile Include="std\iStrTex.cpp" />
     <ClCompile Include="std\iUtil.cpp" />
     <ClCompile Include="std\iWindow.cpp" />
-    <ClCompile Include="소스.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Metalslug.rc" />

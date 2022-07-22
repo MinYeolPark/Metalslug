@@ -37,6 +37,8 @@ ProcMap::ProcMap(int stage)
 
 	imgs = new iImage * [mapNum[stage]];
 	imgs = createSingleImage(mapImageInfo,	mapNum[stage], this);	
+	if(stage==0)
+		imgs[3]->alpha = 0.0f;
 	//	
 	//Layer	
 	imgsLayer = new iImage * [layerNum];
@@ -87,27 +89,12 @@ void ProcMap::update(float dt)
 {	
 	if (isClipped)
 		return;
-#if 0
-	if (!viewChange)
-	{
-		if (player->p.x > 1050)
-		{
-#if 1
-			if (move(iPointMake(0, dt)))
-			{
-				viewChange = true;
-				//bg collider -> true : block to backward
-			}
-#endif
-		}
-	}
-#else
+
+	//viewChange
 	if (player->p.x < 1200 - devSize.width / 2)
 		_off.y = 0;
 	else if (player->p.x < 1200)
 	{
-		// player->p.x == 1050 - devSize.width / 2 ==> 0
-		// player->p.x == 1050 ==> offMax.y
 		float range = devSize.width / 2;
 		_off.y = linear((player->p.x - 1050 + range) / range, 0.0f, offMax.y);
 	}
@@ -115,8 +102,6 @@ void ProcMap::update(float dt)
 	{
 		_off.y = offMax.y;
 	}
-#endif
-
 	//Camera Move
 	float x = player->p.x + _off.x;
 	if (x < devSize.width / 3)
@@ -132,7 +117,7 @@ void ProcMap::update(float dt)
 		off = _off;
 	}
 #endif
-	movePoint(off, off, _off, player->moveSpeed * dt);
+	
 #if 0
 	if (off.x < _off.x)
 	{
@@ -158,11 +143,14 @@ void ProcMap::update(float dt)
 		if (off.y < _off.y)
 			off.y = _off.y;
 	}
+#else
+	movePoint(off, off, _off, player->moveSpeed * dt);
 #endif
 }
 #include "InputMgr.h"
 void ProcMap::paint(float dt)
 {
+	setRGBA(1, 1, 1, 1);
 	if (getKeyStat(keyboard_delete))
 	{
 		isClipped = !isClipped;
@@ -200,6 +188,7 @@ void ProcMap::paint(float dt)
 		}
 	}
 #endif // _DEBUG
+	setRGBA(1, 1, 1, 1);
 }
 bool ProcMap::move(iPoint mp)
 {
@@ -217,11 +206,6 @@ bool ProcMap::move(iPoint mp)
 }
 
 
-
-iPoint objPosition[3] =
-{
-	{200, 180},  {2600, 180}, {3400, 100},
-};
 MapData mapData[] = {
 	{
 		{0, 0},

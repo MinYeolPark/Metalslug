@@ -50,13 +50,17 @@ ArabCamel::ArabCamel(int index) : ProcEnemy(index)
 
 ArabCamel::~ArabCamel()
 {
-	for (int i = 0; i < ArabCamelBehaveMax; i++)
+#if 0
+	if (_imgArabCamel)
 	{
-		delete camelImgs[i];
-		delete arabImgs[i];
+		delete _imgArabCamel;
+		_imgArabCamel = NULL;
+		delete _imgCamel;		
 	}
-	delete camelImgs;
-	delete arabImgs;
+	for (int i = 0; i < rectNum; i++)
+		delete rect[i];
+	delete rect;
+#endif
 }
 
 void ArabCamel::getDamage(float damage)

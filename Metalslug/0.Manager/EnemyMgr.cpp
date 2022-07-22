@@ -16,12 +16,6 @@
 ProcEnemy*** _enemies;
 ProcEnemy** enemies;
 int enemyNum;
-
-ArabCamel* arabCamel;
-Truck* truck;
-Kessie* kessie;
-Mosque* mosque;
-Abul* abul;
 int maxNum[EnemyIndexMax] =
 {
 	50,		//melee
@@ -33,7 +27,6 @@ int maxNum[EnemyIndexMax] =
 	1,		//kessie
 	1,		//abul
 };
-
 static bool truckTrigger = false;
 void loadProcEnemy()
 {
@@ -71,7 +64,6 @@ void loadProcEnemy()
 			for (int j = 0; j < maxNum[i]; j++)
 				_enemies[i][j] = new Kessie(i);
 		}
-
 		else if (i == IdxAbul)
 		{
 			for (int j = 0; j < maxNum[i]; j++)

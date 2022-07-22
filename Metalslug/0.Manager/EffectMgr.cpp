@@ -2,8 +2,7 @@
 
 #include "ImgMgr.h"
 
-// 3가지의 이펙트, 100개씩 
-ProcEffect** _effect;
+ProcEffect*** _effect;
 ProcEffect** effect;
 int effectNum;
 
@@ -11,9 +10,13 @@ static iImage** _imgEffect = NULL;
 ImageInfo imgEffectInfo[];
 void loadProcEffect()
 {
-	_effect = new ProcEffect * [EffectIndexMax];
+	_effect = new ProcEffect * *[EffectIndexMax];
 	for (int i = 0; i < EffectIndexMax; i++)
-		_effect[i] = new ProcEffect[effectMax];
+	{
+		_effect[i] = new ProcEffect * [effectMax];
+		for (int j = 0; j < effectMax; j++)
+			_effect[i][j] = new ProcEffect();
+	}
 	effect = new ProcEffect * [EffectIndexMax * effectMax];
 	effectNum = 0;
 }
@@ -22,8 +25,12 @@ void freeProcEffect()
 {
 	for (int i = 0; i < EffectIndexMax; i++)
 	{
+		for (int j = 0; j < effectMax; j++)
+		{
+			_effect[i][j]->free();
+			delete _effect[i][j];
+		}
 		delete _effect[i];
-		delete effect[i];
 	}
 	delete _effect;
 	delete effect;
@@ -34,8 +41,8 @@ void drawProcEffect(float dt, iPoint off)
 	for (int i = 0; i < effectNum; i++)
 	{
 		ProcEffect* e = effect[i];
-		e->updateEffect(dt);
-		if (e->drawEffect(dt, off))
+		e->update(dt);
+		if (e->draw(dt, off))
 		{
 			effectNum--;
 			effect[i] = effect[effectNum];
@@ -48,11 +55,11 @@ void addProcEffect(ProcObject* parent, int index, iPoint p, int id)
 {
 	for (int i = 0; i < effectMax; i++)
 	{
-		ProcEffect* e = &_effect[index][i];
+		ProcEffect* e = _effect[index][i];
 		if (e->isActive == false)
 		{
 			e->id = id;
-			e->initEffect(parent, index, p);
+			e->init(parent, index, p);
 			effect[effectNum] = e;
 			effectNum++;
 			return;
@@ -64,10 +71,10 @@ void addProcEffect(ProcObject* parent, int index, iPoint p, float spawnDt)
 {
 	for (int i = 0; i < effectMax; i++)
 	{
-		ProcEffect* e = &_effect[index][i];
+		ProcEffect* e = _effect[index][i];
 		if (e->isActive == false)
 		{
-			e->initEffect(parent, index, p , spawnDt);
+			e->init(parent, index, p , spawnDt);
 			effect[effectNum] = e;
 			effectNum++;
 			return;
@@ -100,16 +107,14 @@ ProcEffect::ProcEffect()
 
 ProcEffect::~ProcEffect()
 {
-#if 1
-	for (int i = 0; i < BulletIndexMax; i++)
-		delete _imgEffect[i];
-	delete _imgEffect;
-
-	_imgEffect = NULL;
-#endif
+	if (_imgEffect)
+	{
+		delete _imgEffect;
+		_imgEffect = NULL;
+	}
 }
 
-void ProcEffect::initEffect(ProcObject* parent, int idx, iPoint p)
+void ProcEffect::init(ProcObject* parent, int idx, iPoint p)
 {
 	isActive = true;
 	this->parent = parent;
@@ -119,15 +124,15 @@ void ProcEffect::initEffect(ProcObject* parent, int idx, iPoint p)
 	imgs[idx]->startAnimation(cbAniEffect, this);
 }
 
-void ProcEffect::initEffect(ProcObject* parent, int idx, iPoint p, float spawnDt)
+void ProcEffect::init(ProcObject* parent, int idx, iPoint p, float spawnDt)
 {
 	this->spawnDt = spawnDt - 1.f;
 	this->_spawnDt = spawnDt;
-	initEffect(parent, idx, p);
+	init(parent, idx, p);
 }
 
 
-void ProcEffect::updateEffect(float dt)
+void ProcEffect::update(float dt)
 {
 	if (index == EffectKessieBlastStart ||
 		index ==EffectKessieBlast ||
@@ -149,7 +154,7 @@ void ProcEffect::updateEffect(float dt)
 	}
 }
 
-bool ProcEffect::drawEffect(float dt, iPoint off)
+bool ProcEffect::draw(float dt, iPoint off)
 {
 	setRGBA(1, 1, 1, 1);
 	imgCurr = imgs[index];
@@ -163,7 +168,7 @@ bool ProcEffect::drawEffect(float dt, iPoint off)
 	return !isActive;
 }
 
-void ProcEffect::freeEffect()
+void ProcEffect::free()
 {
 }
 

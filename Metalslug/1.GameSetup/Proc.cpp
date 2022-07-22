@@ -71,8 +71,6 @@ bool keyProc(iKeyState stat, iPoint p)
 	switch (stat) {
 
 	case iKeyStateBegan:
-		printf("Clicked point = %f, %f\n", p.x, p.y );
-		printf("off = %f, %f\n", map->off.x, map->off.y);
 		break;
 
 	case iKeyStateMoved:
@@ -120,12 +118,14 @@ void loadProcPlayer()
 	//#issue
 	player = new ProcPlayer(ERI);
 
-#if 0
-	player->init({ 3600, 200 });
+#if 1
+	player->init({ 100, 200 });
 #elif 0
 	player->init({ 1250,200 });
+#elif 0
+	player->init({ 2100,200 });
 #else
-	player->init({ 100, 200 });
+	player->init({ 3600, 200 });
 #endif
 }
 

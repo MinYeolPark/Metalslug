@@ -5,6 +5,8 @@
 #include "GameMgr.h"
 #include "ImgMgr.h"
 
+#include "Menu.h"
+#include "Loading.h"
 #include "StatusUI.h"
 #include "PopupUI.h"
 
@@ -142,6 +144,7 @@ bool keyProcUI(iKeyState stat, iPoint p)
 		else if (i == 2)
 		{
 			optionConfirm = true;
+			setLoading(GameStateMenu, freeProc, loadMenu);
 		}
 
 		if (optionConfirm == true)

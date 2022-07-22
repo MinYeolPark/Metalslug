@@ -14,7 +14,7 @@ void loadGame()
 
 	playtime = 0.0f;
 	stageClear = false;
-#if 1
+#if 0
 	gs = GameState::GameStateProc;
 	loadProc();
 #else

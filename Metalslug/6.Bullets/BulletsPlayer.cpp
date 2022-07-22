@@ -5,6 +5,7 @@
 #include "BulletMgr.h"
 
 #include "ProcNpc.h"
+#include "ProcStructure.h"
 BulletsPlayer::BulletsPlayer(int index) : ProcBullets(index)
 {
 
@@ -103,6 +104,30 @@ void BulletsPlayer::update(float dt)
 				}
 			}
 		}	
+	}
+	for (int i = 0; i < structNum; i++)
+	{
+		ProcStructure* s = structures[i];
+		float dMin = 0xfffff;
+		float d = iPointLength(s->p - p);
+		if (dMin > d)
+		{
+			dMin = d;
+			if (s->rect)
+			{
+				dst = s;
+				for (int j = 0; j < dst->rectNum; j++)
+				{
+					if (containPoint(p + map->off, dst->getRect(j)))
+					{
+						isActive = false;
+						dst->getDamage(damage);
+						iPoint bp = iPointMake(rand() % 10 + p.x, rand() % 10 + p.y);
+						addProcEffect(this, index, bp);		//bulletIndex=effectIndex
+					}
+				}
+			}
+		}
 	}
 	//if (dst)
 	//{

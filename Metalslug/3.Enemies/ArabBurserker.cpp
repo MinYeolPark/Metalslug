@@ -41,10 +41,11 @@ ArabBurserker::ArabBurserker(int index) : ProcEnemy(index)
 
 ArabBurserker::~ArabBurserker()
 {
-	for (int i = 0; i < BurserkBehaveMax; i++)
-		delete imgs[i];
-	delete imgs;
-
+	if (_imgBurserk)
+	{
+		delete _imgBurserk;
+		_imgBurserk = NULL;
+	}
 	for (int i = 0; i < rectNum; i++)
 		delete rect[i];
 	delete rect;
@@ -79,8 +80,8 @@ void ArabBurserker::update(float dt)
 	if (!isAppear)
 	{
 		if (containPoint(p,
-			iRectMake(-map->off.x - 40, -map->off.y - 40,
-				devSize.width + 80, devSize.height + 80)))
+			iRectMake(-map->off.x, -map->off.y,
+				devSize.width, devSize.height)))
 			isAppear = true;
 	}
 	else
@@ -94,9 +95,14 @@ void ArabBurserker::update(float dt)
 	if (aiDt > _aiDt)
 	{
 		aiDt -= _aiDt;
-		//ai(this, dt);
-	}
-	
+		int len = iPointLength(p - player->p);
+		if (len < sight)
+		{
+			iPoint tv = player->p - p;
+			tv /= iPointLength(tv);			
+			v = tv;
+		}
+	}	
 
 	if (v != iPointZero)
 	{
@@ -105,21 +111,7 @@ void ArabBurserker::update(float dt)
 		else if (v.x < 0)
 			state = WalkBurserkL;
 
-		//for (int i = 0; i < player->colNum; i++)
-		//{
-		//	Collider* c = player->colliders[i];
-		//	if (containPoint(p, c->getCollider()))
-		//	{
-		//		float d = iPointLength(p - c->p);
-
-		//		if (!player->isDead)
-		//		{
-		//			player->getDamage(100, c);
-		//			iPoint bp = iPointMake(rand() % 10 + p.x, rand() % 10 + p.y);
-		//			addProcEffect(EffectBlood, bp);		//bulletIndex=effectIndex
-		//		}
-		//	}			
-		//}		
+		p.x += v.x;
 	}
 	else
 	{
@@ -136,13 +128,23 @@ void ArabBurserker::update(float dt)
 void ArabBurserker::fixedUpdate(float dt)
 {
 	ProcEnemy::fixedUpdate(dt);
-
 	//ColliderUpdate
 	for (int i = 0; i < rectNum; i++)
 	{
 		rect[i]->origin = iPointMake(
 			p.x + map->off.x - rect[i]->size.width / 2,
 			p.y + map->off.y - rect[i]->size.height);
+	}
+
+	if (state == WalkBurserkL + state % 2)
+	{
+		for (int i = 0; i < rectNum; i++)
+		{
+			iRect rt = getRect();
+			printf("%f, %f\n", getRect(i).origin.x, getRect(i).origin.y);
+			if (containPoint(player->p, rt))
+				player->getDamage(100);
+		}
 	}
 }
 bool ArabBurserker::draw(float dt, iPoint off)

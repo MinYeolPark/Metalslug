@@ -43,11 +43,12 @@ ArabMelee::ArabMelee(int index) : ProcEnemy(index)
 }
 
 ArabMelee::~ArabMelee()
-{	
-	for (int i = 0; i < MeleeBehaveMax; i++)
-		delete imgs[i];
-	delete imgs;
-
+{
+	if (_imgMelee)
+	{
+		delete _imgMelee;
+		_imgMelee = NULL;
+	}
 	for (int i = 0; i < rectNum; i++)
 		delete rect[i];
 	delete rect;
@@ -101,14 +102,12 @@ void ArabMelee::update(float dt)
 		{
 			attkRate = 0.0f;
 			iPoint tv = player->p - p;
-			tv /= iPointLength(tv);
-			tv.setLength(moveSpeed * dt);
+			tv /= iPointLength(tv);			
 			v = tv;
 			if (v.x > 0)
 				tp = iPointMake(player->p.x - attkRange, player->p.y);
 			else if (v.x < 0)
 				tp = iPointMake(player->p.x + attkRange, player->p.y);
-			printf("targetPosition=%f,%f\n", tp.x, tp.y);
 		}
 	}
 
@@ -157,8 +156,7 @@ void ArabMelee::update(float dt)
 	}
 #if 1
 	else 
-	{
-		printf("v=%f\n", v.x);
+	{		
 		attkRate += dt;
 		if (state != (ArabMeleeBehave)PreAttackMeleeL + state % 2
 			&& state != (ArabMeleeBehave)FireMeleeL + state % 2)

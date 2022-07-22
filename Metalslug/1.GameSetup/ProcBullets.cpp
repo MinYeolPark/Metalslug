@@ -38,15 +38,11 @@ ProcBullets::ProcBullets(int index) : ProcObject()
 
 ProcBullets::~ProcBullets()
 {
-	for (int i = 0; i < BulletIndexMax; i++)
+	if (_imgBullets)
 	{
-		delete _imgBullets[i];
-		delete imgs[i];
+		delete _imgBullets;
+		_imgBullets = NULL;
 	}
-	delete _imgBullets;
-	delete imgs;
-
-	_imgBullets = NULL;
 }
 
 void ProcBullets::fixedUpdate(float dt)

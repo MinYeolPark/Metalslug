@@ -10,8 +10,6 @@ BulletsMosque::BulletsMosque(int index): ProcBullets(index)
 	d = 0.f;
 	_d = 0.f;
 	imgCurr = imgs[index];
-
-
 }
 
 BulletsMosque::~BulletsMosque()

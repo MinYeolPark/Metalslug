@@ -142,10 +142,10 @@ void Kessie::update(float dt)
 	if (!isAppear)
 	{
 		if (containPoint(p,
-			iRectMake(-map->off.x - 80, -map->off.y - 100,
+			iRectMake(-map->off.x - 20, -map->off.y - 100,
 				devSize.width, devSize.height)))
 		{
-			if (movePoint(p, p, iPointMake(p.x, 120), moveSpeed * 0.01))
+			if (movePoint(p, p, iPointMake(p.x, devSize.height / 3), moveSpeed * dt))
 			{
 				isAppear = true;
 				for (int i = 0; i < 2; i++)
@@ -159,17 +159,15 @@ void Kessie::update(float dt)
 				}
 			}
 		}
-		else
-			return;
 	}
 	else//isAppear
 	{
 		aiDt += dt;
-
 		delta += dt;
 		while (delta > 2)
 			delta -= 2;
 		float r = delta / 2;
+		printf("y=%f\n");
 		y = 0.3 * _cos(360 * r);
 		p.y+= y;
 		if (aiDt > _aiDt)
@@ -231,7 +229,6 @@ void Kessie::update(float dt)
 
 void Kessie::fixedUpdate(float dt)
 {
-	printf("fixedupdate~~\n");
 	//ColliderUpdate		
 	iPoint rectPos[3] =
 	{
@@ -248,8 +245,7 @@ void Kessie::fixedUpdate(float dt)
 	}
 
 	for (int i = 0; i < 2; i++)
-	{
-		printf("atkrect[%d]=%f,%f\n", i, atkRect[i]->origin.x, atkRect[i]->origin.y);
+	{		
 		iRect* r = atkRect[i];
 		iPoint pos[2] =
 		{
