@@ -47,7 +47,3 @@ void ProcObject::addScore(int addScore)
 void ProcObject::getDamage(float damage)
 {
 }
-
-void ProcObject::getDamage(float damage, Collider* c)
-{
-}

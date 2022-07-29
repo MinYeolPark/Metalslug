@@ -26,7 +26,7 @@ void loadProc()
 	loadProcEffect();
 
 
-	//loadProcItem();
+	loadProcItem();
 	loadProcNpcs();
 	//
 }
@@ -40,7 +40,7 @@ void freeProc()
 	freeProcEffect();
 
 
-	//freeProcItem();
+	freeProcItem();
 	freeProcNpcs();
 	//
 }
@@ -50,13 +50,11 @@ void drawProc(float dt)
 	iPoint off = drawProcField(dt);
 	drawStructure(dt, off);
 	drawProcEnemy(dt, off);
-	drawProcPlayer(dt, off);
+	drawProcItem(dt, off);
+	drawProcNpcs(dt, off);
 	drawProcBullets(dt, off);
 	drawProcEffect(dt, off);
-
-
-	drawProcNpcs(dt, off);
-	//drawProcItem(dt, off);
+	drawProcPlayer(dt, off);
 
 	drawUI(dt, off);
 	setRGBA(1, 1, 1, 1);
@@ -116,12 +114,11 @@ void loadProcPlayer()
 	//charIdx=selectedBtn;
 	//#issue
 	player = new ProcPlayer(ERI);
-
-#if 0
+#if 1
 	player->init({ 100, 200 });
 #elif 0
 	player->init({ 1250,200 });
-#elif 1
+#elif 0
 	player->init({ 2100,200 });
 #else
 	player->init({ 3600, 200 });
@@ -133,7 +130,7 @@ void freeProcPlayer()
 	delete player;
 }
 
-float spawnDt = 0.f;
+float spawnDt;
 void drawProcPlayer(float dt, iPoint off)
 {
 	if (player->topState != (PlayerBehave)(PlayerDead + player->topState % 2)
@@ -148,8 +145,10 @@ void drawProcPlayer(float dt, iPoint off)
 			if (player->life > 0)
 				player->init(player->p);
 			else//player->life==0
-			{
-				printf("gameOver\n");
+			{			
+				if (countDownPopup->bShow)
+					return;
+				showPopCountdown(true);
 			}
 		}
 	}

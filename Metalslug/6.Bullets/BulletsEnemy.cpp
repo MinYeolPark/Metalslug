@@ -93,11 +93,7 @@ void BulletsEnemy::update(float dt)
 
 void BulletsEnemy::fixedUpdate(float dt)
 {		
-	printf("p.x=%f, player->p.x=%f\n", p.x + map->_off.y, player->getRect().origin.y);
-	
-	setDotSize(20);
-	drawDot(getRect().origin);
-	if (containPoint(p, player->getRect()))
+	if (containPoint(p + map->off, player->getRect()))
 	{
 		isActive = false;
 		player->getDamage(100);

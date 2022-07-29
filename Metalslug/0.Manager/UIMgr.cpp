@@ -27,6 +27,7 @@ iStrTex* stPlaytime;
 igImage** boldNumber;
 igImage** normNumber;
 igImage** goldNumber;
+igImage** bigNumber;
 igImage** normAlphabet;
 void loadUI()
 {
@@ -40,11 +41,13 @@ void loadUI()
 	boldNumber = new igImage * [10];
 	normNumber = new igImage * [10];
 	goldNumber = new igImage * [10];
+	bigNumber = new igImage * [10];
 	normAlphabet = new igImage * [26];
 
 	memset(boldNumber, 0x00, sizeof(boldNumber));
 	memset(boldNumber, 0x00, sizeof(normNumber));
 	memset(boldNumber, 0x00, sizeof(goldNumber));
+	memset(boldNumber, 0x00, sizeof(bigNumber));
 	memset(boldNumber, 0x00, sizeof(normAlphabet));
 
 	for (int i = 0; i < 10; i++)
@@ -52,6 +55,7 @@ void loadUI()
 		boldNumber[i] = g->createIgImage("assets/NumFont/NumFont_%02d.png", i);
 		normNumber[i] = g->createIgImage("assets/NumFont/NumFont_%02d.png", i + 10);
 		goldNumber[i] = g->createIgImage("assets/NumFont/NumFont_%02d.png", i + 20);
+		bigNumber[i] = g->createIgImage("assets/NumFont/NumFont_%02d.png", i + 30);
 	}
 	for (int j = 0; j < 26; j++)
 		normAlphabet[j] = g->createIgImage("assets/NumFont/AlphabetFont_%02d.png", j + 1);
@@ -61,29 +65,34 @@ void loadUI()
 	popup = new PopupUI();
 #if true
 	createConfirmPopup();
+	createCountdownPopup();
 #endif
 }
 
 void freeUI()
 {
 	freeConfirmPopup();
+	freeCountdownPopup();
 #if 1
 	for (int i = 0; i < 10; i++)
 	{
 		delete boldNumber[i];
 		delete normNumber[i];
 		delete goldNumber[i];
+		delete bigNumber[i];
 	}
 	for (int j = 0; j < 26; j++)
 		delete normAlphabet[j];
 	delete boldNumber;
 	delete normNumber;
 	delete goldNumber;
+	delete bigNumber;
 	delete normAlphabet;
 
 	boldNumber = NULL;
 	normNumber = NULL;
 	goldNumber = NULL;
+	bigNumber = NULL;
 	normAlphabet = NULL;
 
 	delete status;
@@ -99,6 +108,7 @@ void drawUI(float dt, iPoint off)
 #if 1
 	drawConfirmPopup(dt);
 	drawSettingPopup(dt);
+	drawCountdownPopup(dt);
 #endif
 
 	setRGBA(1, 1, 1, 1);
@@ -256,7 +266,7 @@ bool keyConfirmPopup(iKeyState stat, iPoint p)
 			printf("yes\n");
 		}
 		else if (i == 1)
-			printf("Non\n");
+			printf("No\n");
 	case iKeyStateMoved:
 		for (i = 0; i < 2; i++)
 		{
@@ -274,4 +284,64 @@ bool keyConfirmPopup(iKeyState stat, iPoint p)
 		break;
 	}
 	return true;
+}
+
+iPopup* countDownPopup;
+iStrTex* stCount;
+int countDown;
+Texture* methodPopcount(const char* str)
+{
+	iGraphics* g = new iGraphics();
+	iSize size = iSizeMake(48, 48);
+	g->init(size);
+
+	int i, j = strlen(str);
+	iPoint p = iPointZero;
+	for (int i = 0; i < j; i++)
+	{
+		igImage* ig = bigNumber[str[i] - '0'];
+		g->drawIgImage(ig, p.x, p.y, TOP | LEFT);
+		p.x += ig->GetWidth() + 1;
+	}
+
+	Texture* tex = g->getTexture();
+	delete g;
+
+	return tex;
+}
+void createCountdownPopup()
+{
+	iPopup* pop = new iPopup();
+	iGraphics* g = new iGraphics();
+	iSize size = iSizeMake(devSize.width / 2, devSize.height / 2);
+	g->init(size);	
+	//stCount = new iStrTex(methodPopcount);	
+	Texture* tex = g->getTexture();
+	iImage* img = new iImage();
+	img->addObject(tex);
+
+	img->position = iPointZero;
+	freeImage(tex);
+
+	pop->addObject(img);
+	pop->style = iPopupStyleZoom;
+	pop->openPoint = iPointZero;
+	pop->closePoint = iPointZero;	
+	countDownPopup = pop;
+	countDownPopup->selected = 0;
+	countDownPopup->show(false);
+}
+
+void freeCountdownPopup()
+{
+}
+
+void drawCountdownPopup(float dt)
+{
+	countDownPopup->paint(dt);
+}
+
+void showPopCountdown(bool show)
+{
+	countDownPopup->show(show);
 }

@@ -24,9 +24,11 @@ void BulletsBomb::init(ProcObject* parent, int index, float degree, int fpNum)
 	this->p = owner->fp;
 	this->index = index;
 	this->alpha = 1.0f;
-
+	this->rp = p;
+	this->d = 0;
+	this->_d = 100.f;
 #if 1
-	this->v = iPointRotate(iPointMake(1, 0), iPointZero, 45);
+	this->v = parent->v;//iPointRotate(iPointMake(1, 0), iPointZero, 0);
 #endif
 	this->degree = owner->fireDeg;
 	float speedInfo[] = {
@@ -47,23 +49,25 @@ void BulletsBomb::update(float dt)
 	isActive = containPoint(p,
 		iRectMake(-map->off.x - 20, -map->off.y - 20,
 			devSize.width + 40, devSize.height + 40));	
+	printf(isActive ? "true\n" : "false\n");
 #if 1
+	iPoint md = v * speed * dt;
+	p += md;
+	d += iPointLength(md);
+	if (d > _d)
+		d -= _d;
+	float r = d / _d;
+	
+	iPoint c = iPointZero;
+	c.x = rp.x + 100 * dt * _cos(180 * r);
+	c.y = rp.y + 300 * dt * _sin(180 * r) - 0.5 * 9.81 * dt * dt;
+	rp = c;
+	printf("rp=%f=\n", c.y);
 #endif
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+void BulletsBomb::fixedUpdate(float dt)
+{
 	ProcObject* dst = NULL;
 	for (int i = 0; i < bulletNum; i++)
 	{
@@ -98,7 +102,7 @@ void BulletsBomb::update(float dt)
 	{
 		ProcEnemy* e = enemies[i];
 		float dMin = 0xfffff;
-		float d = iPointLength(e->p - p);		
+		float d = iPointLength(e->p - p);
 		if (dMin > d)
 		{
 			dMin = d;
@@ -121,7 +125,7 @@ void BulletsBomb::update(float dt)
 					}
 				}
 			}
-		}	
+		}
 	}
 	for (int i = 0; i < structNum; i++)
 	{
@@ -193,12 +197,34 @@ void BulletsBomb::update(float dt)
 					cNear->parent->getDamage(damage, cNear);
 					iPoint bp = iPointMake(rand() % 10 + p.x, rand() % 10 + p.y);
 					addProcEffect(index, bp);		//bulletIndex=effectIndex
-				}
+}
 			}
 		}
 		cNear = NULL;
 	}
 #endif
 
-	//p += v * speed * dt;
+	//ColliderUpdate
+	for (int i = 0; i < rectNum; i++)
+	{
+		rect[i]->origin = iPointMake(
+			p.x + map->off.x - rect[i]->size.width / 2,
+			p.y + map->off.y - rect[i]->size.height);
+	}
+}
+
+bool BulletsBomb::draw(float dt, iPoint off)
+{
+	setRGBA(1, 1, 1, alpha);
+	imgCurr = imgs[index];
+	imgCurr->degree = degree;
+	imgCurr->paint(dt, rp + off);
+	setRGBA(1, 1, 1, 1);
+
+#ifdef _DEBUG
+	for (int i = 0; i < rectNum; i++)
+		drawRect(getRect());
+#endif // _DEBUG
+
+	return !isActive;
 }

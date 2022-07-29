@@ -62,8 +62,9 @@ public:
 public:
 	virtual void getDamage(float damage);
 	virtual void spawnItem() = 0;
-	virtual void setState(NpcBehave newState) { state = newState; }
 
 	virtual void init(int idex, iPoint p, int itemIndex);
 	virtual void fixedUpdate(float dt);
 };
+extern ProcNpc** npcs;
+extern int npcNum;

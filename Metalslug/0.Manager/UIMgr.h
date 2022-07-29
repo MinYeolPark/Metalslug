@@ -14,6 +14,13 @@ void freeConfirmPopup();
 void drawConfirmPopup(float dt);
 bool keyConfirmPopup(iKeyState stat, iPoint p);
 
+extern iPopup* countDownPopup;
+extern int countDown;
+void createCountdownPopup();
+void freeCountdownPopup();
+void drawCountdownPopup(float dt);
+void showPopCountdown(bool show);
+
 extern igImage** boldNumber;
 extern igImage** normNumber;
 extern igImage** goldNumber;

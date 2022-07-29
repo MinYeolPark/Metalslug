@@ -69,12 +69,11 @@ Texture* methodStScore(const char* str)
 Texture* methodStAmmo(const char* str)
 {
 	iGraphics* g = new iGraphics();
-	iSize size = iSizeMake(16, 16);
+	iSize size = iSizeMake(48, 16);
 	g->init(size);
 
 	int i, j = strlen(str);
 	iPoint p = iPointZero;
-	iSize s = iSizeMake(16, 16);
 	for (int i = 0; i < j; i++)
 	{
 		igImage* ig = status->numberGold[str[i] - '0'];
@@ -193,8 +192,8 @@ bool StatusUI::paint(float dt)
 
 	stScore->drawString(devSize.width / 6, 2, TOP | LEFT, "%d", player->score);
 	stLife->drawString(devSize.width / 6 + 3, 22, TOP | LEFT, "%d", player->life);
-	stAmmo->drawString(100, 29, VCENTER | HCENTER, "%d", player->curGun->remain);
-	stBomb->drawString(130, 29, VCENTER | HCENTER, "%d", player->bombs);
+	stAmmo->drawString(105, 29, 0.9, 0.9, VCENTER | HCENTER, "%d", player->curGun->remain);
+	stBomb->drawString(130, 29, 0.9, 0.9, VCENTER | HCENTER, "%d", player->bombs);
 
 	playtime += dt;
 	stPlaytime->setString("%.0f", playtime);

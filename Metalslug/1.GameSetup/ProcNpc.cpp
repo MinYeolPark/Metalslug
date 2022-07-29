@@ -22,7 +22,7 @@ void loadProcNpcs()
 	npcNum = 0;
 
 	//AddProcNpc
-	addProcNPC(NpcIchimondi, iPointMake(150, 100));
+	addProcNPC(NpcIchimondi, iPointMake(150, 100),ItemHeavyMachineGun);
 }
 
 void freeProcNpcs()
@@ -94,7 +94,7 @@ ProcNpc::~ProcNpc()
 void ProcNpc::getDamage(float damage)
 {
 	if (state == (NpcBehave)(IdleNpcL + state % 2))
-		setState((NpcBehave)(ReleaseNpcL + state % 2));
+		state = (NpcBehave)(ReleaseNpcL + state % 2);
 }
 
 void ProcNpc::init(int idex, iPoint p, int itemIndex)
@@ -107,7 +107,6 @@ void ProcNpc::init(int idex, iPoint p, int itemIndex)
 
 void ProcNpc::fixedUpdate(float dt)
 {
-
 	int maxY = *(map->maxY + (int)p.x);
 	if (p.y >= maxY)
 	{

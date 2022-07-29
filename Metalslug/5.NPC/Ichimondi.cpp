@@ -8,13 +8,11 @@ static iImage** _imgIchi = NULL;
 ImageInfo infoIchi[];
 Ichimondi::Ichimondi(int index): ProcNpc(index)
 {		
-	//colliders[0]->init(this, iSizeMake(50, 50));
-
 	index = NpcIchimondi;
 	state = IdleNpcL;
 	complete = false;
 	escape = false;
-	itemIndex = -1;
+	itemIndex = 0;
 	///////////////////////////////////
 	imgs = NULL;
 	imgCurr = NULL;
@@ -32,15 +30,23 @@ Ichimondi::Ichimondi(int index): ProcNpc(index)
 	for (int i = 0; i < NpcBehaveMax; i++)
 		imgs[i] = _imgIchi[i]->clone();
 	imgCurr = imgs[index];
+
+	rectNum = 1;
+	rect = new iRect * [rectNum];
+	for (int i = 0; i < rectNum; i++)
+		rect[i] = new iRect();
 }
 
 Ichimondi::~Ichimondi()
 {
 	for (int i = 0; i < NpcIndexMax; i++)
-		delete _imgIchi[i];
-	delete _imgIchi;
-
-	_imgIchi = NULL;
+	{
+		delete _imgIchi;		
+		_imgIchi = NULL;
+	}
+	for (int i = 0; i < rectNum; i++)
+		delete rect[i];
+	delete rect;
 }
 
 void Ichimondi::dead()
@@ -51,9 +57,26 @@ void Ichimondi::dead()
 
 void Ichimondi::spawnItem()
 {
-	addProcItem(itemIndex, this->p - map->off);
+	addProcItem(itemIndex, this->p);
 }
+
 iPoint initPos = iPointZero;
+void Ichimondi::init(int index, iPoint p, int itemIndex)
+{
+	this->isActive = true;
+	this->index = index;
+	this->p = p;
+	this->tp = p;
+	this->itemIndex = itemIndex;
+	state = IdleNpcL;
+
+	for (int i = 0; i < rectNum; i++)
+	{
+		iRect* r = rect[i];
+		r->size = iSizeMake(40, 40);
+		r->origin = p;
+	}
+}
 void Ichimondi::update(float dt)
 {
 	isActive = containPoint(p,
@@ -70,14 +93,14 @@ void Ichimondi::update(float dt)
 			if (v.x > 0)
 			{
 				maxX = initPos.x + 100;
-				setState(WalkNpcR);
+				state = WalkNpcR;				
 				if (p.x > maxX)
 					v.x = -1;
 			}
 			else if (v.x < 0)
 			{
 				maxX = initPos.y - 100;
-				setState(WalkNpcL);			
+				state = WalkNpcL;				
 				if (p.x < maxX)
 					v.x = 1;
 			}
@@ -89,7 +112,7 @@ void Ichimondi::update(float dt)
 		if (containPoint(player->p, iRectMake(p.x - 20, p.y - 40, 40, 40)))
 		{
 			v = iPointZero;
-			setState((NpcBehave)(AddItemNpcL + state % 2));
+			state = (NpcBehave)(AddItemNpcL + state % 2);			
 		}
 	}
 
@@ -101,6 +124,20 @@ void Ichimondi::update(float dt)
 	fixedUpdate(dt);
 }
 
+void Ichimondi::fixedUpdate(float dt)
+{
+	ProcNpc::fixedUpdate(dt);
+
+	//ColliderUpdate
+	for (int i = 0; i < rectNum; i++)
+	{
+		rect[i]->origin = iPointMake(
+			p.x + map->off.x - rect[i]->size.width / 2,
+			p.y + map->off.y - rect[i]->size.height);
+		printf("%f\n", rect[i]->origin.x);
+	}
+}
+
 bool Ichimondi::draw(float dt, iPoint off)
 {
 	setRGBA(1, 1, 1, 1);
@@ -108,6 +145,10 @@ bool Ichimondi::draw(float dt, iPoint off)
 	imgCurr->paint(dt, p + off);	
 	setRGBA(1, 1, 1, 1);
 
+#ifdef _DEBUG
+	for (int i = 0; i < rectNum; i++)
+		drawRect(getRect());
+#endif // _DEBUG
 	return !isActive;
 }
 

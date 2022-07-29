@@ -325,8 +325,7 @@ void ProcPlayer::update(float dt)
         }        
     }    
     p.x += v.x;
-    
-    fixedUpdate(dt);
+    //fixedUpdate(dt);
 }
 
 void ProcPlayer::fixedUpdate(float dt)
@@ -364,8 +363,8 @@ void ProcPlayer::fixedUpdate(float dt)
     for (int i = 0; i < rectNum; i++)
     {
         rect[i]->origin = iPointMake(
-            p.x + map->_off.x - rect[i]->size.width / 2,
-			p.y + map->_off.y - rect[i]->size.height);
+            p.x + map->off.x - rect[i]->size.width / 2,
+			p.y + map->off.y - rect[i]->size.height);
     }    
 }
 
@@ -404,7 +403,7 @@ bool ProcPlayer::draw(float dt, iPoint off)
 
 
     setRGBA(1, 1, 1, 1);
-
+    fixedUpdate(dt);
     return !isActive;
 }
 
@@ -413,6 +412,15 @@ void ProcPlayer::free()
 }
 void ProcPlayer::fire(iPoint v)
 {
+    if (curGun->gunIndex == HeavyMachinegun)
+    {
+        if (curGun->remain > 0)
+            curGun->remain--;
+
+        if (curGun->remain <= 0)
+            curGun->changeGun(Handgun);
+    }
+
     audioPlay(snd_eff_fire);
     topState = PlayerFire;
     fireing = true;
@@ -503,14 +511,15 @@ void ProcPlayer::addScore(int score)
 }
 
 void ProcPlayer::addBomb(int bomb)
-{
-    
+{    
     this->bombs += bomb;
 }
 
 void ProcPlayer::changeGun(int index)
 {
     this->curGun->gunIndex = (GunIndex)index;
+    if (index == HeavyMachinegun)
+        curGun->remain += 200;
 }
 
 ImageInfo botImageInfo[] =

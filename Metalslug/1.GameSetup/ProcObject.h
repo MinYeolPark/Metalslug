@@ -47,11 +47,9 @@ public:
 public:
 	virtual void update(float dt) = 0;				//With control physics
 	virtual bool draw(float dt, iPoint off) = 0;
-
 public:
 	virtual iRect& getRect(int index = 0);
 	virtual int getScore();
 	virtual void addScore(int addScore);
 	virtual void getDamage(float damage);
-	virtual void getDamage(float damage, Collider* c);
 };

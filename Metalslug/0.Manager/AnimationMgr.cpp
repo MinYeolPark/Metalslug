@@ -82,40 +82,39 @@ void AnimationMgr::cbAniMosque(void* parm)
 
 void AnimationMgr::cbAniNpcRelease(void* parm)
 {
-#if 0
-	printf("cb ani release");
+#if 1	
 	ProcNpc* n = (ProcNpc*)parm;
 
 	int r = (rand() % 2 - 0.5) * 2;
 	n->v.x = r;
-	n->setState((NpcBehave)(WalkNpcL + n->state % 2));
+	n->state = (NpcBehave)(WalkNpcL + n->state % 2);	
 #endif
 }
 
-void AnimationMgr::cbAniNpcSpawnItem(void* n)
+void AnimationMgr::cbAniNpcSpawnItem(void* parm)
 {
-#if 0
-	ProcNpc* nn = (ProcNpc*)n;
+#if 1
+	ProcNpc* n = (ProcNpc*)parm;
 
-	nn->complete = true;
-	nn->spawnItem();
-	nn->setState((NpcBehave)(SaluteNpcL + nn->state % 2));
+	n->complete = true;
+	n->spawnItem();
+	n->state = (NpcBehave)(SaluteNpcL + n->state % 2);
 #endif
 }
 
-void AnimationMgr::cbAniNpcSalute(void* n)
+void AnimationMgr::cbAniNpcSalute(void* parm)
 {
-#if 0
-	ProcNpc* nn = (ProcNpc*)n;
+#if 1
+	ProcNpc* n = (ProcNpc*)parm;
 
 	int r = (rand() % 2 - 0.5) * 2;
-	nn->v = iPointRotate(iPointMake(r, 0), iPointZero, 0);
-	if (nn->v != iPointZero)
+	n->v = iPointRotate(iPointMake(r, 0), iPointZero, 0);
+	if (n->v != iPointZero)
 	{
-		if (nn->v.x > 0)
-			nn->setState(EscapeNpcR);
-		else if (nn->v.x < 0)
-			nn->setState(EscapeNpcL);
+		if (n->v.x > 0)
+			n->state = EscapeNpcR;
+		else if (n->v.x < 0)
+			n->state = EscapeNpcL;
 	}
 #endif
 }

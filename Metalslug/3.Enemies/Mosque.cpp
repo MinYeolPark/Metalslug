@@ -91,7 +91,7 @@ Mosque::Mosque(int index) : ProcEnemy(index)
 //				  90 / 0 / 270 / 0
 // 
 // // 0~1~1~1
-// float r = angel; while( r > 90 ) r -= 90; r /= 90;
+// float r = angle; while( r > 90 ) r -= 90; r /= 90;
 // 
 // int array[4] = {90, 0, -90, 0};// 90 / 0 / 270 / 0
 // float degree = array[n] * (1-r)* + array[(1+n)%4] * r;
@@ -173,9 +173,8 @@ void Mosque::update(float dt)
 				devSize.width + 400, devSize.height + 80));
 		isDead = !isActive;		
 	}
-	//Appear
-	//for(int i = 0; i < 3; i++)
-	for (int i = 0; i < 1; i++)
+	//Appear	
+	for (int i = 0; i < 3; i++)
 	{
 		if (movePoint(towerP[i], towerP[i],
 			iPointMake(towerP[i].x, p.y - 80), 1))

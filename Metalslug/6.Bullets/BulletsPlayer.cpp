@@ -6,6 +6,7 @@
 
 #include "ProcNpc.h"
 #include "ProcStructure.h"
+#include "ProcNpc.h"
 BulletsPlayer::BulletsPlayer(int index) : ProcBullets(index)
 {
 
@@ -130,6 +131,30 @@ void BulletsPlayer::update(float dt)
 			}
 		}
 	}
+	for (int i = 0; i < npcNum; i++)
+	{
+		ProcNpc* s = npcs[i];
+		float dMin = 0xfffff;
+		float d = iPointLength(s->p - p);
+		if (dMin > d)
+		{
+			dMin = d;
+			if (s->rect)
+			{
+				dst = s;
+				for (int j = 0; j < dst->rectNum; j++)
+				{
+					if (containPoint(p + map->off, dst->getRect(j)))
+					{
+						isActive = false;
+						dst->getDamage(damage);
+						iPoint bp = iPointMake(rand() % 10 + p.x, rand() % 10 + p.y);
+						addProcEffect(this, index, bp);		//bulletIndex=effectIndex
+					}
+				}
+			}
+		}
+	}
 	//if (dst)
 	//{
 	//	iRect r;
@@ -149,39 +174,5 @@ void BulletsPlayer::update(float dt)
 	//		}
 	//	}
 	//}
-#if 0
-	for (int i = 0; i < objects->count; i++)
-	{
-		Collider* c = (Collider*)objects->objectAtIndex(i);
-		if (c->parent->layer != LayerPlayer)
-		{
-			if (containPoint(p, c->getCollider()))
-			{
-				float d = iPointLength(p - c->p);
-				if (dNear > d)
-				{
-					if (c->isActive &&
-						c->damageable)
-					{
-						dNear = d;
-						cNear = c;
-					}
-				}
-			}
-			if (cNear)
-			{
-				if (cNear->isActive)
-				{
-					isActive = false;
-					cNear->parent->getDamage(damage, cNear);
-					iPoint bp = iPointMake(rand() % 10 + p.x, rand() % 10 + p.y);
-					addProcEffect(index, bp);		//bulletIndex=effectIndex
-				}
-			}
-		}
-		cNear = NULL;
-	}
-#endif
-
 	p += v * speed * dt;
 }

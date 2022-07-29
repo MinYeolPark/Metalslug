@@ -7,41 +7,6 @@
 #include "ProcEnemy.h"
 #include "ProcPlayer.h"
 
-struct Ball
-{
-	iPoint p, v;
-	float speed;
-
-	float d, _d, wave;
-
-	Ball()
-	{
-		p = iPointZero;
-		v = iPointZero;
-
-		speed = 200;
-
-		_d = 50;
-		d = 0;
-		wave = 30;
-	}
-
-	void paint(float dt)
-	{
-		iPoint md = v * speed;
-		p += md;
-
-		d += iPointLength(md);
-		while (d > _d)
-			d -= _d;
-		float r = d / _d;
-		float w = wave * _sin(360 * r);
-
-		iPoint position = p;
-
-	}
-};
-
 enum BulletIndex
 {
 	BulletHandGun = 0,

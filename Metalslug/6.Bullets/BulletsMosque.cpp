@@ -32,25 +32,14 @@ void BulletsMosque::init(ProcObject* parent, int index, float degree, int fpNum)
 	this->parentIndex = fpNum;
 	this->alpha = 1.0f;
 	this->v = iPointRotate(iPointMake(1, 0), iPointZero, degree);	
+	this->speed = 20.f;
+	this->damage = 0.f;
 
-	iSize colSize;
-	if (index == BulletMosque)
-	{
-		this->speed = 10.f;
-		this->damage = 0.f;		
-		colSize = { 0,0 };
-	}
-	else if (index == BulletMosqueTrace)
-	{
-		this->speed = 300.f;
-		this->damage = 100.0f;
-		colSize = { 40,40 };
-	}
-
+	tp = parent->tp;
 	rp = p;
 	wave = 15.f;
 	d = 0.f;
-	_d = 50.f;
+	_d = 100.f;
 	_hp = 300;
 	hp = _hp;
 
@@ -92,39 +81,32 @@ void BulletsMosque::update(float dt)
 		{
 			imgs[index]->startAnimation();
 			index = BulletMosqueTrace;
+			speed = 50.f;
+			damage = 100.f;
+			for (int i = 0; i < rectNum; i++)
+			{
+				iRect* r = rect[i];
+				r->size = iSizeMake(30, 30);
+				r->origin = p;
+			}
+			p = rp;
 		}
-		p.x += speed * dt;
+		rp.x += speed * dt;
 	}
 	else if (index == BulletMosqueTrace)
 	{
-#if 0
 		iPoint md = v * speed * dt;
 		p += md;
 		d += iPointLength(md);
 		if (d > _d)
 			d -= _d;
-		float r = d / _d;
-		printf("r=%f\n", r);
+		float rate = d / _d;
+		float add = _cos(rate * 360) * 30;
+		iPoint h = iPointMake(v.y, -v.x);
+		rp = p + h * (_sin(rate * 360) * wave);
 		float angle = iPointAngle(iPointMake(1, 0), iPointZero, v);
-		iPoint w = iPointRotate(iPointMake((wave * _sin(360 * r)), 0), iPointZero, angle + 90);
-
-		//degree = iPointAngle(p, p, w);
-		rp = p + w;
-#else
-		iPoint md = v * speed * dt;
-		p += md;
-		printf("md=%f\n", md.x);
-		d += iPointLength(md);
-		if (d > _d)
-			d -= _d;
-		float r = d / _d;		
-		float angle = iPointAngle(iPointMake(1, 0), iPointZero, v);	
-		iPoint w = iPointRotate(iPointMake((wave * _sin(360 * r)), 0), iPointZero, 90 + angle);		
-
-		//y= _cos(360 * r)(x + r) + _sin(360 * r)
-		degree = iPointAngle(iPointMake(1, 0), iPointZero, w);
-		rp = p + w;
-#endif
+		angle += add;
+		degree = 360-angle;
 	}
 
 	fixedUpdate(dt);
@@ -132,13 +114,21 @@ void BulletsMosque::update(float dt)
 
 
 void BulletsMosque::fixedUpdate(float dt)
-{
+{	
+	if (containPoint(rp + map ->off, player->getRect()))
+	{
+		isActive = false;
+		player->getDamage(100);
+		iPoint bp = iPointMake(rand() % 10 + p.x, rand() % 10 + p.y);
+		addProcEffect(this, EffectBomb, bp);		//bulletIndex=effectIndex
+	}
+
 	//ColliderUpdate
 	for (int i = 0; i < rectNum; i++)
 	{
 		rect[i]->origin = iPointMake(
-			p.x + map->off.x - rect[i]->size.width / 2,
-			p.y + map->off.y - rect[i]->size.height);
+			rp.x + map->off.x - rect[i]->size.width / 2,
+			rp.y + map->off.y - rect[i]->size.height);
 	}
 }
 

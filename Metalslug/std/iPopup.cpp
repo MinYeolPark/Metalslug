@@ -48,8 +48,7 @@ void iPopup::paint(float dt)
 		p = closePoint;
 		if (state == iPopupStateOpen)
 		{
-			alpha = aniDt / _aniDt;
-			printf("000alpha = %f\n", alpha);
+			alpha = aniDt / _aniDt;			
 			aniDt += dt;
 			if (aniDt > _aniDt)
 			{
