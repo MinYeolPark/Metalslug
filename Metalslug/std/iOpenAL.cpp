@@ -193,7 +193,6 @@ void iOpenAL::volume(int idx, float vol)
 static iOpenAL* al;
 AudioInfo* audioInfo;
 int prevBgm;
-
 void loadAudio(AudioInfo* ai, int aiNum)
 {
 	al = new iOpenAL(aiNum);

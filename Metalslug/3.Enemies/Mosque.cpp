@@ -174,7 +174,8 @@ void Mosque::update(float dt)
 		isDead = !isActive;		
 	}
 	//Appear
-	for(int i = 0; i < 3; i++)
+	//for(int i = 0; i < 3; i++)
+	for (int i = 0; i < 1; i++)
 	{
 		if (movePoint(towerP[i], towerP[i],
 			iPointMake(towerP[i].x, p.y - 80), 1))
@@ -192,7 +193,8 @@ void Mosque::update(float dt)
 				int len = iPointLength(tp - p);
 				if (len < attkRange)
 				{					
-					addBullet(this, BulletMosque, 360-ang, i);		//x축 기준, 시계방향 degree 					
+					//addBullet(this, BulletMosque, 0, i);		//x축 기준, 시계방향 degree 	
+					addBullet(this, BulletMosque, 360-ang, i);		//x축 기준, 시계방향 degree 										
 					addProcEffect(this, EffectMoskTrail, firePoint[i]);
 				}
 			}

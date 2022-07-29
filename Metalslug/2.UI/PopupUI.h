@@ -22,3 +22,9 @@ public:
 extern int selectedOptionBtn;
 extern bool optionConfirm;
 extern PopupUI* popup;
+
+void createSettingPopup();
+void freeSettingPopup();
+void drawSettingPopup(float dt);
+bool keySettingPopup(iKeyState stat, iPoint p);
+void showPopSetting(bool show);

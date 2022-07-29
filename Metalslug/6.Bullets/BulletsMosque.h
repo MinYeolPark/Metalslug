@@ -17,7 +17,7 @@ public:
 	virtual void init(ProcObject* parent, int index, float degree, int fpNum);
 	virtual void update(float dt);
 	virtual void fixedUpdate(float dt);
-
+	virtual bool draw(float dt, iPoint off);
 	virtual void getDamage(float damage);
 };
 

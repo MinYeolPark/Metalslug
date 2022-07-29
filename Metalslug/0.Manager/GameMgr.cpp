@@ -2,6 +2,7 @@
 
 #include "Loading.h"
 
+#include "UIMgr.h"
 #include "Menu.h"
 #include "Select.h"
 #include "Proc.h"
@@ -14,14 +15,13 @@ void loadGame()
 
 	playtime = 0.0f;
 	stageClear = false;
-#if 0
+#if 1
 	gs = GameState::GameStateProc;
 	loadProc();
 #else
 	gs = GameState::GameStateMenu;
 	loadMenu();
 #endif
-
 }
 
 void freeGame()

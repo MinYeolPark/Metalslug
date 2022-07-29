@@ -101,7 +101,7 @@ ImageInfo bulletImageInfo[] =
 	{
 		"assets/Bullets/Bomb_%02d.png",
 		16,
-		.5f, {-20 / 2, 0},
+		.8f, {-20 / 2, 0},
 		0.1f,
 		0,
 		{0, 248, 0, 255},

@@ -1,5 +1,6 @@
 #include "Select.h"
 
+#include "UIMgr.h"
 #include "InputMgr.h"
 #include "ImgMgr.h"
 
@@ -24,6 +25,9 @@ iPoint shutterP[4];
 float shutterRate[4];
 void loadSelect()
 {
+	audioStop(snd_bgm_title);
+	audioPlay(snd_bgm_select);
+	
 	selectmap = createImage("assets/CharSelect/CharacterSelectBg.png");
 		
 	imgSelectBtn = new iImage * [CharacterIndexMax];
@@ -122,7 +126,7 @@ void drawSelect(float dt)
 		}
 
 		if (confirm)
-		{			
+		{				
 			iPoint tp = { shutterP[selectedBtn].x, 70 };
 			printf("tp=%f, %f\n", tp.x, tp.y);
 			if (movePoint(shutterP[selectedBtn], shutterP[selectedBtn], tp, shutterRate[i]))
@@ -156,9 +160,13 @@ void drawSelect(float dt)
 		}
 		if (getKeyDown(keyboard_enter))
 		{
-			printf("%d", selectedBtn);
 			confirm = true;
 			imgSelectBtn[selectedBtn]->frame = 2;
+
+			if(selectedBtn==0)
+				audioPlay(snd_eff_select_eri);
+			else if(selectedBtn==1)
+				audioPlay(snd_eff_select_eri);
 		}
 	}	
 	setRGBA(1, 1, 1, 1);
@@ -194,14 +202,6 @@ bool keySelect(iKeyState stat, iPoint p)
 			confirm = true;
 			imgSelectBtn[3]->frame = 2;
 			printf("fio\n");
-		}
-
-		if (confirm == true)
-		{			
-			iPoint tp = { imgShutter[i].position.x, 200 };
-			printf("tp =%f, %f\n", tp.x, tp.y);
-			movePoint(imgShutter[i].position, imgShutter[i].position, tp, 5.f);
-			//setLoading(GameStateProc, 2, freeSelect, loadProc);
 		}
 		break;
 	case iKeyStateMoved:

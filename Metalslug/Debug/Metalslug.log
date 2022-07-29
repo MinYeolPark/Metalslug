@@ -1,11 +1,6 @@
-﻿  StatusUI.cpp
+﻿  BulletsBomb.cpp
 C:\workspace\Metalslug\Metalslug\std\iOpenGL.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
-C:\workspace\Metalslug\Metalslug\2.UI\StatusUI.cpp(21,6): warning C4101: 'i' :참조되지 않은 지역 변수입니다.
-C:\workspace\Metalslug\Metalslug\2.UI\StatusUI.cpp(54,6): warning C4101: 'i' :참조되지 않은 지역 변수입니다.
-C:\workspace\Metalslug\Metalslug\2.UI\StatusUI.cpp(78,6): warning C4101: 'i' :참조되지 않은 지역 변수입니다.
-C:\workspace\Metalslug\Metalslug\2.UI\StatusUI.cpp(99,6): warning C4101: 'i' :참조되지 않은 지역 변수입니다.
-C:\workspace\Metalslug\Metalslug\2.UI\StatusUI.cpp(121,6): warning C4101: 'i' :참조되지 않은 지역 변수입니다.
-C:\workspace\Metalslug\Metalslug\2.UI\StatusUI.cpp(194,56): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+C:\workspace\Metalslug\Metalslug\6.Bullets\BulletsBomb.cpp(59,9): warning C4244: '-=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
      C:\workspace\Metalslug\Debug\Metalslug.lib 라이브러리 및 C:\workspace\Metalslug\Debug\Metalslug.exp 개체를 생성하고 있습니다.
 LINK : warning LNK4217: '_glewInit@0'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"void __cdecl loadOpenGL(void *)" (?loadOpenGL@@YAXPAX@Z)'이(가) 가져왔습니다.
 LINK : warning LNK4217: '_glewGetErrorString@4'에 정의된 'glew.obj' 기호를 함수 'iOpenGL.obj'에서 '"void __cdecl loadOpenGL(void *)" (?loadOpenGL@@YAXPAX@Z)'이(가) 가져왔습니다.

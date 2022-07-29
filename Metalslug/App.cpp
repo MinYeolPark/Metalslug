@@ -2,6 +2,7 @@
 
 #include "iWindow.h"
 #include "GameMgr.h"
+#include "UIMgr.h"
 #include "InputMgr.h"
 
 static int win_border_width, win_border_height;
@@ -69,6 +70,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     memset(keys, false, sizeof(bool) * 128);
     srand(time(NULL));
 
+    loadUI();
     loadGame();
 
     runApp = true;
@@ -91,6 +93,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     }
 
     freeGame();
+    freeUI();
 
     freeOpenGL();
     ReleaseDC(hWnd, hDC);
@@ -184,7 +187,7 @@ LRESULT CALLBACK wndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
     }
     case WM_CLOSE:
     {
-        int result = MessageBox(NULL, L"종료할래?", L"Exit", MB_YESNO);
+        int result = MessageBox(NULL, L"Quit?", L"Exit", MB_YESNO);
         if (result == IDYES)
         {
             runApp = false;

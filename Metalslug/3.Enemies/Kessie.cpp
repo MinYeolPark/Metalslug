@@ -167,7 +167,6 @@ void Kessie::update(float dt)
 		while (delta > 2)
 			delta -= 2;
 		float r = delta / 2;
-		printf("y=%f\n");
 		y = 0.3 * _cos(360 * r);
 		p.y+= y;
 		if (aiDt > _aiDt)

@@ -1,8 +1,9 @@
 ﻿#include "ProcField.h"
 
 #include "ProcPlayer.h"
-#include "ImgMgr.h"
 
+#include "UIMgr.h"
+#include "ImgMgr.h"
 #include "InputMgr.h"
 int mapNum[] =
 {
@@ -54,6 +55,13 @@ ProcMap::~ProcMap()
 
 void ProcMap::init(int stage)
 {
+	audioStop(snd_bgm_select);
+	
+	if (stage == 0)	//stage 1
+	{
+		audioPlay(snd_bgm_stage1);
+		audioPlay(snd_m1_start);
+	}
 	for (int i = 0; i < mapNum[stage]; i++)
 	{
 		Texture* t = imgs[i]->tex;

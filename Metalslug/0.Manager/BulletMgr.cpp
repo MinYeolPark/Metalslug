@@ -4,6 +4,7 @@
 
 #include "ProcField.h"
 #include "BulletsPlayer.h"
+#include "BulletsBomb.h"
 #include "BulletsEnemy.h"
 #include "BulletsMosque.h"
 ProcBullets*** _bullets;
@@ -15,12 +16,16 @@ void loadProcBullets()
 	for (int i = 0; i < BulletIndexMax; i++)
 	{
 		_bullets[i] = new ProcBullets * [bulletMax];
-		if (i == BulletHandGun || i == BulletHeavyMachinegun ||
-			i==BulletBomb)
+		if (i == BulletHandGun || i == BulletHeavyMachinegun)
 		{
 			for (int j = 0; j < bulletMax; j++)
 				_bullets[i][j] = new BulletsPlayer(i);
 		}
+		if (i == BulletBomb)
+		{
+			for (int j = 0; j < bulletMax; j++)
+				_bullets[i][j] = new BulletsBomb(i);
+		}	
 		else if (i == BulletMelee || i==BulletMeleeEnd)
 		{
 			for (int j = 0; j < bulletMax; j++)

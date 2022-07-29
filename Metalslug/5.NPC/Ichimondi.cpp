@@ -12,7 +12,6 @@ Ichimondi::Ichimondi(int index): ProcNpc(index)
 
 	index = NpcIchimondi;
 	state = IdleNpcL;
-	ai = NULL;
 	complete = false;
 	escape = false;
 	itemIndex = -1;
@@ -63,7 +62,7 @@ void Ichimondi::update(float dt)
 
 	if (v != iPointZero)
 	{
-		if (getState() == WalkNpcL || getState() == WalkNpcR)
+		if (state == WalkNpcL || state == WalkNpcR)
 		{
 			if(initPos==iPointZero)
 				initPos= p;
@@ -85,7 +84,7 @@ void Ichimondi::update(float dt)
 		}
 			
 	}
-	if (getState() == WalkNpcL || getState() == WalkNpcR)
+	if (state == WalkNpcL || state == WalkNpcR)
 	{
 		if (containPoint(player->p, iRectMake(p.x - 20, p.y - 40, 40, 40)))
 		{
@@ -94,7 +93,7 @@ void Ichimondi::update(float dt)
 		}
 	}
 
-	if (getState() == EscapeNpcL || getState() == EscapeNpcR)
+	if (state == EscapeNpcL || state == EscapeNpcR)
 		p += v * moveSpeed * 4 * dt;
 	else
 		p += v * moveSpeed * dt;		

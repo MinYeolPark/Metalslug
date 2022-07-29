@@ -183,6 +183,12 @@
     <ClInclude Include="std\iOpenAL.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="5.NPC\Ichimondi.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="6.Bullets\BulletsBomb.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp">
@@ -348,6 +354,12 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="std\iOpenAL.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="5.NPC\Ichimondi.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="6.Bullets\BulletsBomb.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

@@ -41,10 +41,7 @@ Texture* methodStPlaytime(const char* str)
 
 	return tex;
 }
-Texture* methodStSetting(const char* str, void* parm)
-{
-	return NULL;
-}
+
 Texture* methodStScore(const char* str)
 {
 	iGraphics* g = new iGraphics();
@@ -190,17 +187,19 @@ StatusUI::~StatusUI()
 
 bool StatusUI::paint(float dt)
 {
-	drawImage(statsFrame[0], devSize.width/4, 12, 1.1, 1.1);
+	setRGBA(1, 1, 1, 1);
+	drawImage(statsFrame[0], devSize.width/4, 12);
 	drawImage(gaugeFrame[0], devSize.width/16, 12);
 
 	stScore->drawString(devSize.width / 6, 2, TOP | LEFT, "%d", player->score);
-	stLife->drawString(devSize.width / 6, 22, TOP | LEFT, "%d", player->life);
-	stAmmo->drawString(115, 31, VCENTER | HCENTER, "%d", player->curGun->remain);
-	stBomb->drawString(145, 31, VCENTER | HCENTER, "%d", player->bombs);
+	stLife->drawString(devSize.width / 6 + 3, 22, TOP | LEFT, "%d", player->life);
+	stAmmo->drawString(100, 29, VCENTER | HCENTER, "%d", player->curGun->remain);
+	stBomb->drawString(130, 29, VCENTER | HCENTER, "%d", player->bombs);
 
 	playtime += dt;
 	stPlaytime->setString("%.0f", playtime);
 	Texture* t = stPlaytime->tex;
 	drawImage(t, devSize.width / 2, 16, TOP | LEFT);
+	setRGBA(1, 1, 1, 1);
 	return true;
 }

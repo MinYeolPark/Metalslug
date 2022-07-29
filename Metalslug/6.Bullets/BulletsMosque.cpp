@@ -42,7 +42,7 @@ void BulletsMosque::init(ProcObject* parent, int index, float degree, int fpNum)
 	}
 	else if (index == BulletMosqueTrace)
 	{
-		this->speed = 100.f;
+		this->speed = 300.f;
 		this->damage = 100.0f;
 		colSize = { 40,40 };
 	}
@@ -50,7 +50,7 @@ void BulletsMosque::init(ProcObject* parent, int index, float degree, int fpNum)
 	rp = p;
 	wave = 15.f;
 	d = 0.f;
-	_d = 0.f;
+	_d = 50.f;
 	_hp = 300;
 	hp = _hp;
 
@@ -97,16 +97,34 @@ void BulletsMosque::update(float dt)
 	}
 	else if (index == BulletMosqueTrace)
 	{
-		d += iPointLength(v);
+#if 0
+		iPoint md = v * speed * dt;
+		p += md;
+		d += iPointLength(md);
+		if (d > _d)
+			d -= _d;
+		float r = d / _d;
+		printf("r=%f\n", r);
+		float angle = iPointAngle(iPointMake(1, 0), iPointZero, v);
+		iPoint w = iPointRotate(iPointMake((wave * _sin(360 * r)), 0), iPointZero, angle + 90);
+
+		//degree = iPointAngle(p, p, w);
+		rp = p + w;
+#else
+		iPoint md = v * speed * dt;
+		p += md;
+		printf("md=%f\n", md.x);
+		d += iPointLength(md);
 		if (d > _d)
 			d -= _d;
 		float r = d / _d;		
-		float angle = iPointAngle(iPointMake(1, 0), iPointZero, v);			
-		iPoint w = iPointRotate(iPointMake((wave * _sin(360 * r)), 0), iPointZero, angle + 90);		
-		degree = 45 * _sin(360 * r);	
-		rp = p + w;
+		float angle = iPointAngle(iPointMake(1, 0), iPointZero, v);	
+		iPoint w = iPointRotate(iPointMake((wave * _sin(360 * r)), 0), iPointZero, 90 + angle);		
 
-		p += v * speed * dt;
+		//y= _cos(360 * r)(x + r) + _sin(360 * r)
+		degree = iPointAngle(iPointMake(1, 0), iPointZero, w);
+		rp = p + w;
+#endif
 	}
 
 	fixedUpdate(dt);
@@ -122,6 +140,23 @@ void BulletsMosque::fixedUpdate(float dt)
 			p.x + map->off.x - rect[i]->size.width / 2,
 			p.y + map->off.y - rect[i]->size.height);
 	}
+}
+
+bool BulletsMosque::draw(float dt, iPoint off)
+{
+	setRGBA(1, 1, 1, alpha);
+	imgCurr = imgs[index];
+	imgCurr->degree = degree;
+	imgCurr->paint(dt, rp + off);
+	//imgCurr->paint(dt, p + off);
+	setRGBA(1, 1, 1, 1);
+
+#ifdef _DEBUG
+	for (int i = 0; i < rectNum; i++)
+		drawRect(getRect());
+#endif // _DEBUG
+
+	return !isActive;
 }
 
 void BulletsMosque::getDamage(float damage)

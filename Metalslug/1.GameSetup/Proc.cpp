@@ -14,6 +14,7 @@
 #include "ProcNpc.h"
 #include "ProcItem.h"
 #include "ProcStructure.h"
+#include "ProcNpc.h"
 
 void loadProc()
 {
@@ -26,9 +27,8 @@ void loadProc()
 
 
 	//loadProcItem();
-	//loadProcNpcs();
+	loadProcNpcs();
 	//
-	loadUI();
 }
 void freeProc()
 {
@@ -41,9 +41,8 @@ void freeProc()
 
 
 	//freeProcItem();
-	//freeProcNpcs();
+	freeProcNpcs();
 	//
-	freeUI();
 }
 
 void drawProc(float dt)
@@ -56,7 +55,7 @@ void drawProc(float dt)
 	drawProcEffect(dt, off);
 
 
-	//drawProcNpcs(dt, off);
+	drawProcNpcs(dt, off);
 	//drawProcItem(dt, off);
 
 	drawUI(dt, off);
@@ -118,11 +117,11 @@ void loadProcPlayer()
 	//#issue
 	player = new ProcPlayer(ERI);
 
-#if 1
+#if 0
 	player->init({ 100, 200 });
 #elif 0
 	player->init({ 1250,200 });
-#elif 0
+#elif 1
 	player->init({ 2100,200 });
 #else
 	player->init({ 3600, 200 });

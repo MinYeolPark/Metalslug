@@ -148,6 +148,8 @@
     <ClInclude Include="3.Enemies\Kessie.h" />
     <ClInclude Include="3.Enemies\Mosque.h" />
     <ClInclude Include="3.Enemies\Truck.h" />
+    <ClInclude Include="5.NPC\Ichimondi.h" />
+    <ClInclude Include="6.Bullets\BulletsBomb.h" />
     <ClInclude Include="6.Bullets\BulletsEnemy.h" />
     <ClInclude Include="6.Bullets\BulletsMosque.h" />
     <ClInclude Include="3.Enemies\Abul.h" />
@@ -206,6 +208,8 @@
     <ClCompile Include="3.Enemies\Kessie.cpp" />
     <ClCompile Include="3.Enemies\Mosque.cpp" />
     <ClCompile Include="3.Enemies\Truck.cpp" />
+    <ClCompile Include="5.NPC\Ichimondi.cpp" />
+    <ClCompile Include="6.Bullets\BulletsBomb.cpp" />
     <ClCompile Include="6.Bullets\BulletsEnemy.cpp" />
     <ClCompile Include="6.Bullets\BulletsMosque.cpp" />
     <ClCompile Include="3.Enemies\Abul.cpp" />

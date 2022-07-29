@@ -244,7 +244,7 @@ void ProcPlayer::update(float dt)
     if (getKeyDown(keyboard_x))
         fire(v);
     if (getKeyDown(keyboard_space))
-        ;// bomb(v);
+        bomb(v);
     
     //Animation
     if (!up)
@@ -413,7 +413,7 @@ void ProcPlayer::free()
 }
 void ProcPlayer::fire(iPoint v)
 {
-    audioPlay(1);
+    audioPlay(snd_eff_fire);
     topState = PlayerFire;
     fireing = true;
 
@@ -423,7 +423,7 @@ void ProcPlayer::fire(iPoint v)
     for (int i = 0; i < enemyNum; i++)
     {
         ProcEnemy* e = enemies[i];
-        float d = iPointLength(e->p - p);
+        float d = iPointLength(e->p - p); 
         if (dMin > d)
         {
             if (d < attkRange)
@@ -469,6 +469,7 @@ void ProcPlayer::fire(iPoint v)
 void ProcPlayer::bomb(iPoint v)
 {
     topState = PlayerBomb;
+    topImgs[topState]->startAnimation(AnimationMgr::cbAniToIdle, this);
     int maxY = *(map->maxY + (int)p.x);
 
     if (v.x > 0)
@@ -503,7 +504,7 @@ void ProcPlayer::addScore(int score)
 
 void ProcPlayer::addBomb(int bomb)
 {
-    printf("%d\n", bomb);
+    
     this->bombs += bomb;
 }
 

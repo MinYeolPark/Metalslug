@@ -4,8 +4,9 @@
 #include "Proc.h"
 #include "Select.h"
 
-#include "iPopup.h"
+#include "UIMgr.h"
 
+#include "App.h"
 Texture* titlemap;
 iPopup* titleMenu;
 iImage** titleMenuBtn;
@@ -14,18 +15,17 @@ void drawMenuBefore(float dt, iPopup* pop)
 	for (int i = 0; i < 4; i++)
 		titleMenuBtn[i]->frame = (i == titleMenu->selected);
 }
+
 void loadMenu()
 {
-	titlemap = createImage("assets/map/Title.png");
-
-	createTitleMenu();
-
-	showTitleMenu(true);
+	titlemap = createImage("assets/map/Title.png");	
+	createTitleMenu();	
+	titleMenu->show(true);
 }
 
 void freeMenu()
 {
-
+	freeTitleMenu();	
 }
 
 void drawMenu(float dt)
@@ -34,7 +34,7 @@ void drawMenu(float dt)
 	drawImage(titlemap, 0, 0,
 		devSize.width / titlemap->width,
 		devSize.height / titlemap->height, TOP | LEFT);
-
+	drawConfirmPopup(dt);
 	drawTitleMenu(dt);
 	setRGBA(1, 1, 1, 1);
 }
@@ -43,23 +43,21 @@ void keyMenu(iKeyState stat, iPoint p)
 {
 	if (keyTitleMenu(stat, p))
 		return;
+	else if (keyConfirmPopup(stat, p))
+		return;
 }
 
-
 void createTitleMenu()
-{	
+{
 #if 1
 	iPopup* pop = new iPopup();
 
 	iGraphics* g = new iGraphics();
-	
-	iSize size = iSizeMake(devSize.width/3, devSize.height/3);	
-	g->init(size);
-
-	setRGBA(1, 0, 1, 0.5f);
+	iSize size = iSizeMake(devSize.width / 3, devSize.height / 3);
+	g->init(size);	
 	Texture* tex = g->getTexture();
 	iImage* img = new iImage();
-	img->addObject(tex);	
+	img->addObject(tex);
 	freeImage(tex);
 
 	pop->addObject(img);
@@ -68,38 +66,45 @@ void createTitleMenu()
 	// imgTopMenuBtn[3]
 	//
 	const char* str[4] =
-	{ "Game Start","Map Tool", "Option","Exit" };
-	setStringName("assets/BMJUA_ttf.ttf");	
+	{ "GAMESTART","DISPLAY", "OPTION","EXIT" };
+	setStringName("assets/BMJUA_ttf.ttf");
 	setStringSize(20);
 	setStringBorder(2);
-	
-	size = iSizeMake(160, 25);
+
+	size = iSizeMake(120, 20);
 	titleMenuBtn = new iImage * [4];
 	for (int i = 0; i < 4; i++)
 	{
 		img = new iImage();
 		for (int j = 0; j < 2; j++)
 		{
+			iPoint pos = iPointZero;
 			g->init(size);
 			if (j == 0)
-			{
-				setRGBA(0.5, 0.5, 0.5, 1);
-				setStringRGBA(0, 0, 0, 1);
-			}
+				setRGBA(1, 1, 1, 1);
 			else
-			{
 				setRGBA(1, 1, 0, 1);
-				setStringRGBA(1, 1, 1, 1);
+			for (int k = 0; k < strlen(str[i]); k++)
+			{
+				igImage* ig = normAlphabet[str[i][k] - 'A'];
+				pos.y = i ;
+				g->drawIgImage(ig, pos.x + 20, pos.y + 4, TOP | LEFT);
+				pos.x += ig->GetWidth() + 1;
 			}
-			g->fillRect(0, 0, size.width, size.height, 1);
-			g->drawString(size.width / 2, size.height / 2, VCENTER | HCENTER, str[i]);
+
+			if (j == 0)
+				setRGBA(1, 1, 1, 0);
+			else// if (j == 1)
+				setRGBA(1, 1, 0, 0.4);
+			g->fillRect(0, 0, size.width, size.height, 4);
+			setRGBA(1, 1, 1, 1);
 
 			tex = g->getTexture();
 			img->addObject(tex);
 			freeImage(tex);
 		}
 		img->position = iPointMake(devSize.width / 2 - size.width / 2,
-			(devSize.height / 2 + 30 * i));		
+			(devSize.height / 2 + 20 * i));
 		pop->addObject(img);
 		titleMenuBtn[i] = img;
 	}
@@ -110,18 +115,49 @@ void createTitleMenu()
 	pop->closePoint = iPointZero;
 	pop->methodDrawBefore = drawMenuBefore;
 	titleMenu = pop;
-
+	titleMenu->selected = 0;
 	delete g;
 #endif
 }
+
 void freeTitleMenu()
 {
 	delete titleMenu;
 	delete titleMenuBtn;
 }
+
+#include "InputMgr.h"
 void drawTitleMenu(float dt)
-{	
+{
 	titleMenu->paint(dt);
+	if (getKeyDown(keyboard_down))
+	{
+		titleMenu->selected++;
+		if (titleMenu->selected > 3)
+			titleMenu->selected = 0;
+		printf("down");
+	}
+	if (getKeyDown(keyboard_up))
+	{
+		titleMenu->selected--;
+		if (titleMenu->selected < 0)
+			titleMenu->selected = 3;
+		printf("up");
+	}
+	if (getKeyDown(keyboard_enter))
+	{		
+		if (titleMenu->selected == 0)
+			setLoading(GameStateSelect, freeMenu, loadSelect);
+		else if (titleMenu->selected == 1)
+			;
+		else if (titleMenu->selected == 2)
+			;
+		else if (titleMenu->selected == 3)
+		{
+			printf("Quit\n");					
+			runApp = false;
+		}
+	}
 }
 bool keyTitleMenu(iKeyState stat, iPoint p)
 {
@@ -129,20 +165,14 @@ bool keyTitleMenu(iKeyState stat, iPoint p)
 		return false;
 	if (titleMenu->state != iPopupStateProc)
 		return true;
-
 	int i, j = -1;
 	switch (stat) {
 	case iKeyStateBegan:
-		i = titleMenu->selected;
+		i = titleMenu->selected;		
 		if (i == -1) break;
 		if (i == 0)
 		{
-			printf("GameStart\n");
-#if 0
-			setLoading(GameStateProc, freeMenu, loadProc);
-#else
 			setLoading(GameStateSelect, freeMenu, loadSelect);
-#endif
 		}
 	case iKeyStateMoved:
 		for (i = 0; i < 4; i++)
@@ -160,8 +190,4 @@ bool keyTitleMenu(iKeyState stat, iPoint p)
 		break;
 	}
 	return true;
-}
-void showTitleMenu(bool show)
-{
-	titleMenu->show(show);
 }

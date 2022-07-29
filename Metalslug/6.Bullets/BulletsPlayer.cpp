@@ -28,16 +28,17 @@ void BulletsPlayer::init(ProcObject* parent, int index, float degree, int fpNum)
 	this->degree = owner->fireDeg;
 	float speedInfo[] = {
 		300,
-		110,
+		300,
+		200,
 	};
 	this->speed = speedInfo[index];
 	float damageInfo[] =
 	{
 		100,
 		120,
+		200,
 	};
-	this->damage = damageInfo[index];
-	
+	this->damage = damageInfo[index];	
 }
 
 void BulletsPlayer::update(float dt)
