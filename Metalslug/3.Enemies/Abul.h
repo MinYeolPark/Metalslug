@@ -6,8 +6,8 @@ enum AbulBehave
     IdleAbulL,
     IdleAbulR,
 
-	WalkAbulR,
 	WalkAbulL,
+	WalkAbulR,
 
     SignalAbulL,
     SignalAbulR,
@@ -15,8 +15,12 @@ enum AbulBehave
     SurrenderAbulL,
     SurrenderAbulR,
 
+	FlagAbulL,
+	FlagAbulR,
+
 	AbulBehaveMax,
 };
+
 class Abul :
     public ProcEnemy
 {
@@ -27,7 +31,6 @@ public:
 public:
 	iImage** imgs;
 	iImage* imgCurr;
-
 public:
 	virtual void getDamage(float damage);
 public:

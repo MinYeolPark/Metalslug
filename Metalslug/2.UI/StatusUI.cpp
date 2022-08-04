@@ -1,6 +1,7 @@
 #include "StatusUI.h"
 
 #include "GameMgr.h"
+#include "UIMgr.h"
 #include "ProcPlayer.h"
 
 StatusUI* status;
@@ -31,7 +32,7 @@ Texture* methodStPlaytime(const char* str)
 #endif
 	for (int i = 0; i < j; i++)
 	{
-		igImage* ig = status->igNumber[str[i] - '0'];
+		igImage* ig = boldNumber[str[i] - '0'];
 		g->drawIgImage(ig, p.x, p.y, TOP | LEFT);
 		p.x += ig->GetWidth() + 1;
 	}
@@ -53,7 +54,7 @@ Texture* methodStScore(const char* str)
 	iSize s = iSizeMake(16, 16);
 	for (int i = 0; i < j; i++)
 	{
-		igImage* ig = status->number[str[i] - '0'];
+		igImage* ig = normNumber[str[i] - '0'];
 
 		//#issue
 		g->drawIgImage(ig, p.x, p.y, TOP | LEFT);
@@ -76,7 +77,7 @@ Texture* methodStAmmo(const char* str)
 	iPoint p = iPointZero;
 	for (int i = 0; i < j; i++)
 	{
-		igImage* ig = status->numberGold[str[i] - '0'];
+		igImage* ig = goldNumber[str[i] - '0'];
 		g->drawIgImage(ig, p.x, p.y, TOP | LEFT);
 		p.x += ig->GetWidth() + 1;
 	}
@@ -97,7 +98,7 @@ Texture* methodStBomb(const char* str)
 	iSize s = iSizeMake(16, 16);
 	for (int i = 0; i < j; i++)
 	{
-		igImage* ig = status->numberGold[str[i] - '0'];
+		igImage* ig = goldNumber[str[i] - '0'];
 		g->drawIgImage(ig, p.x, p.y, TOP | LEFT);
 		p.x += ig->GetWidth() + 1;
 	}
@@ -119,7 +120,7 @@ Texture* methodStLife(const char* str)
 	iSize s = iSizeMake(16, 16);
 	for (int i = 0; i < j; i++)
 	{
-		igImage* ig = status->numberGold[str[i] - '0'];
+		igImage* ig = goldNumber[str[i] - '0'];
 		g->drawIgImage(ig, p.x, p.y, TOP | LEFT);
 		p.x += ig->GetWidth() + 1;
 	}
@@ -133,28 +134,19 @@ Texture* methodStLife(const char* str)
 
 StatusUI::StatusUI()
 {
+	setRGBA(1, 1, 1, 1);
 	iGraphics* g = new iGraphics();
-	stPlaytime = new iStrTex(methodStPlaytime);
+	iSize s = iSizeMake(32, 16);
+	g->init(s);
+	g->drawIgImage(goldNumber[10], iPointZero, 0);
+	inf = g->getTexture();
 
 	num = 0; p = iPointZero; delta = 0.f;
-	alphabet = new igImage * [26];
-	number = new igImage * [10];
-	numberGold = new igImage * [10];
-
-	igNumber = new igImage * [10];
-	for (int i = 0; i < 10; i++)
-		igNumber[i] = g->createIgImage("assets/NumFont/NumFont_%02d.png", i);
-	for (int i = 0; i < 26; i++)
-		alphabet[i] = g->createIgImage("assets/NumFont/AlphabetFont_%02d.png", i + 1);
-	for (int i = 0; i < 10; i++)
-		number[i] = g->createIgImage("assets/NumFont/NumFont_%02d.png", i + 10);
-	for (int i = 0; i < 10; i++)
-		numberGold[i] = g->createIgImage("assets/NumFont/NumFont_%02d.png", i + 20);
-
 	for (int i = 0; i < 3; i++)
 		statsFrame[i] = createImage(iColor4bMake(222, 0, 255, 255), "assets/NumFont/ScoreFrame_00.png");
 	for (int i = 0; i < 4; i++)
 		gaugeFrame[i] = createImage(iColor4bMake(222, 0, 255, 255), "assets/NumFont/GaugeFrame_%02d.png", i);
+	stPlaytime = new iStrTex(methodStPlaytime);
 	stScore = new iStrTex(methodStScore);
 	stAmmo = new iStrTex(methodStAmmo);
 	stBomb = new iStrTex(methodStBomb);
@@ -163,25 +155,16 @@ StatusUI::StatusUI()
 }
 
 StatusUI::~StatusUI()
-{
-	iGraphics* g = new iGraphics();
-	for (int i = 0; i < 10; i++)
-		g->freeIgImage(igNumber[i]);
-	delete igNumber;
-
-	for (int i = 0; i < 10; i++)
-		g->freeIgImage(alphabet[i]);
-	delete alphabet;
-
-	for (int i = 0; i < 10; i++)
-		g->freeIgImage(number[i]);
-	delete number;
-
+{	
 	delete stPlaytime;
 	delete stScore;
 	delete stAmmo;
 	delete stBomb;	
-	delete g;
+	delete stLife;
+
+	delete inf;
+	delete statsFrame;
+	delete gaugeFrame;
 }
 
 bool StatusUI::paint(float dt)
@@ -192,13 +175,15 @@ bool StatusUI::paint(float dt)
 
 	stScore->drawString(devSize.width / 6, 2, TOP | LEFT, "%d", player->score);
 	stLife->drawString(devSize.width / 6 + 3, 22, TOP | LEFT, "%d", player->life);
-	stAmmo->drawString(105, 29, 0.9, 0.9, VCENTER | HCENTER, "%d", player->curGun->remain);
+	if (player->curGun->gunIndex == Handgun)
+		drawImage(inf, 90, 22, 0.5, 0.5);
+	else
+		stAmmo->drawString(105, 29, 0.9, 0.9, VCENTER | HCENTER, "%d", player->curGun->remain);
 	stBomb->drawString(130, 29, 0.9, 0.9, VCENTER | HCENTER, "%d", player->bombs);
-
+	stPlaytime->drawString(devSize.width / 2, 16, TOP | LEFT, "%.0f", playtime);
 	playtime += dt;
-	stPlaytime->setString("%.0f", playtime);
-	Texture* t = stPlaytime->tex;
-	drawImage(t, devSize.width / 2, 16, TOP | LEFT);
+	//Texture* t = stPlaytime->tex;
+	//drawImage(t, devSize.width / 2, 16, TOP | LEFT);
 	setRGBA(1, 1, 1, 1);
 	return true;
 }

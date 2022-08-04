@@ -60,9 +60,7 @@ ProcPlayer::ProcPlayer(int index) : ProcObject()
     hp = 0.f;
     life = 3;
     moveSpeed = 120.f;
-    bombSpeed = 10.f;
     attkRange = 30;
-    bombRange = 100.0f;
 
     bombs = 10;
     score = 0;
@@ -90,13 +88,6 @@ ProcPlayer::ProcPlayer(int index) : ProcObject()
 
 ProcPlayer::~ProcPlayer()
 {
-    //for (int i = 0; i < PlayerBehaveMax; i++)
-    //{
-    //    delete _imgEriTop[i];
-    //    delete _imgEriHeavyTop[i];
-    //}
-    //for (int i = 0; i < 4; i++)
-    //    delete _imgEriBot[i];
     if (_imgEriTop)
     {
         delete _imgEriTop;
@@ -136,7 +127,6 @@ void ProcPlayer::init(iPoint p)
         r->origin = p;
     }    
     curGun->gunIndex = Handgun;
-    //curGun->gunIndex = HeavyMachinegun;
     topImgs = _imgEriTop;
     botImgs = _imgEriBot;
     alpha = 1.0f;
@@ -149,6 +139,12 @@ void ProcPlayer::init(iPoint p)
 }
 
 #include "ProcStructure.h"
+
+static float count;
+static float _count = 5.f;
+static float delta;
+static float _delta = 0.1f;
+static float d;
 void ProcPlayer::update(float dt)
 {   
     if (isDead || !canControl)
@@ -164,9 +160,7 @@ void ProcPlayer::update(float dt)
         v.y = -1;
     else if (getKeyStat(keyboard_down))
         v.y = 1;
-
-    if (getKeyStat(keyboard_enter))
-        getDamage(100);
+    
     if (v != iPointZero)
     {        
         v.setLength(moveSpeed * dt);        
@@ -205,11 +199,35 @@ void ProcPlayer::update(float dt)
             }
             else//if(up)
             {
-                if (dirRight)
-                    fp = iPointMake(p.x + 1, p.y - 5);   //fireDown right
+                if (curGun->gunIndex == Handgun)
+                {
+                    if (dirRight)
+                        fp = iPointMake(p.x + 1, p.y - 5);   //fireDown right
+                    else
+                        fp = iPointMake(p.x - 1, p.y - 5);   //fireDown left
+                    fireDeg = 90;
+                }
                 else
-                    fp = iPointMake(p.x - 1, p.y - 5);   //fireDown left
-                fireDeg = 90;
+                {
+                    if (dirRight)
+                    {            
+#if 0
+                        if (delta)  //firing
+                        {
+                            d += dt;
+                            if (d > 1)
+                                d -= 1;
+                        }
+#endif
+                        fp = iPointMake(p.x + 1, p.y - 5);   //fireDown left
+                        fireDeg = 90;
+                    }
+                    else
+                    {
+                        fp = iPointMake(p.x - 1, p.y - 5);   //fireDown left
+                        fireDeg = 90;
+                    }
+                }
             }
         }
         else
@@ -246,6 +264,24 @@ void ProcPlayer::update(float dt)
     if (getKeyDown(keyboard_space))
         bomb(v);
     
+
+    //check firing
+    if (count)
+    {
+        delta += dt;
+        if (delta > _delta)
+        {
+            float deg = fireDeg + (rand() % 2 - 2) * 2;
+            addBullet(this, HeavyMachinegun, deg);
+            curGun->remain--;
+            delta = 0.f;
+            count++;            
+        }
+        if (curGun->remain < 1)
+            changeGun(Handgun);
+        if (count >= _count)
+            count = 0;
+    }
     //Animation
     if (!up)
     {
@@ -395,8 +431,7 @@ bool ProcPlayer::draw(float dt, iPoint off)
         if (inviDt > _inviDt)
             inviDt = 0.0f;
     }
-
-#ifdef _DEBUG
+#ifdef DEBUG
     for (int i = 0; i < rectNum; i++)
         drawRect(getRect());           
 #endif // _DEBUG
@@ -410,6 +445,7 @@ bool ProcPlayer::draw(float dt, iPoint off)
 void ProcPlayer::free()
 {
 }
+
 void ProcPlayer::fire(iPoint v)
 {
     if (curGun->gunIndex == HeavyMachinegun)
@@ -420,8 +456,6 @@ void ProcPlayer::fire(iPoint v)
         if (curGun->remain <= 0)
             curGun->changeGun(Handgun);
     }
-
-    audioPlay(snd_eff_fire);
     topState = PlayerFire;
     fireing = true;
 
@@ -437,7 +471,7 @@ void ProcPlayer::fire(iPoint v)
             if (d < attkRange)
             {
                 dMin = d;
-                if(e->getRect().size!=iSizeZero)
+				if (e->getRect().size.width != 0 && e->getRect().size.height != 0)
                     dst = e;                    
             }
         }
@@ -445,12 +479,19 @@ void ProcPlayer::fire(iPoint v)
 
     if (dst)
     {
+        if (dst->getRect().size.width == 0 || dst->getRect().size.height == 0)
+            return;
         topState = PlayerMeleeAttack;
+        audioPlay(snd_eff_melee);
         topImgs[topState]->startAnimation(AnimationMgr::cbAniToIdle, this);
         dst->getDamage(100);       
     }
     else
     {
+        if (curGun->gunIndex == Handgun)
+            audioPlay(snd_eff_fire);
+        if (curGun->gunIndex == HeavyMachinegun)
+            audioPlay(snd_eff_HMG_fire);
         if (v.y < 0)           //aim up
         {
             topState = PlayerFireUp;
@@ -469,7 +510,14 @@ void ProcPlayer::fire(iPoint v)
             topState = PlayerFire;
             topImgs[topState]->startAnimation(AnimationMgr::cbAniToIdle, this);            
         }
-        addBullet(this, curGun->gunIndex, fireDeg);   
+        if(curGun->gunIndex==Handgun)
+            addBullet(this, curGun->gunIndex, fireDeg);   
+        else if (curGun->gunIndex == HeavyMachinegun)
+        {
+            addBullet(this, curGun->gunIndex, fireDeg);
+            count = 1;
+            delta = 0.05f;
+        }
     }
 #endif
 }
@@ -478,6 +526,9 @@ void ProcPlayer::bomb(iPoint v)
 {
     topState = PlayerBomb;
     topImgs[topState]->startAnimation(AnimationMgr::cbAniToIdle, this);
+    if (bombs < 1)
+        return;  
+    bombs--;
     int maxY = *(map->maxY + (int)p.x);
 
     if (v.x > 0)
@@ -675,7 +726,7 @@ ImageInfo topImageInfo[] =
    },
    {
       "assets/Player/Crouch_Fire_%02d.png",
-      11, 1.0f, { -51 / 2, 0 },
+      9, 1.0f, { -51 / 2, 0 },
       0.06f,
       1,
       {255,0,0,255},
@@ -784,7 +835,7 @@ ImageInfo infoEriTopHeavy[] =
    },
    {
       "assets/Player/Heavy_Melee_%02d.png",
-      6, 1.0f, { -76 / 2, 18 },
+      6, 1.0f, { -76 / 2, 14 },
       0.06f,
       1,
       {255,255,255,255},

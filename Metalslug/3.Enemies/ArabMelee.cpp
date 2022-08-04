@@ -59,8 +59,7 @@ void ArabMelee::init(iPoint p)
 	this->isActive = true;
 	this->index = index;
 	this->p = p;
-	this->tp = p;	
-
+	this->tp = p;			
 	for (int i = 0; i < rectNum; i++)
 	{
 		iRect* r = rect[i];
@@ -70,7 +69,8 @@ void ArabMelee::init(iPoint p)
 }
 
 void ArabMelee::update(float dt)
-{
+{	
+	fixedUpdate(dt);
 	if (isDead)
 	{
 		for (int i = 0; i < rectNum; i++)
@@ -81,8 +81,8 @@ void ArabMelee::update(float dt)
 	if (!isAppear)
 	{
 		if (containPoint(p,
-			iRectMake(-map->off.x - 40, -map->off.y - 40,
-				devSize.width + 80, devSize.height + 80)))
+			iRectMake(-map->off.x - 20, -map->off.y - 40,
+				devSize.width + 40, devSize.height + 80)))
 			isAppear = true;
 	}
 	else
@@ -181,7 +181,6 @@ void ArabMelee::update(float dt)
 		}		
 	}
 #endif
-	fixedUpdate(dt);
 }
 void ArabMelee::fixedUpdate(float dt)
 {
@@ -195,6 +194,8 @@ void ArabMelee::fixedUpdate(float dt)
 			p.y + map->off.y - rect[i]->size.height);
 	}
 }
+
+#include "InputMgr.h"
 bool ArabMelee::draw(float dt, iPoint off)
 {
 	setRGBA(1, 1, 1, alpha);
@@ -224,9 +225,9 @@ bool ArabMelee::draw(float dt, iPoint off)
 		}
 	}
 
-	//if (p.x == tp.x && p.y != tp.y)
-	//	tp.y = p.y;
-#ifdef _DEBUG
+	if(getKeyStat(keyboard_delete))
+		#define DEBUG
+#ifdef DEBUG
 	for (int i = 0; i < rectNum; i++)
 		drawRect(getRect());
 

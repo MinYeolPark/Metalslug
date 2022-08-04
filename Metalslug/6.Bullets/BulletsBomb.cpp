@@ -1,5 +1,6 @@
 #include "BulletsBomb.h"
 
+#include "UIMgr.h"
 #include "EnemyMgr.h"	
 #include "EffectMgr.h"
 #include "BulletMgr.h"
@@ -21,18 +22,19 @@ void BulletsBomb::init(ProcObject* parent, int index, float degree, int fpNum)
 	this->isActive = true;
 	this->parent = owner;
 	this->degree = degree;
-	this->p = owner->fp;
+	this->p = owner->p;
 	this->index = index;
 	this->alpha = 1.0f;
-	this->rp = p;
-	this->d = 0;
-	this->_d = 100.f;
+
+	pow = 5.0f;
+	down = 0.f;
+	up -= pow;	
 #if 1
-	this->v = parent->v;//iPointRotate(iPointMake(1, 0), iPointZero, 0);
+	this->v = owner->dirRight ? iPointMake(1, 0) : iPointMake(-1, 0);
 #endif
 	this->degree = owner->fireDeg;
 	float speedInfo[] = {
-		200,
+		100,
 		200,
 		200
 	};
@@ -40,34 +42,51 @@ void BulletsBomb::init(ProcObject* parent, int index, float degree, int fpNum)
 	float damageInfo[] =
 	{
 		200,
+		200,
+		200,
 	};
 	this->damage = damageInfo[index];	
 }
 
+static float delta;
 void BulletsBomb::update(float dt)
 {
 	isActive = containPoint(p,
 		iRectMake(-map->off.x - 20, -map->off.y - 20,
-			devSize.width + 40, devSize.height + 40));	
-	printf(isActive ? "true\n" : "false\n");
-#if 1
-	iPoint md = v * speed * dt;
-	p += md;
-	d += iPointLength(md);
-	if (d > _d)
-		d -= _d;
-	float r = d / _d;
-	
-	iPoint c = iPointZero;
-	c.x = rp.x + 100 * dt * _cos(180 * r);
-	c.y = rp.y + 300 * dt * _sin(180 * r) - 0.5 * 9.81 * dt * dt;
-	rp = c;
-	printf("rp=%f=\n", c.y);
-#endif
-}
+			devSize.width + 40, devSize.height + 40));		
 
-void BulletsBomb::fixedUpdate(float dt)
-{
+#if 1
+	if (up)
+	{
+		p = iPointMake(p.x, p.y -= pow);
+		up += 9.81 * dt;
+		if (up > 0.0f)
+			up = 0.0f;
+	}
+
+	int maxY = *(map->maxY + (int)p.x);
+	if (p.y < maxY)
+	{
+		down += 9.81 * dt;
+		if (v.x > 0)
+			p = iPointMake(p.x + 2, p.y += down);
+		else// if(!b->parent->isRight)
+			p = iPointMake(p.x - 2, p.y += down);		
+	}
+	else
+	{
+		if (pow < 1.5f)
+		{
+			addProcEffect(this, EffectBomb, p);
+			audioPlay(snd_eff_bomb);
+			isActive = false;
+		}
+		pow *= 0.7f;
+		up -= pow;
+		down = 0.f;
+	}
+#endif
+
 	ProcObject* dst = NULL;
 	for (int i = 0; i < bulletNum; i++)
 	{
@@ -82,13 +101,8 @@ void BulletsBomb::fixedUpdate(float dt)
 				dst = b;
 				for (int j = 0; j < dst->rectNum; j++)
 				{
-
 					if (containPoint(p + map->off, dst->getRect(j)))
 					{
-						setRGBA(1, 0, 0, 1);
-						drawRect(dst->getRect(j));
-						setRGBA(1, 1, 1, 1);
-
 						isActive = false;
 						dst->getDamage(damage);
 						iPoint bp = iPointMake(rand() % 10 + p.x, rand() % 10 + p.y);
@@ -114,10 +128,6 @@ void BulletsBomb::fixedUpdate(float dt)
 
 					if (containPoint(p + map->off, dst->getRect(j)))
 					{
-						setRGBA(1, 0, 0, 1);
-						drawRect(dst->getRect(j));
-						setRGBA(1, 1, 1, 1);
-
 						isActive = false;
 						dst->getDamage(damage);
 						iPoint bp = iPointMake(rand() % 10 + p.x, rand() % 10 + p.y);
@@ -151,80 +161,31 @@ void BulletsBomb::fixedUpdate(float dt)
 			}
 		}
 	}
-	//if (dst)
-	//{
-	//	iRect r;
-	//	for (int i = 0; i < dst->rectNum; i++)
-	//	{
-	//		r = dst->getRect(i);
-	//		if (containPoint(p + map->off, r))
-	//		{
-	//			setRGBA(1, 0, 0, 1);
-	//			drawRect(r);
-	//			setRGBA(1, 1, 1, 1);
-
-	//			isActive = false;
-	//			dst->getDamage(damage);
-	//			iPoint bp = iPointMake(rand() % 10 + p.x, rand() % 10 + p.y);
-	//			addProcEffect(index, bp);		//bulletIndex=effectIndex
-	//		}
-	//	}
-	//}
-#if 0
-	for (int i = 0; i < objects->count; i++)
+	for (int i = 0; i < npcNum; i++)
 	{
-		Collider* c = (Collider*)objects->objectAtIndex(i);
-		if (c->parent->layer != LayerPlayer)
+		ProcNpc* s = npcs[i];
+		float dMin = 0xfffff;
+		float d = iPointLength(s->p - p);
+		if (dMin > d)
 		{
-			if (containPoint(p, c->getCollider()))
+			dMin = d;
+			if (s->rect)
 			{
-				float d = iPointLength(p - c->p);
-				if (dNear > d)
+				dst = s;
+				for (int j = 0; j < dst->rectNum; j++)
 				{
-					if (c->isActive &&
-						c->damageable)
+					if (s->state == IdleNpcL + s->state % 2)
 					{
-						dNear = d;
-						cNear = c;
+						if (containPoint(p + map->off, dst->getRect(j)))
+						{
+							isActive = false;
+							dst->getDamage(damage);
+							iPoint bp = iPointMake(rand() % 10 + p.x, rand() % 10 + p.y);
+							addProcEffect(this, index, bp);		//bulletIndex=effectIndex
+						}
 					}
 				}
 			}
-			if (cNear)
-			{
-				if (cNear->isActive)
-				{
-					isActive = false;
-					cNear->parent->getDamage(damage, cNear);
-					iPoint bp = iPointMake(rand() % 10 + p.x, rand() % 10 + p.y);
-					addProcEffect(index, bp);		//bulletIndex=effectIndex
-}
-			}
 		}
-		cNear = NULL;
 	}
-#endif
-
-	//ColliderUpdate
-	for (int i = 0; i < rectNum; i++)
-	{
-		rect[i]->origin = iPointMake(
-			p.x + map->off.x - rect[i]->size.width / 2,
-			p.y + map->off.y - rect[i]->size.height);
-	}
-}
-
-bool BulletsBomb::draw(float dt, iPoint off)
-{
-	setRGBA(1, 1, 1, alpha);
-	imgCurr = imgs[index];
-	imgCurr->degree = degree;
-	imgCurr->paint(dt, rp + off);
-	setRGBA(1, 1, 1, 1);
-
-#ifdef _DEBUG
-	for (int i = 0; i < rectNum; i++)
-		drawRect(getRect());
-#endif // _DEBUG
-
-	return !isActive;
 }

@@ -16,6 +16,9 @@
 #include "ProcStructure.h"
 #include "ProcNpc.h"
 
+#include "PopupUI.h"
+#include "StatusUI.h"
+
 void loadProc()
 {
 	loadProcField();
@@ -28,7 +31,11 @@ void loadProc()
 
 	loadProcItem();
 	loadProcNpcs();
-	//
+	
+	//initialize	
+	showPopSetting(false);
+	popup->popOption->show(false);
+	
 }
 void freeProc()
 {
@@ -83,7 +90,7 @@ bool keyProc(iKeyState stat, iPoint p)
 ///////////////////////////////////////////////////
 //Field
 ///////////////////////////////////////////////////
-static int stage = 0;		//stage1
+int stage = 0;		//stage1
 void loadProcField()
 {
 	map = new ProcMap(stage);
@@ -133,6 +140,14 @@ void freeProcPlayer()
 float spawnDt;
 void drawProcPlayer(float dt, iPoint off)
 {
+	//for Deebug
+	if (getKeyStat(keyboard_delete))
+	{
+#define DEBUG
+		printf("Debug\n");
+	}
+
+
 	if (player->topState != (PlayerBehave)(PlayerDead + player->topState % 2)
 		&& player->topState != (PlayerBehave(PlayerSpawn + player->topState % 2)))
 		player->update(dt);

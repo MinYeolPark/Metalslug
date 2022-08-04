@@ -11,11 +11,6 @@ public:
 	iPoint p;
 	float delta;
 
-	igImage** igNumber;
-	igImage** alphabet;
-	igImage** number;
-	igImage** numberGold;
-
 	iStrTex* stPlaytime;
 
 	iStrTex* stScore;
@@ -23,6 +18,7 @@ public:
 	iStrTex* stBomb;
 	iStrTex* stLife;
 
+	Texture* inf;
 	Texture* statsFrame[3];
 	Texture* gaugeFrame[4];
 
@@ -33,5 +29,3 @@ public:
 
 };
 extern StatusUI* status;
-
-Texture* methodStPlaytime(const char* str);

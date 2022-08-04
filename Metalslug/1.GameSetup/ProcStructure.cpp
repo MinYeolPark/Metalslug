@@ -7,6 +7,7 @@ static iImage** _imgStructure = NULL;
 ImageInfo imgStructureInfo[];
 ProcStructure::ProcStructure() : ProcObject()
 {
+    score = 100;
     layer = LayerFieldObj;
     
     imgs = NULL;
@@ -95,8 +96,15 @@ void ProcStructure::update(float dt)
 
 bool ProcStructure::draw(float dt, iPoint off)
 {
-    setRGBA(1, 1, 1, 1);
-
+    if (dmgDt)
+    {
+        setRGBA(1, 0.8, 0.1, 1);
+        dmgDt += dt;
+        if (dmgDt > _dmgDt)
+            dmgDt = 0.f;
+    }
+    else
+        setRGBA(1, 1, 1, 1);
     imgCurr = imgs[index];
     imgCurr->paint(dt, p + off);
 
@@ -119,6 +127,8 @@ void ProcStructure::getDamage(float damage)
         return;
 
     hp -= damage;
+    player->addScore(score);
+    dmgDt = 0.000001f;
     if (hp <= _hp * 0.5)
     {
         if (index == Wall)
@@ -133,7 +143,7 @@ void ProcStructure::getDamage(float damage)
         if (hp <= 0)
         {
             isActive = false;
-            addProcEffect(this, EffectExplosionM, p);
+            addProcEffect(this, EffectExplosionL, p);
         }
     }
 

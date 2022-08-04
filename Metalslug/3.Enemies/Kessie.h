@@ -81,6 +81,7 @@ public:
 	iRect* atkRect[2];
 	float rageDt, _rageDt;	
 	float aiDt, _aiDt;
+	float dmgDt, _dmgDt;
 	int hp[3], _hp;
 public:
 	virtual void init(iPoint p);

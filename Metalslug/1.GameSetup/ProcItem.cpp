@@ -1,7 +1,7 @@
 #include "ProcItem.h"
 
 #include "ImgMgr.h"
-
+#include "UIMgr.h"
 ProcItem*** _item;
 ProcItem** item;
 int itemNum;
@@ -119,15 +119,17 @@ void ProcItem::update(float dt)
 		rect[i]->origin = iPointMake(
 			p.x + map->off.x - rect[i]->size.width / 2,
 			p.y + map->off.y - rect[i]->size.height);
-		if (containPoint(player->p, *rect[i]))
+		if (containPoint( p + map->off, player->getRect()))
 		{
 			if (index == ItemHeavyMachineGun)
 			{
 				player->changeGun(HeavyMachinegun);
+				audioPlay(snd_nar_HMG);
 			}
 			else if (index == ItemBomb)
 			{
-				player->addBomb(10);
+				player->addBomb(10);				
+				audioPlay(snd_nar_OK);
 			}
 			isActive = false;
 		}
@@ -139,7 +141,7 @@ bool ProcItem::draw(float dt, iPoint off)
 	imgCurr = imgs[index];
 	imgCurr->paint(dt, p + off);
 
-#ifdef _DEBUG
+#ifdef DEBUG
 	for (int i = 0; i < rectNum; i++)
 		drawRect(getRect());
 #endif // _DEBUG	

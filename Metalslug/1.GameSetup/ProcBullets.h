@@ -52,7 +52,7 @@ public:
 	virtual void free();
 
 public:
-	virtual void getDamage(float damage, Collider* c);
+	virtual void getDamage(float damage);
 };
 
 

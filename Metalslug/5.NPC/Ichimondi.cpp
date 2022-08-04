@@ -2,12 +2,14 @@
 
 #include "ImgMgr.h"
 #include "AnimationMgr.h"
+#include "UIMgr.h"
 
 #include "ProcItem.h"
 static iImage** _imgIchi = NULL;
 ImageInfo infoIchi[];
 Ichimondi::Ichimondi(int index): ProcNpc(index)
 {		
+	score = 100;
 	index = NpcIchimondi;
 	state = IdleNpcL;
 	complete = false;
@@ -79,9 +81,20 @@ void Ichimondi::init(int index, iPoint p, int itemIndex)
 }
 void Ichimondi::update(float dt)
 {
-	isActive = containPoint(p,
-		iRectMake(-map->off.x - 20, -map->off.y - 20,
-			devSize.width + 40, devSize.height + 40));
+
+	if (!isAppear)
+	{
+		if (containPoint(p,
+			iRectMake(-map->off.x - 20, -map->off.y - 40,
+				devSize.width + 40, devSize.height + 80)))
+			isAppear = true;
+	}
+	else
+	{
+		isActive = containPoint(p,
+			iRectMake(-map->off.x - 40, -map->off.y - 40,
+				devSize.width + 80, devSize.height + 80));
+	}
 
 	if (v != iPointZero)
 	{
@@ -109,18 +122,24 @@ void Ichimondi::update(float dt)
 	}
 	if (state == WalkNpcL || state == WalkNpcR)
 	{
+		initPos = iPointZero;
+		printf("v.x=%f\n", v.x);
 		if (containPoint(player->p, iRectMake(p.x - 20, p.y - 40, 40, 40)))
 		{
+			player->addScore(score);
+			audioPlay(snd_eff_thank);
 			v = iPointZero;
 			state = (NpcBehave)(AddItemNpcL + state % 2);			
 		}
 	}
 
 	if (state == EscapeNpcL || state == EscapeNpcR)
+	{
+		imgs[state]->startAnimation();
 		p += v * moveSpeed * 4 * dt;
+	}
 	else
-		p += v * moveSpeed * dt;		
-
+		p += v * moveSpeed * dt;
 	fixedUpdate(dt);
 }
 
@@ -133,11 +152,11 @@ void Ichimondi::fixedUpdate(float dt)
 	{
 		rect[i]->origin = iPointMake(
 			p.x + map->off.x - rect[i]->size.width / 2,
-			p.y + map->off.y - rect[i]->size.height);
-		printf("%f\n", rect[i]->origin.x);
+			p.y + map->off.y - rect[i]->size.height);		
 	}
 }
 
+#include "InputMgr.h"
 bool Ichimondi::draw(float dt, iPoint off)
 {
 	setRGBA(1, 1, 1, 1);
@@ -145,7 +164,9 @@ bool Ichimondi::draw(float dt, iPoint off)
 	imgCurr->paint(dt, p + off);	
 	setRGBA(1, 1, 1, 1);
 
-#ifdef _DEBUG
+	if (getKeyStat(keyboard_delete))
+#define DEBUG
+#ifdef DEBUG
 	for (int i = 0; i < rectNum; i++)
 		drawRect(getRect());
 #endif // _DEBUG

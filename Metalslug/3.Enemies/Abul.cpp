@@ -12,7 +12,7 @@ Abul::Abul(int index) : ProcEnemy(index)
 	hp = 0;
 	dmg = 0;
 	sight = 0;
-	moveSpeed = 200.f;
+	moveSpeed = 250.f;
 	attkRange = 0;
 	attkRate = 0.f;	_attkRate = 0.f;
 	aiDt = 0.f;	_aiDt = 0.f;
@@ -32,15 +32,15 @@ Abul::Abul(int index) : ProcEnemy(index)
 	for (int i = 0; i < AbulBehaveMax; i++)
 		imgs[i] = _imgAbul[i]->clone();
 	imgCurr = imgs[index];
+
+	rectNum = 1;
+	rect = new iRect * [rectNum];
+	for (int i = 0; i < rectNum; i++)
+		rect[i] = new iRect();
 }
 
 Abul::~Abul()
 {
-}
-
-void Abul::getDamage(float damage)
-{
-	
 }
 
 void Abul::init(iPoint p)
@@ -48,9 +48,19 @@ void Abul::init(iPoint p)
 	isActive = true;
 	isAppear = false;
 	this->p = p;
-	tp = iPointMake(player->p.x + devSize.width/2, player->p.y);
-
 	state = IdleAbulL;
+
+	for (int i = 0; i < rectNum; i++)
+	{
+		iRect* r = rect[i];
+		r->size = iSizeMake(0, 0);
+		r->origin = p;
+	}
+
+	if (player->p.x < 2000)
+		tp = iPointMake(1670, p.y);
+	else if (player->p.x < 4000)
+		tp = iPointMake(3800, p.y);
 }
 
 void Abul::update(float dt)
@@ -58,26 +68,15 @@ void Abul::update(float dt)
 	if (isDead)
 		return;
 
-	if (!isAppear)
-	{
-		if (tp == p)
-		{
-			isAppear = true;
-			state = (SignalAbulL + state % 2);			
-		}
-	}
-	else
-	{
-		isActive = containPoint(p,
-			iRectMake(-map->off.x - 40, -map->off.y - 40,
-				devSize.width + 80, devSize.height + 80));
-	}
+	isActive = containPoint(p,
+		iRectMake(-map->off.x - 100, -map->off.y - 40,
+			devSize.width + 200, devSize.height + 80));
 
 	int len = iPointLength(tp - p);
 	iPoint v = tp - p;
 	v /= iPointLength(v);
+	v.setLength(moveSpeed * dt);
 	this->v = v;
-
 	if (p != tp)
 	{
 		if (p.x < tp.x)
@@ -113,10 +112,17 @@ void Abul::update(float dt)
 	//Animation
 	if (v != iPointZero)
 	{
-		if (v.x > 0)
-			state = WalkAbulR;
-		else if (v.x < 0)
+		if (v.x < 0)
 			state = WalkAbulL;
+		else if (v.x > 0)
+			state = WalkAbulR;
+	}
+	else
+	{
+		if (player->p.x < 2000)
+			state = SignalAbulL + state % 2;
+		else if (player->p.x < 4000)
+			state = SignalAbulL + state % 2;
 	}
 
 	fixedUpdate(dt);
@@ -142,7 +148,10 @@ void Abul::free()
 {
 }
 
-
+void Abul::getDamage(float damage)
+{
+	return;
+}
 
 ImageInfo imgAbulInfo[] =
 {
@@ -172,7 +181,15 @@ ImageInfo imgAbulInfo[] =
 	},
 	{
 		"assets/Abul/Abul_Surrender_%02d.png",
-		17, 1.0f, { -70 / 2, 0},
+		7, 1.0f, { -70 / 2, 0},
+		0.1f,
+		1,			//repeat
+		{255, 0, 0, 255},
+		AnimationMgr::cbAniAbulFlag
+	},
+	{
+		"assets/Abul/Abul_Flag_%02d.png",
+		10, 1.0f, { -70 / 2, 0},
 		0.1f,
 		0,			//repeat
 		{255, 0, 0, 255},

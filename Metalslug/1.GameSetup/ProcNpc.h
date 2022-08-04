@@ -48,6 +48,7 @@ public:
 public:	
 	NpcBehave state;
 
+	bool isAppear;
 	bool complete;
 	bool escape;
 	int itemIndex;

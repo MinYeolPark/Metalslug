@@ -120,8 +120,17 @@ void BulletsMosque::fixedUpdate(float dt)
 		isActive = false;
 		player->getDamage(100);
 		iPoint bp = iPointMake(rand() % 10 + p.x, rand() % 10 + p.y);
-		addProcEffect(this, EffectBomb, bp);		//bulletIndex=effectIndex
+		addProcEffect(this, EffectBomb, bp);
 	}
+
+	//Check Ground
+	if (containPoint(p, iRectMake(p.x, (float)*(map->maxY + (int)p.x),
+		15, 15)))
+	{
+		isActive = false;
+		addProcEffect(this, index, p);
+	}
+
 
 	//ColliderUpdate
 	for (int i = 0; i < rectNum; i++)
@@ -137,11 +146,10 @@ bool BulletsMosque::draw(float dt, iPoint off)
 	setRGBA(1, 1, 1, alpha);
 	imgCurr = imgs[index];
 	imgCurr->degree = degree;
-	imgCurr->paint(dt, rp + off);
-	//imgCurr->paint(dt, p + off);
+	imgCurr->paint(dt, rp + off);	
 	setRGBA(1, 1, 1, 1);
 
-#ifdef _DEBUG
+#ifdef DEBUG
 	for (int i = 0; i < rectNum; i++)
 		drawRect(getRect());
 #endif // _DEBUG
@@ -152,6 +160,7 @@ bool BulletsMosque::draw(float dt, iPoint off)
 void BulletsMosque::getDamage(float damage)
 {
 	hp -= damage;
+	player->addScore(score);
 	if (hp <= 0)
 	{
 		isActive = false;

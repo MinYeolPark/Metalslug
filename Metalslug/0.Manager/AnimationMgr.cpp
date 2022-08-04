@@ -12,6 +12,9 @@
 #include "ArabMelee.h"
 #include "Mosque.h"
 #include "Kessie.h"
+#include "Abul.h"
+
+#include "Ichimondi.h"
 void AnimationMgr::cbAniToIdle(void* parm)
 {
 	ProcPlayer* pp = (ProcPlayer*)parm;
@@ -72,6 +75,13 @@ void AnimationMgr::cbAniTruck(void* parm)
 	t->_aiDt = 3.f;	
 }
 
+void AnimationMgr::cbAniAbulFlag(void* parm)
+{
+	Abul* a = (Abul*)parm;
+	
+	a->state = FlagAbulL + a->state % 2;
+}
+
 void AnimationMgr::cbAniMosque(void* parm)
 {
 	ProcBullets* b = (ProcBullets*)parm;
@@ -83,21 +93,23 @@ void AnimationMgr::cbAniMosque(void* parm)
 void AnimationMgr::cbAniNpcRelease(void* parm)
 {
 #if 1	
-	ProcNpc* n = (ProcNpc*)parm;
+	Ichimondi* n = (Ichimondi*)parm;
 
 	int r = (rand() % 2 - 0.5) * 2;
 	n->v.x = r;
-	n->state = (NpcBehave)(WalkNpcL + n->state % 2);	
+	n->state = (NpcBehave)(WalkNpcL + n->state % 2);		
+	
 #endif
 }
 
 void AnimationMgr::cbAniNpcSpawnItem(void* parm)
 {
 #if 1
-	ProcNpc* n = (ProcNpc*)parm;
+	Ichimondi* n = (Ichimondi*)parm;
 
 	n->complete = true;
 	n->spawnItem();
+	n->imgs[n->state]->startAnimation(AnimationMgr::cbAniNpcSpawnItem, n);
 	n->state = (NpcBehave)(SaluteNpcL + n->state % 2);
 #endif
 }
@@ -105,12 +117,13 @@ void AnimationMgr::cbAniNpcSpawnItem(void* parm)
 void AnimationMgr::cbAniNpcSalute(void* parm)
 {
 #if 1
-	ProcNpc* n = (ProcNpc*)parm;
+	Ichimondi* n = (Ichimondi*)parm;
 
 	int r = (rand() % 2 - 0.5) * 2;
 	n->v = iPointRotate(iPointMake(r, 0), iPointZero, 0);
 	if (n->v != iPointZero)
 	{
+		n->imgs[n->state]->startAnimation(AnimationMgr::cbAniNpcSalute, n);
 		if (n->v.x > 0)
 			n->state = EscapeNpcR;
 		else if (n->v.x < 0)

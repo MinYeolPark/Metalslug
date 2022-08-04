@@ -30,8 +30,9 @@ ProcObject::~ProcObject()
 
 iRect& ProcObject::getRect(int index)
 {
-	iRect rt = *rect[index];
-	return rt;
+	iRect* rt = rect[index];
+	if (rt->size.width!=0 && rt->size.height!=0)
+		return *rt;
 }
 
 int ProcObject::getScore()

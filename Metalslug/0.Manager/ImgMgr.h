@@ -30,7 +30,5 @@ iImage** createImgReverse(ImageInfo* imageInfo, int size, void* c);
 iImage** createImgSingleBehave(ImageInfo* imageInfo, void* c);
 iImage** createImgSingleEach(ImageInfo* imageInfo, void* c);
 
-
-
 iImage** createSingleImage(ImageInfo* imageInfo, int size, void* c);
 

@@ -41,6 +41,7 @@ public:
 	iPoint soldierP[3];
 
 	float aiDt[3], _aiDt;
+	float dmgDt[3], _dmgDt;
 	float hp[3], _hp;		//0 : left, 1: mid, 2: right
 	
 	virtual iPoint getFirePoint();

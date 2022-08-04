@@ -11,7 +11,9 @@
 Texture* selectmap;
 iImage** imgSelectBtn;
 iImage** imgSelectPosBtn;
-iImage* imgShutter;
+Texture* texShutter;
+iImage* imgTop;
+iImage* imgBot;
 int selectedBtn;
 bool confirm = false;
 iPoint sp[4] =
@@ -25,6 +27,7 @@ iPoint shutterP[4];
 float shutterRate[4];
 void loadSelect()
 {
+	loadProcPlayer();
 	audioStop(snd_bgm_title);
 	audioPlay(snd_bgm_select);
 	
@@ -32,8 +35,7 @@ void loadSelect()
 		
 	imgSelectBtn = new iImage * [CharacterIndexMax];
 #if 1
-	imgSelectPosBtn = new iImage * [CharacterIndexMax];
-	imgShutter = new iImage();
+	imgSelectPosBtn = new iImage * [CharacterIndexMax];	
 	for (int j = 0; j < CharacterIndexMax; j++)
 	{
 		iImage* _imgSelectBtn = new iImage();
@@ -71,18 +73,15 @@ void loadSelect()
 
 		imgSelectBtn[j] = _imgSelectBtn;
 		imgSelectPosBtn[j] = _imgSelectPos;
-	}
-	iImage* img = new iImage();
-	Texture* t = createImage("assets/CharSelect/Shutter.png");
-	img->addObject(t);
-	freeImage(t);
-
-	t->width *= devSize.width / selectmap->width;
-	t->potWidth *= devSize.width / selectmap->width;
-	t->height *= devSize.height / selectmap->height;
-	t->potHeight *= devSize.height / selectmap->height;
-
-	imgShutter = img;
+	}	
+#if 1
+	texShutter = createImage("assets/CharSelect/Shutter.png");	
+	imgTop = player->topImgs[PlayerIdle];	
+	imgTop->_aniDt = 0.5f;
+	imgTop->alpha = 0.f;
+	imgBot = player->botImgs[PlayerIdle];		
+	imgBot->alpha = 0.f;
+#endif
 	for (int i = 0; i < 4; i++)
 	{
 		shutterP[i] = sp[i];
@@ -94,6 +93,7 @@ void loadSelect()
 }
 void freeSelect()
 {
+	freeProcPlayer();
 	for (int i = 0; i < CharacterIndexMax; i++)
 	{
 		delete imgSelectBtn[i];
@@ -117,8 +117,11 @@ void drawSelect(float dt)
 	}
 #if 1
 	for (int i = 0; i < CharacterIndexMax; i++)
-	{	
-		imgShutter->paint(dt, shutterP[i], iImageTypePop);
+	{			
+		drawImage(texShutter, shutterP[i]);
+		iPoint p = shutterP[i];		
+		imgBot->paint(dt, iPointMake(p.x + 30, p.y + 72), iImageTypePop);
+		imgTop->paint(dt, iPointMake(p.x  + 30, p.y + 50), iImageTypePop);
 		if (isLoaded)
 		{
 			iPoint tp = { shutterP[i].x, -70 };			
@@ -126,9 +129,10 @@ void drawSelect(float dt)
 		}
 
 		if (confirm)
-		{				
-			iPoint tp = { shutterP[selectedBtn].x, 70 };
-			printf("tp=%f, %f\n", tp.x, tp.y);
+		{			
+			imgBot->alpha = 1.f;
+			imgTop->alpha = 1.f;
+			iPoint tp = { shutterP[selectedBtn].x, 70 };			
 			if (movePoint(shutterP[selectedBtn], shutterP[selectedBtn], tp, shutterRate[i]))
 				setLoading(GameStateProc, 2, freeSelect, loadProc);
 		}
@@ -164,9 +168,9 @@ void drawSelect(float dt)
 			imgSelectBtn[selectedBtn]->frame = 2;
 
 			if(selectedBtn==0)
-				audioPlay(snd_eff_select_eri);
+				audioPlay(snd_nar_select_eri);
 			else if(selectedBtn==1)
-				audioPlay(snd_eff_select_eri);
+				audioPlay(snd_nar_select_eri);
 		}
 	}	
 	setRGBA(1, 1, 1, 1);

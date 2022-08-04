@@ -28,6 +28,7 @@ public:
 	iImage** imgs;
 	iImage* imgCurr;
 
+	float dmgDt, _dmgDt;
 public:
 	virtual void getDamage(float damage);
 public:

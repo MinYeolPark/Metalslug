@@ -14,6 +14,7 @@ enum EnemyIndex
 
 	EnemyIndexMax,
 };
+
 class ProcEnemy: 
 	public ProcObject
 {
@@ -35,7 +36,6 @@ public:
 	float attkRange;
 	float attkRate, _attkRate;
 	float aiDt, _aiDt;
-
 	bool isAppear;
 public:	
 	virtual void getDamage(float damage);

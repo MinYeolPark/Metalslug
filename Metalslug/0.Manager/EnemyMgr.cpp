@@ -27,7 +27,7 @@ int maxNum[EnemyIndexMax] =
 	1,		//kessie
 	1,		//abul
 };
-static bool truckTrigger = false;
+
 void loadProcEnemy()
 {
 	_enemies = new ProcEnemy * * [EnemyIndexMax];
@@ -75,10 +75,20 @@ void loadProcEnemy()
 
 	addProcEnemy(IdxMosque, iPointMake(2030, 175));	
 	addProcEnemy(IdxTruck, iPointMake(1700, 100));
+
 	addProcEnemy(IdxMelee, iPointMake(500, 50));
-	addProcEnemy(IdxBurserker, iPointMake(1300, 100));
+	addProcEnemy(IdxMelee, iPointMake(600, 50));
+	//addProcEnemy(IdxMelee, iPointMake(700, 50));
+	//addProcEnemy(IdxMelee, iPointMake(800, 50));
+
+	addProcEnemy(IdxMelee, iPointMake(2800, 50));
+	addProcEnemy(IdxMelee, iPointMake(2900, 50));
+	addProcEnemy(IdxMelee, iPointMake(3000, 50));
+	addProcEnemy(IdxMelee, iPointMake(3200, 50));
+	addProcEnemy(IdxMelee, iPointMake(3300, 50));
 	addProcEnemy(IdxBurserker, iPointMake(1350, 100));
 	addProcEnemy(IdxBurserker, iPointMake(1400, 100));
+	addProcEnemy(IdxBurserker, iPointMake(1450, 100));
 
 
 	//addProcEnemy(IdxArMelee, iPointMake(400, 100), iPointMake(0, 0));
@@ -116,16 +126,6 @@ void drawProcEnemy(float dt, iPoint off)
 			}
 		}
 	}
-
-
-	if (!truckTrigger)
-	{		
-		if (player->p.x > 1550)
-		{
-			truckTrigger = true;
-			addProcEnemy(IdxAbul, iPointMake(1700, 150));
-		}
-	}
 }
 
 ProcEnemy* addProcEnemy(int index, iPoint p)
@@ -136,7 +136,7 @@ ProcEnemy* addProcEnemy(int index, iPoint p)
 		if (e->isActive == false)
 		{
 			e->isActive = true;
-			e->init(p);			//default direction = Left
+			e->init(p);			
 			enemies[enemyNum] = e;
 			enemyNum++;
 			return e;

@@ -22,15 +22,8 @@ void setLoading(GameState gs, MethodLoading free, MethodLoading load)
 
 void setLoading(GameState gs, float delayTime, MethodLoading free, MethodLoading load)
 {
-	if (loadingDt)
-		return;
-	
+	setLoading(gs, free, load);
 	_delay = delayTime;
-	delay = 0.f;
-	gsNew = gs;
-	methodFree = free;
-	methodLoad = load;
-	loadingDt = 0.000001f;
 }
 
 void drawLoading(float dt)

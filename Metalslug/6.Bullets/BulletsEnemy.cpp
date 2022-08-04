@@ -1,15 +1,14 @@
 #include "BulletsEnemy.h"
 
 #include "EffectMgr.h"
+#include "ArabMelee.h"
 BulletsEnemy::BulletsEnemy(int index) : ProcBullets(index)
 {
 }
 
 BulletsEnemy::~BulletsEnemy()
 {
-	for (int i = 0; i < rectNum; i++)
-		delete rect[i];
-	delete rect;
+
 }
 
 void BulletsEnemy::init(ProcObject* parent, int index, float degree, int fpNum)
@@ -28,18 +27,9 @@ void BulletsEnemy::init(ProcObject* parent, int index, float degree, int fpNum)
 	{
 		this->pow = 5.0f;
 		this->up -= pow;
+		this->down = 0.f;
 		this->speed = 100.f;
 		this->damage = 100.f;	
-		rectNum = 1;
-		rect = new iRect * [rectNum];
-		for (int i = 0; i < rectNum; i++)
-			rect[i] = new iRect();
-		for (int i = 0; i < rectNum; i++)
-		{
-			iRect* r = rect[i];
-			r->size = iSizeMake(30, 30);
-			r->origin = p;
-		}
 	}	
 }
 
@@ -72,7 +62,8 @@ void BulletsEnemy::update(float dt)
 	if (p.y < maxY)
 	{
 		down += 9.81 * dt;
-		if (parent->v.x>0)
+		ProcEnemy* e = (ProcEnemy*)parent;
+		if (e->state==PreAttackMeleeR)
 			p = iPointMake(p.x + 2, p.y += down);
 		else// if(!b->parent->isRight)
 			p = iPointMake(p.x - 2, p.y += down);
@@ -100,16 +91,4 @@ void BulletsEnemy::fixedUpdate(float dt)
 		iPoint bp = iPointMake(rand() % 10 + p.x, rand() % 10 + p.y);
 		addProcEffect(this, index, bp);		//bulletIndex=effectIndex
 	}
-
-	//rect Update
-	for (int i = 0; i < rectNum; i++)
-	{
-		rect[i]->origin = iPointMake(
-			p.x + map->_off.x - rect[i]->size.width / 2,
-			p.y + map->_off.y - rect[i]->size.height);
-	}
-}
-
-void BulletsEnemy::getDamage(float damage)
-{
 }

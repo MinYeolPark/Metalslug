@@ -11,7 +11,5 @@ public:
 	virtual void init(ProcObject* parent, int index, float degree, int fpNum);
 	virtual void update(float dt);
 	virtual void fixedUpdate(float dt);
-
-	virtual void getDamage(float damage);
 };
 

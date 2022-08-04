@@ -21,6 +21,7 @@ public:
 	iImage* imgCurr;
 
 	bool isAppear;
+	float dmgDt, _dmgDt;
 public:
 	virtual void init(int index, iPoint p);
 	virtual void update(float dt);

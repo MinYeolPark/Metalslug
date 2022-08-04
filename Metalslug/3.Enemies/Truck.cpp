@@ -9,6 +9,7 @@ ImageInfo imgTruckInfo[];
 static iImage** _imgTruck = NULL;
 Truck::Truck(int index) : ProcEnemy(index)
 {
+    score = 100;
     this->index = index;
     state = IdleTruckL;
 
@@ -19,7 +20,7 @@ Truck::Truck(int index) : ProcEnemy(index)
     attkRange = 0;
     attkRate = 0.f; _attkRate = 0.f;
     aiDt = 0.f; _aiDt = 2.f;
-
+    dmgDt = 0.f; _dmgDt = 0.18f;
     imgs = NULL;
     imgCurr = NULL;
 
@@ -80,6 +81,7 @@ void Truck::update(float dt)
             state= (MoveTruckL + state % 2);            
             if (movePoint(p, p, iPointMake(1650, p.y), moveSpeed * dt))
             {
+                addProcEnemy(IdxAbul, iPointMake(1740, p.y));
                 state = DeployTruckL + state % 2;                
                 _aiDt = 3.0f;
                 isAppear = true;
@@ -130,28 +132,26 @@ void Truck::fixedUpdate(float dt)
 
 bool Truck::draw(float dt, iPoint off)
 {
-    setRGBA(1, 1, 1, 1);
+    if (dmgDt)
+    {
+        setRGBA(1, 0.8, 0.1, 1);
+        dmgDt += dt;
+        if (dmgDt > _dmgDt)
+            dmgDt = 0.f;
+    }
+    else
+        setRGBA(1, 1, 1, 1);
+
     imgCurr = imgs[state];
     imgCurr->paint(dt, p + off);
 
-    if (alphaDt)
-    {
-        alphaDt += dt;
-        alpha = fabsf(_cos((alphaDt / _alphaDt * 270)));
-        if (alphaDt > _alphaDt)
-        {
-            alphaDt = 0.0f;
-            isActive = false;
-        }
-    }
-
-#ifdef _DEBUG
+#ifdef DEBUG
     for (int i = 0; i < rectNum; i++)
         drawRect(getRect());
 
 #endif // _DEBUG
     setRGBA(1, 1, 1, 1);
-    return !IsAccelerator;
+    return !isActive;
 }
 
 void Truck::free()
@@ -162,6 +162,7 @@ void Truck::free()
 void Truck::getDamage(float damage)
 {
     hp -= damage;
+    player->addScore(score);
     if (hp <= 0)
     {
         if (!isDead)
@@ -169,13 +170,12 @@ void Truck::getDamage(float damage)
             isDead = true;
             state = (DeadTruckL + state % 2);
             imgs[state]->startAnimation(AnimationMgr::cbAniDead, this);
+            addProcEffect(this, EffectExplosionL, p);
             for (int i = 0; i < enemyNum; i++)
             {
                 ProcEnemy* e = enemies[i];
                 if (e->index == IdxAbul)
-                {
-                    e->tp = iPointMake(e->p.x + 200, e->p.y);
-                }
+                    e->tp = iPointMake(e->p.x + 400, e->p.y);
             }
         }
     }

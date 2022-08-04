@@ -22,7 +22,9 @@ void loadProcNpcs()
 	npcNum = 0;
 
 	//AddProcNpc
-	addProcNPC(NpcIchimondi, iPointMake(150, 100),ItemHeavyMachineGun);
+	//addProcNPC(NpcIchimondi, iPointMake(1000, 100),ItemHeavyMachineGun);
+	addProcNPC(NpcIchimondi, iPointMake(2000, 100), ItemHeavyMachineGun);
+	//addProcNPC(NpcIchimondi, iPointMake(3400, 100), ItemHeavyMachineGun);
 }
 
 void freeProcNpcs()
@@ -84,6 +86,7 @@ void addProcNPC(int index, iPoint p, int itemIndex)
 
 ProcNpc::ProcNpc(int index)
 {
+	
 }
 
 ProcNpc::~ProcNpc()
@@ -99,6 +102,7 @@ void ProcNpc::getDamage(float damage)
 
 void ProcNpc::init(int idex, iPoint p, int itemIndex)
 {
+	isAppear = false;
 	isActive = true;
 	this->itemIndex = itemIndex;
 	this->p = p;

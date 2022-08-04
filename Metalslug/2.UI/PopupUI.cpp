@@ -61,8 +61,7 @@ PopupUI::PopupUI()
 			tex = g->getTexture();
 			img->addObject(tex);
 			freeImage(tex);
-		}		
-
+		}
 		img->position = iPointMake((devSize.width / 2 - bg->GetWidth() / 2)+ 20,
 			(devSize.height / 3 + 15) + 12 * i);
 		pop->addObject(img);		
@@ -86,8 +85,11 @@ PopupUI::PopupUI()
 
 PopupUI::~PopupUI()
 {
+	delete popup;
+	delete bg;
 }
 
+iPopup* popSetting;
 bool PopupUI::paint(float dt)
 {	
 	setRGBA(1, 1, 1, 1);
@@ -96,6 +98,8 @@ bool PopupUI::paint(float dt)
 	bool show = popOption->bShow;
 	if (getKeyDown(keyboard_esc))
 	{
+		if (popSetting->bShow)
+			return false;
 		show = !show;
 		popOption->show(show);
 	}
@@ -113,7 +117,7 @@ void drawPopOptionBefore(float dt, iPopup* pop)
 // -----------------------------------
 // popSetting
 // -----------------------------------
-iPopup* popSetting;
+//iPopup* popSetting;   line 91
 iImage** imgSettingBtn;
 float rangeBtn[2];// min / max about x
 void drawSettingBefore(float dt, iPopup* pop)
@@ -129,7 +133,6 @@ void createSettingPopup()
 	iSize size = iSizeMake(200, 200);
 	g->init(size);
 	
-	setRGBA(1, 1, 1, 1);
 	iPoint p = iPointZero;
 	g->drawIgImage(bg, p.x, p.y, 1.5, 1.5, TOP | LEFT);	
 	for (int i = 0; i < 2; i++)

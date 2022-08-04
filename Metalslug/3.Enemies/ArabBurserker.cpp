@@ -6,6 +6,7 @@ ImageInfo imgBurserkInfo[];
 static iImage** _imgBurserk = NULL;
 ArabBurserker::ArabBurserker(int index) : ProcEnemy(index)
 {		
+	score = 100;
 	this->index = index;
 	state = IdleBurserkL;
 
@@ -149,7 +150,7 @@ void ArabBurserker::fixedUpdate(float dt)
 }
 bool ArabBurserker::draw(float dt, iPoint off)
 {
-	setRGBA(1, 1, 1, 1);
+	setRGBA(1, 1, 1, alpha);
 	imgCurr = imgs[state];
 	imgCurr->paint(dt, p + off);
 
@@ -163,7 +164,7 @@ bool ArabBurserker::draw(float dt, iPoint off)
 			isActive = false;
 		}
 	}
-#ifdef _DEBUG
+#ifdef DEBUG
 	for (int i = 0; i < rectNum; i++)
 		drawRect(getRect());
 
@@ -196,6 +197,7 @@ void ArabBurserker::getDamage(float damage)
 			isDead = true;
 			state = (DeadBurserkL + state % 2);
 			imgs[state]->startAnimation(AnimationMgr::cbAniDead, this);			
+			player->addScore(score);
 		}
 	}
 }

@@ -11,10 +11,14 @@
 #include "EffectMgr.h"
 #include "BulletMgr.h"
 #include "AnimationMgr.h"
+#include "UIMgr.h"
+
+#include "Abul.h"
 ImageInfo imgKessieInfo[];
 static iImage** _imgKessie = NULL;
 Kessie::Kessie(int index) : ProcEnemy(index)
 {	
+	score = 100;
 	_alphaDt = 1.f;
 
 	layer = LayerKessie;	
@@ -49,13 +53,10 @@ Kessie::Kessie(int index) : ProcEnemy(index)
 	_rageDt = 5.0f;
 	aiDt = 0.f;
 	_aiDt = 2.f;
-	_hp = 3000.f;
-	_hp = 500.f;
+	dmgDt = 0.f, _dmgDt = 0.18f;
+	_hp = 2000.f;	
 	for (int i = 0; i < 3; i++)
 		hp[i] = _hp;
-	//test
-	hp[1] = 200;
-	hp[2] = 200;
 
 	if (_imgKessie == NULL)
 		_imgKessie = createSingleImage(imgKessieInfo, KessieBehaveMax, this);
@@ -113,7 +114,7 @@ void Kessie::init(iPoint p)
 	{
 		atkRect[i] = new iRect();
 		iRect* r = atkRect[i];
-		r->size = iSizeMake(40, 80);
+		r->size = iSizeMake(40, 100);
 		iPoint pos[2] =
 		{
 			{p.x - 80, p.y},
@@ -145,8 +146,11 @@ void Kessie::update(float dt)
 			iRectMake(-map->off.x - 20, -map->off.y - 100,
 				devSize.width, devSize.height)))
 		{
+			audioStop(snd_bgm_stage1);
+			audioPlay(snd_bgm_boss);
 			if (movePoint(p, p, iPointMake(p.x, devSize.height / 3), moveSpeed * dt))
 			{
+				addProcEnemy(IdxAbul, iPointMake(3820, 180));
 				isAppear = true;
 				for (int i = 0; i < 2; i++)
 				{
@@ -276,35 +280,24 @@ void Kessie::fixedUpdate(float dt)
 			}
 		}
 	}
-#if 0
-	for (int i = 0; i < 2; i++)
-	{
-		iPoint pos[2] =
-		{
-			{p.x - 80, p.y + 30},
-			{p.x + 80, p.y + 30},
-		};
-		atkRect[i]->origin = iPointMake(
-			pos[i].x + map->off.x - atkRect[i]->size.width / 2,
-			pos[i].y + map->off.y - atkRect[i]->size.height);		
-		drawRect(iRectMake(atkRect[i]->origin.x + map->off.x,
-			atkRect[i]->origin.y+ map->off.y,
-			atkRect[i]->size.width,
-			atkRect[i]->size.height));
-		printf("rectPos[%d]=%f,%f\n", i, pos[i].x, pos[i].y);
-		printf("size=%f, %f\n", atkRect[i]->size.width, atkRect[i]->size.height);
-	}
-#endif
 }
 
+#include "InputMgr.h"
 bool Kessie::draw(float dt, iPoint off)
 {
-	int maxY = *(map->maxY + (int)p.x);
-
-	setRGBA(1, 1, 1, 1);
+	if (dmgDt)
+	{
+		setRGBA(1, 0.8, 0.1, 1);
+		dmgDt += dt;
+		if (dmgDt > _dmgDt)
+			dmgDt = 0.f;
+	}
+	else
+		setRGBA(1, 1, 1, 1);
 	imgHead->paint(dt, { p.x + off.x, p.y + off.y - 95 });
 	imgBase[baseState]->paint(dt, p + off);
 
+	int maxY = *(map->maxY + (int)p.x);
 	if (!isDead)
 	{
 		if (hp[1] > 0)
@@ -321,14 +314,24 @@ bool Kessie::draw(float dt, iPoint off)
 		}
 	}
 
-#ifdef _DEBUG
+	if (getKeyStat(keyboard_delete))
+		#define DEBUG
+#ifdef DEBUG
 	for (int i = 0; i < rectNum; i++)
 		drawRect(getRect(i));
-	
+#endif // _DEBUG
 	if (isDead)
 	{
 		delta += dt;
 		float r = delta / 0.2;
+		if (r > 0.2)
+		{
+			delta -= 1;			
+			int rx = p.x + (rand() % 120 - 20 * 2);
+			int ry = p.y - (rand() % 30);
+			addProcEffect(this, EffectExplosionM, iPointMake(rx, ry));
+			audioPlay(snd_eff_expM);
+		}		
 		x = 5 * _sin(360 * r);
 		p.x += x;
 		if (movePoint(p, p, iPointMake(p.x, maxY), moveSpeed * 0.7 * dt))
@@ -338,20 +341,16 @@ bool Kessie::draw(float dt, iPoint off)
 			{
 				int rx = p.x + (rand() % 120 - 20 * 2) * i;
 				int ry = p.y - (rand() % 30) * i;
-				addProcEffect(this, EffectExplosionM, iPointMake(rx, ry));
+				addProcEffect(this, EffectExplosionL, iPointMake(rx, ry));
+				audioPlay(snd_eff_expM);
+				audioPlay(snd_eff_expL);
 			}
 			isActive = false;
-
-			//Game End			
 			stageClear = true;
-			if (stageClear)
-				setLoading(GameStateMenu, 2, freeProc, loadMenu);
 		}
 	}
-
-#endif // _DEBUG
-	setRGBA(1, 1, 1, 1);
 	
+	setRGBA(1, 1, 1, 1);
 	return !isActive;
 }
 
@@ -368,8 +367,10 @@ void Kessie::getDamage(float damage)
 			ProcBullets* b = bullets[i];
 			if (containPoint(b->p + map->off, rect[k][0]))
 			{
+				setRGBA(1, 0, 0, 1);
 				hp[k] -= damage;
-				printf("hp[%d]=%d\n", k, hp[k]);
+				player->addScore(score);
+				dmgDt = 0.000001f;
 			}
 		}
 
@@ -378,6 +379,13 @@ void Kessie::getDamage(float damage)
 		{
 			isDead = true;
 			baseState = KessieBase0;
+
+			for (int i = 0; i < enemyNum; i++)
+			{
+				ProcEnemy* e = enemies[i];
+				if (e->index == IdxAbul)
+					e->state = SurrenderAbulL + state % 2;
+			}
 		}
 	}
 
@@ -406,7 +414,6 @@ void Kessie::getDamage(float damage)
 	{
 		if (baseState == KessieBase100)
 			state = KessieBase80;
-
 	}
 }
 

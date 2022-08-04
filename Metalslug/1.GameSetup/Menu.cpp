@@ -18,6 +18,12 @@ void drawMenuBefore(float dt, iPopup* pop)
 
 void loadMenu()
 {
+	audioPlay(snd_bgm_title);
+	audioStop(snd_bgm_select);
+	audioStop(snd_bgm_stage1);
+	audioStop(snd_bgm_boss);
+	audioStop(snd_bgm_clear);
+
 	titlemap = createImage("assets/map/Title.png");	
 	createTitleMenu();	
 	titleMenu->show(true);
@@ -135,14 +141,12 @@ void drawTitleMenu(float dt)
 		titleMenu->selected++;
 		if (titleMenu->selected > 3)
 			titleMenu->selected = 0;
-		printf("down");
 	}
 	if (getKeyDown(keyboard_up))
 	{
 		titleMenu->selected--;
 		if (titleMenu->selected < 0)
 			titleMenu->selected = 3;
-		printf("up");
 	}
 	if (getKeyDown(keyboard_enter))
 	{		
@@ -154,8 +158,11 @@ void drawTitleMenu(float dt)
 			;
 		else if (titleMenu->selected == 3)
 		{
-			printf("Quit\n");					
-			runApp = false;
+			int result = MessageBox(NULL, L"Quit?", L"Exit", MB_YESNO);
+			if (result == IDYES)
+				runApp = false;
+			else
+				return;			
 		}
 	}
 }
@@ -173,6 +180,18 @@ bool keyTitleMenu(iKeyState stat, iPoint p)
 		if (i == 0)
 		{
 			setLoading(GameStateSelect, freeMenu, loadSelect);
+		}
+		else if (i == 1)
+			printf("Display\n");
+		else if (i == 2)
+			printf("Option\n");
+		else if (i == 3)
+		{
+			int result = MessageBox(NULL, L"Quit?", L"Exit", MB_YESNO);
+			if (result == IDYES)
+				runApp = false;
+			else
+				return false;
 		}
 	case iKeyStateMoved:
 		for (i = 0; i < 4; i++)

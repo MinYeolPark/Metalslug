@@ -29,7 +29,7 @@ bool keyProc(iKeyState stat, iPoint p);
 void loadProcField();
 void freeProcField();
 iPoint drawProcField(float dt);
-
+extern int stage;
 ///////////////////////////////////////////////////
 //Player
 ///////////////////////////////////////////////////

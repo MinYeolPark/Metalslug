@@ -36,7 +36,6 @@ ProcEnemy::ProcEnemy(int index) : ProcObject()
 	attkRange = 0.f;
 	attkRate = 0.f, _attkRate = 0.f;
 	aiDt = 0.f, _aiDt = 0.f;
-
 	isAppear = false;	
 }
 

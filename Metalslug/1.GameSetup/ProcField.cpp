@@ -1,5 +1,4 @@
 ﻿#include "ProcField.h"
-
 #include "ProcPlayer.h"
 
 #include "UIMgr.h"
@@ -55,12 +54,15 @@ ProcMap::~ProcMap()
 
 void ProcMap::init(int stage)
 {
+	audioStop(snd_bgm_title);
 	audioStop(snd_bgm_select);
 	
 	if (stage == 0)	//stage 1
 	{
 		audioPlay(snd_bgm_stage1);
-		audioPlay(snd_m1_start);
+		audioPlay(snd_nar_m1_start);
+
+		showMissionPopup(true, 0.000001f);
 	}
 	for (int i = 0; i < mapNum[stage]; i++)
 	{
@@ -92,7 +94,6 @@ void ProcMap::init(int stage)
 	offMin = iPointMake(devSize.width - maxW, 0);	
 }
 
-static float delta;
 void ProcMap::update(float dt)
 {	
 	if (isClipped)
@@ -159,10 +160,6 @@ void ProcMap::update(float dt)
 void ProcMap::paint(float dt)
 {
 	setRGBA(1, 1, 1, 1);
-	if (getKeyStat(keyboard_delete))
-	{
-		isClipped = !isClipped;
-	}
 	iPoint p;
 	//Layer
 	for (int i = 0; i < layerNum; i++)
@@ -184,7 +181,7 @@ void ProcMap::paint(float dt)
 		md = &mapData[i];
 		imgs[i]->paint(dt, md->p + off);
 	}	
-#ifdef _DEBUG
+#ifdef DEBUG
 	setLineWidth(2);
 	for (int j = 0; j < mapNum[stage]; j++)
 	{

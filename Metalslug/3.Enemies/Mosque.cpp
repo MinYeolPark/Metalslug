@@ -1,5 +1,6 @@
 #include "Mosque.h"
 
+#include "UIMgr.h"
 #include "EnemyMgr.h"
 #include "ImgMgr.h"
 #include "BulletMgr.h"
@@ -13,6 +14,7 @@ static iImage** _imgMosqueBase = NULL;
 static iImage** _imgMosqueAdd = NULL;
 Mosque::Mosque(int index) : ProcEnemy(index)
 {	
+	score = 100;
 	layer = LayerMosque;
 	index = IdxMosque;
 
@@ -80,9 +82,11 @@ Mosque::Mosque(int index) : ProcEnemy(index)
 	_hp = 1500.f;
 	sight = 500.f;
 	attkRange = 500.f;
+	_dmgDt = 0.18f;
 	for (int i = 0; i < 3; i++)
 	{
 		hp[i] = 100.f;		
+		dmgDt[i] = 0.f;
 		firePoint[i] = iPointZero;
 	}
 }
@@ -163,6 +167,7 @@ void Mosque::update(float dt)
 			isAppear = true;
 			if (map->move(iPointMake(devSize.width / 5 - (p.x + map->_off.x), 0)))
 				map->isClipped = true;
+			audioPlay(snd_eff_mosqueMove);
 		}
 		return;
 	}
@@ -235,15 +240,24 @@ bool Mosque::draw(float dt, iPoint off)
 		//	soldierP[i].y += (50 * dt);
 		if (towerState[i] != MosqueDead)
 		{
+			if (dmgDt[i])
+			{
+				setRGBA(1, 0.8, 0.1, 1);				
+				dmgDt[i] += dt;
+				if (dmgDt[i] > _dmgDt)
+					dmgDt[i] = 0.f;
+			}
+			else
+				setRGBA(1, 1, 1, 1);
+
 			imgSoldier[i][soldierState[i]]->paint(dt, soldierP[i] + off);
 			imgCurtain[i][curtainState[i]]->paint(dt, curtainP[i] + off);
 			imgShutter[i][shutterState[i]]->paint(dt, shutterP[i] + off);
+			setRGBA(1, 1, 1, 1);
 		}
 	}
 	imgBase[baseState]->paint(dt, p + off);
 
-
-#if 1
 	//Dead Event
 	if (dramaDt)
 	{
@@ -251,6 +265,7 @@ bool Mosque::draw(float dt, iPoint off)
 		intervalDt += dt;
 		if (intervalDt > _intervalDt)
 		{
+			audioPlay(snd_eff_expM);
 			intervalDt -= _intervalDt;
 			int rx = p.x + (((rand() % 150) - 50) * 2);
 			int ry = p.y - (((rand() % 50)) * 2);
@@ -259,6 +274,7 @@ bool Mosque::draw(float dt, iPoint off)
 
 		if (dramaDt > _dramaDt)
 		{
+			audioPlay(snd_eff_expL);
 			state = MosqueDead;
 			for (int i = 0; i < 10; i++)
 			{
@@ -272,15 +288,10 @@ bool Mosque::draw(float dt, iPoint off)
 			map->isClipped = false;
 		}
 	}
-#else
-	for (int i = 0; i < 3; i++)
-	{
-		for (int j = 0; j < 2; j++)
-			;//imgSoldier[i][j]->alpha = 0.0f;
-		//addProcEnemy();
-	}
-#endif
-#ifdef _DEBUG
+
+	if (getKeyStat(keyboard_delete))
+		#define DEBUG
+#ifdef DEBUG
 	for (int i = 0; i < rectNum; i++)
 	{
 		if (!isAppear)
@@ -303,16 +314,20 @@ void Mosque::getDamage(float damage)
 		for (int k = 0; k < rectNum; k++)
 		{		
 			ProcBullets* b = bullets[i];
-			if (containPoint(b->p + map->off, rect[k][0]))
+			if (containPoint(b->p + map->off, getRect(k)))
 			{
 				hp[k] -= damage;
+				score = 100;
+				if(!dmgDt[k])
+					dmgDt[k] = 0.000001f;				
+				printf("#1 %f, #2 %f, #3 %f\n", rect[0]->size.width, rect[1]->size.width, rect[2]->size.width);
 				if (hp[k] <= 0)
 				{
 					rect[k]->size = iSizeZero;		//disable
 					
 					towerState[k] = MosqueDead;
 					soldierState[k] = MosqueDead;
-					//shutterState[k] = MosqueDead;
+					shutterState[k] = MosqueDead;
 				}
 			}
 		}

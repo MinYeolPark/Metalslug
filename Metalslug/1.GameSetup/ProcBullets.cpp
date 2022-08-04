@@ -60,7 +60,7 @@ bool ProcBullets::draw(float dt, iPoint off)
 
 #ifdef _DEBUG
 	for (int i = 0; i < rectNum; i++)
-		drawRect(getRect());
+		drawRect(getRect(i));
 #endif // _DEBUG
 
 	return !isActive;
@@ -70,9 +70,8 @@ void ProcBullets::free()
 {
 }
 
-void ProcBullets::getDamage(float damage, Collider* c)
+void ProcBullets::getDamage(float damage)
 {
-	printf("get damage bulletss\n");
 	hp -= damage;
 	if (hp <= 0)
 		isActive = false;

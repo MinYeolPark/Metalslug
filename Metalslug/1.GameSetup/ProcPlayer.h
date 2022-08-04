@@ -48,7 +48,6 @@ public:
 	int hp;
 	int life;
 	float moveSpeed;
-	float bombSpeed;
 	float attkRange;
 	float bombRange;
 

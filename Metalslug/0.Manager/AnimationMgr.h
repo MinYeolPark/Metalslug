@@ -12,7 +12,7 @@ public:
 	//static void cbAniEnemyMotion2Idle(void* parm);
 	static void cbAniMeleeFire(void* parm);
 	static void cbAniTruck(void* parm);
-
+	static void cbAniAbulFlag(void* parm);
 public:
 	static void cbAniMosque(void* parm);
 

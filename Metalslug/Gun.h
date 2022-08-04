@@ -22,7 +22,7 @@ struct Gun
 	GunInfo gi[3] =
 	{
 		{Handgun, 100, 300, 0},
-		{HeavyMachinegun, 100, 150, 200},
+		{HeavyMachinegun, 100, 300, 200},
 		{Bomb, 100, 150, 200},
 	};
 	Gun()
