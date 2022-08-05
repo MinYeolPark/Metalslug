@@ -223,6 +223,7 @@ iImage** createSingleImage(ImageInfo* imageInfo, int size, void* c)
 		if (ii->repeatNum)
 			img->_repeatNum = ii->repeatNum;
 		_imgs[i] = img;
+		printf("%p\n", _imgs[i]);
 	}
 	return _imgs;
 }

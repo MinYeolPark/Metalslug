@@ -44,6 +44,8 @@ public:
 	float dmgDt[3], _dmgDt;
 	float hp[3], _hp;		//0 : left, 1: mid, 2: right
 	
+	iRect* collider;
+
 	virtual iPoint getFirePoint();
 public:
 	virtual void getDamage(float damage);

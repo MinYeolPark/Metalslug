@@ -39,7 +39,7 @@ ProcMap::ProcMap(int stage)
 	imgs = createSingleImage(mapImageInfo,	mapNum[stage], this);	
 	if(stage==0)
 		imgs[3]->alpha = 0.0f;
-	//	
+
 	//Layer	
 	imgsLayer = new iImage * [layerNum];
 	imgsLayer = createSingleImage(layerImageInfo, layerNum, this);	
@@ -47,9 +47,14 @@ ProcMap::ProcMap(int stage)
 
 ProcMap::~ProcMap()
 {
-	/*for (int i = 0; i < mapNum[stage]; i++)
-		delete imgs;
-	delete imgs;*/
+	for (int i = 0; i < mapNum[stage]; i++)	
+		delete imgs[i];
+	delete imgs;
+
+	for (int j = 0; j < layerNum; j++)
+		delete imgsLayer[j];
+	delete imgsLayer;
+
 }
 
 void ProcMap::init(int stage)

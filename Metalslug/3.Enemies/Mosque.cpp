@@ -89,6 +89,9 @@ Mosque::Mosque(int index) : ProcEnemy(index)
 		dmgDt[i] = 0.f;
 		firePoint[i] = iPointZero;
 	}
+
+	collider = new iRect[3];
+
 }
 
 // d/_d * 360 =>  0 / 90 / 270 / 360 
@@ -148,6 +151,12 @@ void Mosque::init(iPoint p)
 	{
 		iRect* r = rect[i];
 		r->size = iSizeMake(60, 60);
+	}
+
+	for (int i = 0; i < 3; i++)
+	{
+		(collider + i)->origin = towerP[i];
+		(collider + i)->size = iSizeMake(60, 60);		
 	}
 }
 
@@ -297,6 +306,9 @@ bool Mosque::draw(float dt, iPoint off)
 		if (!isAppear)
 			setRGBA(1, 1, 1, 0);
 		drawRect(getRect(i));
+
+		for(int i=0;i<3;i++)
+			drawRect(*(collider + i));
 	}
 #endif // _DEBUG
 	return !isActive;

@@ -166,6 +166,7 @@
     <ClInclude Include="Gun.h" />
     <ClInclude Include="iSort.h" />
     <ClInclude Include="2.UI\PopupUI.h" />
+    <ClInclude Include="PlayerGun.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="1.GameSetup\Select.h" />
     <ClInclude Include="Sorting.h" />
@@ -229,6 +230,7 @@
     <ClCompile Include="Gun.cpp" />
     <ClCompile Include="iSort.cpp" />
     <ClCompile Include="2.UI\PopupUI.cpp" />
+    <ClCompile Include="PlayerGun.cpp" />
     <ClCompile Include="Sorting.cpp" />
     <ClCompile Include="std\iArray.cpp" />
     <ClCompile Include="std\iColor.cpp" />

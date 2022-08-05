@@ -9,6 +9,8 @@
 #include "Proc.h"
 #include "ProcField.h"
 #include "ProcItem.h"
+#include "ProcStructure.h"
+
 ProcPlayer* player;
 ImageInfo topImageInfo[];
 ImageInfo botImageInfo[];
@@ -72,6 +74,10 @@ ProcPlayer::ProcPlayer(int index) : ProcObject()
 #endif
 
     _imgEriTop = createSingleImage(topImageInfo, PlayerBehaveMax, this);
+    for (int i = 0; i < PlayerBehaveMax; i++)
+    {
+            printf("_imgEritop[i]=%p\n", _imgEriTop[i]);
+    }
     _imgEriHeavyTop = createSingleImage(infoEriTopHeavy, PlayerBehaveMax, this);
     _imgEriBot = createSingleImage(botImageInfo, 8, this);
     switch (index)
@@ -137,8 +143,6 @@ void ProcPlayer::init(iPoint p)
     if (topState == PlayerSpawn)
         topImgs[topState]->startAnimation(AnimationMgr::cbAniToIdle, this);
 }
-
-#include "ProcStructure.h"
 
 static float count;
 static float _count = 5.f;
