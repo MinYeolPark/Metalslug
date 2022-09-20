@@ -4,7 +4,7 @@
 ![image](https://user-images.githubusercontent.com/67354549/191329885-93892d64-2da4-4f4b-843b-91ff13563adc.png)
 
 ## 기간
-2022.09.01 ~2022.09.08
+2022.05 ~2022.07
 
 ## 툴
 
