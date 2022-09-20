@@ -14,6 +14,6 @@
 
  ● 언어 : C/C++ 
 
-## 시연영상
+## 영상
 <a href="주소(url)"> https://youtu.be/G30gOzBM5_w </a>
 
